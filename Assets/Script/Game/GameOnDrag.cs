@@ -1,46 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameOnDrag: MonoBehaviour
 {
-	Ray ray;
-	RaycastHit hit;
-	private bool isDragging = false;
-	private Vector3 screenPoint;
-	private Vector3 offset;
-	void Update()
-	{
-		if (isDragging) {
-			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	private bool dragging = false;
 
-			Debug.DrawRay(ray.origin, ray.direction * 100f, Color.green);
-			//if (Physics.Raycast(ray, out hit))
-			//{
-			//	// 如果射线击中了物体，将物体的颜色改变为红色
-			//	Renderer rend = hit.transform.GetComponent<Renderer>();
-			//	if (rend != null)
-			//	{
-			//		rend.material.color = Color.red;
-			//	}
-			//}
-		}
-	}
 	void OnMouseDown()
 	{
-		isDragging = true;
-		screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-		offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+		dragging = true;
 	}
 
 	void OnMouseDrag()
 	{
-		Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-		Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
-		transform.position = curPosition;
+		if (dragging)
+		{
+			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			Vector3 objPos = transform.position;
+			objPos.x = mousePos.x;
+			objPos.y = mousePos.y;
+			transform.position = objPos;
+		}
 	}
 
-	void OnMouseUp() {
-		isDragging = false;
+	void OnMouseUp()
+	{
+		dragging = false;
 	}
 }

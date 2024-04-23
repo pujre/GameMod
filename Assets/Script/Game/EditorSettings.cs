@@ -11,13 +11,13 @@ public class EditorSettings : MonoBehaviour
 	[Header("网格预制体")]
 	public GameObject blockPrefab; // 预制方块
 	[Header("地图尺寸")]
-	public int mapSize = 5;
+	public Vector2Int mapSize = new Vector2Int(5,5);
 	[Header("初始坐标")]
 	public Vector3 startPosition;
 	[Header("模型大小基础值")]
-	public Vector3 blockSize = Vector3.zero;//偏移值
+	public Vector3 blockSize = new Vector3(5.22f,0,6);//偏移值
 	[Header("偏移值")]
-	public Vector3 blockSizeDeviation=Vector3.zero;//偏移值
+	public Vector3 blockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	[Header("父类")]
 	public GameObject ItemParent;
 	private Transform CubeRect;//背景六边形网格的宽高
@@ -50,20 +50,19 @@ public class EditorSettings : MonoBehaviour
 	public void GenerateBoxMatrix(){
 		CubeRect = blockPrefab.transform;
 		bool isOn = true;
-		for (int x = 0; x < mapSize; x++)
+		for (int x = 0; x < mapSize.x; x++)
 		{
-			for (int y = 0; y < mapSize; y++)
+			for (int z = 0; z< mapSize.y; z++)
 			{
 				Vector3 position = new Vector3(
-					startPosition.x  + x * blockSize.x+ blockSizeDeviation.x, 0,
-					startPosition.z + (isOn ? y * blockSize.z+ blockSizeDeviation.z : y* blockSize.z)
-					);
+					startPosition.x  + (x == 0 ? 0:x * blockSize.x ) + blockSizeDeviation.x, 0,
+					startPosition.z + (isOn ? z * blockSize.z+ blockSizeDeviation.z : z* blockSize.z));
 				GameObject block = Instantiate(blockPrefab, position, Quaternion.identity, ItemParent.transform);
 				block.transform.position = new Vector3(block.transform.position.x+ ItemParent.transform.position.x,
 					ItemParent.transform.position.y+ block.transform.position.y,
 					ItemParent.transform.position.z + block.transform.position.z);
 				//block.transform.localScale = new Vector3(1, 1, 1);
-				block.name = string.Format("Surface_{0},{1}", x, y);
+				block.name = string.Format("Surface_{0},{1}", x, z);
 			}
 			isOn = !isOn;
 		}
