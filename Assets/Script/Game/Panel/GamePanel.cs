@@ -22,8 +22,15 @@ public class GamePanel : MonoBehaviour
 
     void OnClickEvent(GameObject but) {
         switch (but.name) {
-            case "":
+            case "Prop_1Btn":
                 break;
+            case "Prop_2Btn":
+                break;
+            case "Prop_3Btn":
+                break;
+            case "StopBtn":
+				DelegateManager.Instance.Broadcast(OnEventKey.OnStop.ToString());
+				break;
         }
 
     }

@@ -37,3 +37,15 @@ public enum ItemColorType {
 	Organge,
 
 }
+
+/// <summary>
+/// сно╥йб╪Ч
+/// </summary>
+public enum OnEventKey
+{
+	OngameStar,
+	OnStop,
+	OnGameOver,
+	OnAd,
+}
+
