@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 105690844}
   - component: {fileID: 105690843}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Prop_1Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -497,7 +497,7 @@ GameObject:
   - component: {fileID: 163229358}
   - component: {fileID: 163229357}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: FractionalBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1514,7 +1514,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &439268882
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2300,7 +2300,7 @@ GameObject:
   - component: {fileID: 586671244}
   - component: {fileID: 586671243}
   m_Layer: 5
-  m_Name: Image (6)
+  m_Name: sign_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2483,7 +2483,7 @@ GameObject:
   - component: {fileID: 617691510}
   - component: {fileID: 617691509}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Prop_2Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3098,7 +3098,7 @@ GameObject:
   - component: {fileID: 717187188}
   - component: {fileID: 717187187}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: sign_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3256,7 +3256,7 @@ GameObject:
   - component: {fileID: 810235146}
   - component: {fileID: 810235145}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: sign_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3738,8 +3738,10 @@ GameObject:
   m_Component:
   - component: {fileID: 924926685}
   - component: {fileID: 924926686}
+  - component: {fileID: 924926688}
+  - component: {fileID: 924926687}
   m_Layer: 0
-  m_Name: ADManager
+  m_Name: Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3773,6 +3775,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ADTargerSystem: 1
+--- !u!114 &924926687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924926684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18a8d3cbdacf19844989bd6621aa695a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &924926688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924926684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5262850ab54374a922d200e72e2f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &942542183
 GameObject:
   m_ObjectHideFlags: 0
@@ -4765,7 +4791,7 @@ GameObject:
   - component: {fileID: 1163517625}
   - component: {fileID: 1163517624}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: sign_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5142,8 +5168,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1308827550}
   - component: {fileID: 1308827551}
+  - component: {fileID: 1308827552}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: GamePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5182,6 +5209,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1308827549}
   m_CullTransparentMesh: 1
+--- !u!114 &1308827552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308827549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2fee7766cbfb6c41808e8299bf3b216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1332766637
 GameObject:
   m_ObjectHideFlags: 0
@@ -5423,7 +5462,7 @@ Transform:
   m_GameObject: {fileID: 1422668236}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.6, y: 0, z: -51.9}
+  m_LocalPosition: {x: 18.6, y: 0, z: -46.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5549,7 +5588,7 @@ GameObject:
   - component: {fileID: 1477949755}
   - component: {fileID: 1477949754}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: sign_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5788,6 +5827,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1508598920}
   - component: {fileID: 1508598921}
+  - component: {fileID: 1508598922}
   m_Layer: 5
   m_Name: PausePanel
   m_TagString: Untagged
@@ -5825,6 +5865,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1508598919}
   m_CullTransparentMesh: 1
+--- !u!114 &1508598922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508598919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0624e4bd1b02034ab88d6344d9f0b3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1534408287
 GameObject:
   m_ObjectHideFlags: 0
@@ -6431,7 +6483,7 @@ GameObject:
   - component: {fileID: 1630706357}
   - component: {fileID: 1630706356}
   m_Layer: 5
-  m_Name: Image (7)
+  m_Name: sign_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6891,7 +6943,7 @@ GameObject:
   - component: {fileID: 1734082123}
   - component: {fileID: 1734082122}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Prop_3Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7164,7 +7216,7 @@ GameObject:
   - component: {fileID: 1805094729}
   - component: {fileID: 1805094730}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7912,6 +7964,6 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 924926685}
   - {fileID: 1378940201}
   - {fileID: 1593203246}
+  - {fileID: 924926685}
