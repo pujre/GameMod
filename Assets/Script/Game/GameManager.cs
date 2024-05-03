@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
 
 	}
+
 	public static GameManager Instance
 	{
 		get
@@ -27,6 +28,9 @@ public class GameManager : MonoBehaviour
 			return instance;
 		}
 	}
+
+
+
 	void Start()
 	{
 

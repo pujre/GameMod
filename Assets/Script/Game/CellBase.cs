@@ -47,5 +47,19 @@ public enum OnEventKey
 	OnStop,
 	OnGameOver,
 	OnAd,
+	OnApplyProp,
+
+}
+
+public enum OnDataKey { 
+	Cion,
+	OnProp_1,
+	OnProp_2,
+	OnProp_3,
+	Sound_On,
+	Music_On,
+	Shake_On,
+	Other,
+
 }
 
