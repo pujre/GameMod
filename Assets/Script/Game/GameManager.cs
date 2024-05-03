@@ -1,18 +1,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameManager: MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-	
-    public GoundBackItem[,] GoundBackItemArray2D;
-	private Dictionary<string, PanelBase> PanelDic = new Dictionary<string, PanelBase>();
+
+	public GoundBackItem[,] GoundBackItemArray2D;
+	private static GameManager instance;
 
 	private void Awake()
 	{
-		FindPanelBase();
+		instance = this;
 
+
+	}
+	public static GameManager Instance
+	{
+		get
+		{
+			if (instance == null)
+			{
+				instance = new GameManager();
+			}
+			return instance;
+		}
 	}
 	void Start()
 	{
@@ -24,55 +37,20 @@ public class GameManager: MonoBehaviour
 
 	}
 
-	public void SetGoundBack(int x,int y){
-        GoundBackItemArray2D= new GoundBackItem[x, y];
-        for (int i = 0; i < GoundBackItemArray2D.LongLength; i++)
-        {
-            
-        }
-    }
-
-    public void EnterSurface(int x,int y)
-    {
-
-    }
-
-
-	public void FindPanelBase() {
-		PanelBase[] panelBase = FindObjectsOfType<PanelBase>();
-		for (int i = 0; i < panelBase.Length; i++)
-		{
-			PanelDic.Add(panelBase[i].gameObject.name, panelBase[i]);
-		}
-	}
-
-
-
-
-	public void ActivatePanel(string panelName)
+	public void SetGoundBack(int x, int y)
 	{
-		if (PanelDic.TryGetValue(panelName, out PanelBase panel))
+		GoundBackItemArray2D = new GoundBackItem[x, y];
+		for (int i = 0; i < GoundBackItemArray2D.LongLength; i++)
 		{
-			panel.ActivatePanel();
+
 		}
 	}
 
-	// 隐藏面板
-	public void DeactivatePanel(string panelName)
+	public void EnterSurface(int x, int y)
 	{
-		if (PanelDic.TryGetValue(panelName, out PanelBase panel))
-		{
-			panel.DeactivatePanel();
-		}
+
 	}
 
-	// 触发特定的方法
-	public void TriggerPanelMethod(string panelName, string methodName, object[] parameters)
-	{
-		if (PanelDic.TryGetValue(panelName, out PanelBase panel))
-		{
-			panel.CallSpecificMethod(methodName, parameters);
-		}
-	}
+
 }
 

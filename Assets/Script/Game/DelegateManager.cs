@@ -5,61 +5,60 @@ using UnityEngine;
 
 public class DelegateManager : MonoBehaviour
 {
-	public static DelegateManager Instance { get; private set; }
-
-	private Dictionary<string, Delegate> delegateDict = new Dictionary<string, Delegate>();
-
-	void Awake()
+	private static DelegateManager instance;
+	public static DelegateManager Instance
 	{
-		if (Instance != null && Instance != this)
+		get
 		{
-			Destroy(gameObject); // 确保只有一个实例存在
-		}
-		else
-		{
-			Instance = this;
-			DontDestroyOnLoad(gameObject); // 使得管理器在场景加载时不被销毁
-		}
-	}
-
-	// 添加委托
-	public void AddDelegate(string key, Delegate del)
-	{
-		if (delegateDict.ContainsKey(key))
-		{
-			delegateDict[key] = Delegate.Combine(delegateDict[key], del);
-		}
-		else
-		{
-			delegateDict[key] = del;
-		}
-	}
-
-	// 移除委托
-	public void RemoveDelegate(string key, Delegate del)
-	{
-		if (delegateDict.ContainsKey(key))
-		{
-			Delegate currentDel = delegateDict[key];
-			currentDel = Delegate.Remove(currentDel, del);
-
-			if (currentDel == null)
+			if (instance == null)
 			{
-				delegateDict.Remove(key);
+				var manager = new GameObject("DelegateManager").AddComponent<DelegateManager>();
+				DontDestroyOnLoad(manager.gameObject);
+				instance = manager;
 			}
-			else
+			return instance;
+		}
+	}
+
+	private Dictionary<string, Action<object[]>> eventDictionary = new Dictionary<string, Action<object[]>>();
+
+	// 添加事件
+	public void AddEvent(string eventName, Action<object[]> action)
+	{
+		if (eventDictionary.ContainsKey(eventName))
+		{
+			eventDictionary[eventName] += action;
+		}
+		else
+		{
+			eventDictionary[eventName] = action;
+		}
+	}
+
+	// 移除事件
+	public void RemoveEvent(string eventName, Action<object[]> action)
+	{
+		if (eventDictionary.ContainsKey(eventName))
+		{
+			eventDictionary[eventName] -= action;
+			if (eventDictionary[eventName] == null)
 			{
-				delegateDict[key] = currentDel;
+				eventDictionary.Remove(eventName);
 			}
 		}
 	}
 
-	// 广播委托
-	public void Broadcast(string key, params object[] args)
+	// 触发事件
+	public void TriggerEvent(string eventName, params object[] parameters)
 	{
-		if (delegateDict.ContainsKey(key))
+		if (eventDictionary.ContainsKey(eventName))
 		{
-			delegateDict[key].DynamicInvoke(args);
+			eventDictionary[eventName](parameters);
 		}
+	}
+
+	void OnDestroy()
+	{
+		instance = null;
 	}
 }

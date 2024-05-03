@@ -4,16 +4,11 @@ using UnityEngine;
 
 public abstract class PanelBase : MonoBehaviour
 {
-	public virtual void ActivatePanel()
+	public virtual void ActivatePanel(bool isOn)
 	{
-		gameObject.SetActive(true);
+		gameObject.SetActive(isOn);
 	}
 
-	// 隐藏面板
-	public virtual void DeactivatePanel()
-	{
-		gameObject.SetActive(false);
-	}
 
 	// 调用特定方法
 	public abstract void CallSpecificMethod(string methodName, object[] parameters);

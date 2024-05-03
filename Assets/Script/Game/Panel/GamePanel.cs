@@ -1,9 +1,11 @@
+using Assets.Script.Game;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GamePanel : MonoBehaviour
+public class GamePanel : PanelBase
 {
     void Start()
     {
@@ -29,9 +31,17 @@ public class GamePanel : MonoBehaviour
             case "Prop_3Btn":
                 break;
             case "StopBtn":
-				DelegateManager.Instance.Broadcast(OnEventKey.OnStop.ToString());
+                UIManager.Instance.SetUiPanelAction("PausePanel", true);
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
 				break;
         }
-
     }
+
+	// 实现基类的抽象方法
+	public override void CallSpecificMethod(string methodName, object[] parameters)
+	{
+		// 使用反射来调用方法
+		MethodInfo methodInfo = typeof(PausePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+		methodInfo?.Invoke(this, parameters);
+	}
 }
