@@ -48,7 +48,7 @@ public enum OnEventKey
 	OnGameOver,
 	OnAd,
 	OnApplyProp,
-
+	OnCalculate,//Ïû³ýÊÂ¼þ
 }
 
 public enum OnDataKey { 
@@ -60,6 +60,5 @@ public enum OnDataKey {
 	Music_On,
 	Shake_On,
 	Other,
-
 }
 

@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
-namespace Assets.Script.Game
-{
 	public class UIManager : MonoBehaviour
 	{
 		private static UIManager instance;
@@ -65,4 +62,3 @@ namespace Assets.Script.Game
 			}
 		}
 	}
-}

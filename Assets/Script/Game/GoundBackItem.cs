@@ -11,12 +11,19 @@ public class GoundBackItem : MonoBehaviour
     public Vector2Int ItemPosition;
     public List<Surface> SurfacesList = new List<Surface>();
 
-    /// <summary>
-    /// µþ
-    /// </summary>
-    /// <param name="surfacesList"></param>
-    /// <param name="isOn"></param>
-    public void EntrIntoWarehouse(List<Surface> surfacesList,bool isOn=false) {
+
+    public GoundBackItem(int x,int y,string name) {
+        ItemPosition = new Vector2Int(x,y);
+        if(gameObject) gameObject.name= name;
+    }
+
+
+	/// <summary>
+	/// µþ
+	/// </summary>
+	/// <param name="surfacesList"></param>
+	/// <param name="isOn"></param>
+	public void EntrIntoWarehouse(List<Surface> surfacesList,bool isOn=false) {
         for (int i = 0; i < surfacesList.Count; i++)
         {
             
