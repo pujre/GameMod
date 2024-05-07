@@ -30,6 +30,7 @@ public class Item {
 /// 格子颜色枚举
 /// </summary>
 public enum ItemColorType {
+	Gray,
 	Red,
 	Green, 
 	Blue,
@@ -51,6 +52,9 @@ public enum OnEventKey
 	OnCalculate,//消除事件
 }
 
+/// <summary>
+/// 存储事件Key值
+/// </summary>
 public enum OnDataKey { 
 	Cion,
 	OnProp_1,
@@ -60,5 +64,10 @@ public enum OnDataKey {
 	Music_On,
 	Shake_On,
 	Other,
+}
+
+public enum MoveTweenType { 
+	One,
+	Continuity,
 }
 
