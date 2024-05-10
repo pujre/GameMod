@@ -48,24 +48,7 @@ public class EditorSettings : MonoBehaviour
 	}
 
 	public void GenerateBoxMatrix(){
-		CubeRect = blockPrefab.transform;
-		bool isOn = true;
-		for (int x = 0; x < mapSize.x; x++)
-		{
-			for (int z = 0; z< mapSize.y; z++)
-			{
-				Vector3 position = new Vector3(
-					startPosition.x  + (x == 0 ? 0:x * blockSize.x ) + blockSizeDeviation.x, 0,
-					startPosition.z + (isOn ? z * blockSize.z+ blockSizeDeviation.z : z* blockSize.z));
-				GameObject block = Instantiate(blockPrefab, position, Quaternion.identity, ItemParent.transform);
-				block.transform.position = new Vector3(block.transform.position.x+ ItemParent.transform.position.x,
-					ItemParent.transform.position.y+ block.transform.position.y,
-					ItemParent.transform.position.z + block.transform.position.z);
-				//block.transform.localScale = new Vector3(1, 1, 1);
-				block.name = string.Format("Surface_{0},{1}", x, z);
-			}
-			isOn = !isOn;
-		}
+		GameManager.Instance.GenerateBoxMatrix(mapSize.x, mapSize.y);
 	}
 
 	public void RemoveBoxMatrix() {

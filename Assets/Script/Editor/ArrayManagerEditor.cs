@@ -12,10 +12,9 @@ public class ArrayManagerEditor : Editor
 
 		GameManager script = (GameManager)target;
 
-		if (GUILayout.Button("初始化一个5*5的数组"))
+		if (GUILayout.Button(string.Format("初始化一个{0}*{1}的数组", script.mapSize.x, script.mapSize.y)))
 		{
-			script.SetGoundBack(5, 5);  // Example dimensions or read from user input
-
+			script.GenerateBoxMatrix(script.mapSize.x,script.mapSize.y);  // Example dimensions or read from user input
 		}
 
 		if (script.GoundBackItemArray2D != null)

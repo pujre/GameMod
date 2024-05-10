@@ -66,8 +66,12 @@ public enum OnDataKey {
 	Other,
 }
 
+/// <summary>
+/// 移动动画事件
+/// </summary>
 public enum MoveTweenType { 
 	One,
 	Continuity,
 }
+
 

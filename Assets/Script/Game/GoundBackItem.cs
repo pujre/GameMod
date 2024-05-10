@@ -18,14 +18,19 @@ public class GoundBackItem : MonoBehaviour
 
 
     public GoundBackItem(int x, int y, string name) {
-        ItemPosition = new Vector2Int(x, y);
-        if (gameObject) gameObject.name = name;
-    }
+		SetData(x,y,name);
+	}
+
+	public void SetData(int x, int y, string name)
+	{
+		ItemPosition = new Vector2Int(x, y);
+		if (gameObject) gameObject.name = name;
+	}
 
 	/// <summary>
 	/// 从新布局位置
 	/// </summary>
-    public void SetChinderPosition() {
+	public void SetChinderPosition() {
         for (int i = 0; i < SurfacesList.Count; i++)
         {
             SurfacesList[i].transform.position = new Vector3(transform.position.x, (SurfacesList.Count-i) * Assign_Y, transform.position.z);

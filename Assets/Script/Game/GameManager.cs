@@ -1,19 +1,29 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+	[Tooltip("网格方块预制体，通用型")]
+	[Header("网格预制体")]
+	public GameObject blockPrefab; // 预制方块
+	[Header("地图尺寸")]
+	public Vector2Int mapSize = new Vector2Int(5, 5);
+	[Header("模型大小基础值")]
+	public Vector3 blockSize = new Vector3(5.22f, 0, 6);//偏移值
+	[Header("偏移值")]
+	public Vector3 blockSizeDeviation = new Vector3(0, 0, 3);//偏移值
+	[Header("父类")]
+	public GameObject ItemParent;
+
+	private Vector3 startPosition = new Vector3(0, 0, 0);
 	private static GameManager instance;
 	public GoundBackItem[,] GoundBackItemArray2D;
 
 	private void Awake()
 	{
 		instance = this;
-
-
 	}
 
 	public static GameManager Instance
@@ -40,22 +50,7 @@ public class GameManager : MonoBehaviour
 
 	}
 
-	/// <summary>
-	/// 初始化一个2维数组
-	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
-	public void SetGoundBack(int width, int height)
-	{
-		GoundBackItemArray2D = new GoundBackItem[width, height];
-		for (int i = 0; i < width; i++)
-		{
-			for (int j = 0; j < height; j++)
-			{
-				GoundBackItemArray2D[i, j] = new GoundBackItem(i,j,$"{i},{j}");
-			}
-		}
-	}
+
 
 	/// <summary>
 	/// 计算堆叠逻辑
@@ -135,6 +130,51 @@ public class GameManager : MonoBehaviour
 		else
 		{
 			return null;
+		}
+	}
+
+
+	/// <summary>
+	/// 新建一个指定大小的空的地图网格
+	/// </summary>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
+	public void GenerateBoxMatrix(int width, int height)
+	{
+		RemoveBoxMatrix();
+		GoundBackItemArray2D = new GoundBackItem[width, height];
+		bool isOn = true;
+		for (int x = 0; x < width; x++)
+		{
+			for (int z = 0; z < height; z++)
+			{
+				Vector3 position = new Vector3(
+					startPosition.x + (x == 0 ? 0 : x * blockSize.x) + blockSizeDeviation.x, 0,
+					startPosition.z + (isOn ? z * blockSize.z + blockSizeDeviation.z : z * blockSize.z));
+				GameObject block = Instantiate(blockPrefab, position, Quaternion.identity, ItemParent.transform);
+				block.transform.position = new Vector3(block.transform.position.x + ItemParent.transform.position.x,
+					ItemParent.transform.position.y + block.transform.position.y,
+					ItemParent.transform.position.z + block.transform.position.z);
+				//block.transform.localScale = new Vector3(1, 1, 1);
+				block.name = string.Format("Surface_{0},{1}", x, z);
+				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
+				goundBackItem.SetData(x, z, $"{x},{z}");
+				GoundBackItemArray2D[x, z] = goundBackItem;
+			}
+			isOn = !isOn;
+		}
+	}
+
+	/// <summary>
+	/// 移除当前地图网格
+	/// </summary>
+	public void RemoveBoxMatrix()
+	{
+		int childCount = ItemParent.transform.childCount;
+		for (int i = childCount - 1; i >= 0; i--)
+		{
+			Transform child = ItemParent.transform.GetChild(i);
+			DestroyImmediate(child.gameObject);
 		}
 	}
 }
