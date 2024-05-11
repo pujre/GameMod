@@ -74,4 +74,46 @@ public enum MoveTweenType {
 	Continuity,
 }
 
+public class LevelDataRoot {
+	public LevelData[] LevelDatas;
+	/// <summary>
+	/// 获取指定关卡数据
+	/// </summary>
+	/// <param name="level"></param>
+	/// <returns></returns>
+	public LevelData GetLevelData(int level) { 
+		for (int i = 0; i < LevelDatas.Length; i++)
+		{
+			if (LevelDatas[i].Level == level) {
+				return LevelDatas[i];
+			}
+		}
+		return null;
+	}
 
+public class LevelData {
+	public int Level;
+	public Vector2Int ChapterSize;
+	public Vector2Int GridLock;
+	public Vector2Int ChapterDefault;
+	public int ClearanceScore;
+	public int ColourNum;
+	public int MaxNum;
+}
+
+	public class LevelDataProp
+	{
+		/// <summary>
+		/// 道具ID
+		/// </summary>
+		public int ItemID;
+		/// <summary>
+		/// 道具数量
+		/// </summary>
+		public int ItemNumber;
+		/// <summary>
+		/// 道具描述
+		/// </summary>
+		public string Describe;
+	}
+}
