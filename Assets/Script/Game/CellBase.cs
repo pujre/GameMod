@@ -7,21 +7,23 @@ using UnityEngine;
 /// </summary>
 public class CellBase
 {
-    public Vector2Int GridPosition;
+	public Vector2Int GridPosition;
 	public StackableItem Items;
 }
 
 /// <summary>
 /// 一叠格子
 /// </summary>
-public class StackableItem {
+public class StackableItem
+{
 	public List<Item> ListItems;
 }
 
 /// <summary>
 /// 单个格子
 /// </summary>
-public class Item {
+public class Item
+{
 	public ItemColorType ItemColor;
 	public int ItemIndex;
 }
@@ -29,10 +31,11 @@ public class Item {
 /// <summary>
 /// 格子颜色枚举
 /// </summary>
-public enum ItemColorType {
+public enum ItemColorType
+{
 	Gray,
 	Red,
-	Green, 
+	Green,
 	Blue,
 	Yello,
 	Organge,
@@ -55,7 +58,8 @@ public enum OnEventKey
 /// <summary>
 /// 存储事件Key值
 /// </summary>
-public enum OnDataKey { 
+public enum OnDataKey
+{
 	Cion,
 	OnProp_1,
 	OnProp_2,
@@ -69,29 +73,39 @@ public enum OnDataKey {
 /// <summary>
 /// 移动动画事件
 /// </summary>
-public enum MoveTweenType { 
+public enum MoveTweenType
+{
 	One,
 	Continuity,
 }
 
-public class LevelDataRoot {
-	public LevelData[] LevelDatas;
+public class LevelDataRoot
+{
+	public List<LevelData> LevelDatas;
+
+	public LevelDataRoot() {
+	}
 	/// <summary>
 	/// 获取指定关卡数据
 	/// </summary>
 	/// <param name="level"></param>
 	/// <returns></returns>
-	public LevelData GetLevelData(int level) { 
-		for (int i = 0; i < LevelDatas.Length; i++)
+	public LevelData GetLevelData(int level)
+	{
+		foreach (LevelData item in LevelDatas)
 		{
-			if (LevelDatas[i].Level == level) {
-				return LevelDatas[i];
+			if (item.Level == level)
+			{
+				return item;
 			}
 		}
+		Debug.Log(string.Format("获取指定{0}关卡数据为空", level));
 		return null;
 	}
+}
 
-public class LevelData {
+public class LevelData
+{
 	public int Level;
 	public Vector2Int ChapterSize;
 	public Vector2Int GridLock;
@@ -99,21 +113,42 @@ public class LevelData {
 	public int ClearanceScore;
 	public int ColourNum;
 	public int MaxNum;
-}
-
-	public class LevelDataProp
-	{
-		/// <summary>
-		/// 道具ID
-		/// </summary>
-		public int ItemID;
-		/// <summary>
-		/// 道具数量
-		/// </summary>
-		public int ItemNumber;
-		/// <summary>
-		/// 道具描述
-		/// </summary>
-		public string Describe;
+	/// <summary>
+	/// 道具ID
+	/// </summary>
+	public int Item_1ID;
+	/// <summary>
+	/// 道具数量
+	/// </summary>
+	public int Item_1Number;
+	/// <summary>
+	/// 道具描述
+	/// </summary>
+	public string Describe_1;
+	/// <summary>
+	/// 道具ID
+	/// </summary>
+	public int Item_2ID;
+	/// <summary>
+	/// 道具数量
+	/// </summary>
+	public int Item_2Number;
+	/// <summary>
+	/// 道具描述
+	/// </summary>
+	public string Describe_2;/// <summary>
+							 /// 道具ID
+							 /// </summary>
+	public int Item_3ID;
+	/// <summary>
+	/// 道具数量
+	/// </summary>
+	public int Item_3Number;
+	/// <summary>
+	/// 道具描述
+	/// </summary>
+	public string Describe_3;
+	public LevelData() {
 	}
 }
+

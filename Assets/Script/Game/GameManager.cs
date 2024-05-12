@@ -1,48 +1,68 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
 	[Tooltip("网格方块预制体，通用型")]
 	[Header("网格预制体")]
 	public GameObject blockPrefab; // 预制方块
-	[Header("地图尺寸")]
 	public Vector2Int mapSize = new Vector2Int(5, 5);
-	[Header("模型大小基础值")]
-	public Vector3 blockSize = new Vector3(5.22f, 0, 6);//偏移值
-	[Header("偏移值")]
-	public Vector3 blockSizeDeviation = new Vector3(0, 0, 3);//偏移值
-	[Header("父类")]
+	private Vector3 blockSize = new Vector3(5.22f, 0, 6);//偏移值
+	private Vector3 blockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
-
 	private Vector3 startPosition = new Vector3(0, 0, 0);
-	private static GameManager instance;
+	
 	public GoundBackItem[,] GoundBackItemArray2D;
-
-	private void Awake()
-	{
-		instance = this;
-	}
-
+	public LevelDataRoot LevelDataRoot;
+	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
+	private int NowLevel=1;
+	private static GameManager instance;
 	public static GameManager Instance
 	{
 		get
 		{
 			if (instance == null)
 			{
-				instance = new GameManager();
+				// 在场景中查找 GameManager 实例
+				instance = FindObjectOfType<GameManager>();
+
+				// 如果实例不存在，则创建一个新的 GameObject 并添加 GameManager 组件
+				if (instance == null)
+				{
+					GameObject go = new GameObject("Manager");
+					instance = go.AddComponent<GameManager>();
+				}
 			}
 			return instance;
 		}
 	}
 
+	private void Awake()
+	{
+		if (instance == null)
+		{
+			instance = this;
+			DontDestroyOnLoad(gameObject);  // 确保单例对象跨场景不被销毁
+		}
+		else if (instance != this)
+		{
+			Destroy(gameObject);  // 销毁多余的实例
+		}
+		PropNumber = new Dictionary<string, int>();
+		LoadlevelData();
+		LoadLevel(1);
+	}
+
+	
+
 
 
 	void Start()
 	{
-
+		
 	}
 
 	void Update()
@@ -50,7 +70,31 @@ public class GameManager : MonoBehaviour
 
 	}
 
+	public LevelData GetNowLevelData() {
+		return LevelDataRoot.GetLevelData(NowLevel);
+	}
 
+	private void LoadlevelData() {
+		var levelDataJson=Resources.Load<TextAsset>("LevelData");
+		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
+	}
+
+	public void LoadLevel(int level) {
+		NowLevel = level;
+		LevelData levedata=LevelDataRoot.GetLevelData(level);
+		GenerateBoxMatrix(levedata.ChapterSize.x,levedata.ChapterSize.y);
+		PropNumber.Clear();
+		PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
+
+		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
+
+		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
+		Debug.Log("触发更新道具数量UI逻辑");
+		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
+	}
+
+
+	
 
 	/// <summary>
 	/// 计算堆叠逻辑

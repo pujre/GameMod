@@ -26,15 +26,19 @@ public class GamePanel : PanelBase
 
 	}
 
-    void Update()
+	
+
+	void Update()
     {
         
     }
 
     void OnClickEvent(GameObject but) {
-        switch (but.name) {
+		int Value = 0;
+		switch (but.name) {
             case "Prop_1Btn":
-				if (DataManager.Instance.GetData(OnDataKey.OnProp_1) > 0)
+				GameManager.Instance.PropNumber.TryGetValue(GameManager.Instance.GetNowLevelData().Item_1ID.ToString(), out Value);
+				if (Value > 0)
 				{
 					DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), "Prop_1");
 				}
@@ -43,7 +47,8 @@ public class GamePanel : PanelBase
 				}
 				break;
             case "Prop_2Btn":
-				if (DataManager.Instance.GetData(OnDataKey.OnProp_1) > 0)
+				GameManager.Instance.PropNumber.TryGetValue(GameManager.Instance.GetNowLevelData().Item_2ID.ToString(), out Value);
+				if (Value > 0)
 				{
 					DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), "Prop_2");
 				}
@@ -53,7 +58,8 @@ public class GamePanel : PanelBase
 				}
 				break;
             case "Prop_3Btn":
-				if (DataManager.Instance.GetData(OnDataKey.OnProp_1) > 0)
+				GameManager.Instance.PropNumber.TryGetValue(GameManager.Instance.GetNowLevelData().Item_3ID.ToString(), out Value);
+				if (Value > 0)
 				{
 					DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), "Prop_3");
 				}
@@ -90,9 +96,40 @@ public class GamePanel : PanelBase
     }
 
     void UpdatePropNumber() {
-		Prop_1Text.text = DataManager.Instance.GetData(OnDataKey.OnProp_1).ToString();
-		Prop_2Text.text = DataManager.Instance.GetData(OnDataKey.OnProp_2).ToString();
-		Prop_3Text.text = DataManager.Instance.GetData(OnDataKey.OnProp_3).ToString();
+
+		int Prop_1Value = 0;
+		int Prop_2Value = 0;
+		int Prop_3Value = 0;
+		if (GameManager.Instance == null)
+		{
+			Debug.LogError("GameManager instance is null");
+			return;
+		}
+
+		if (GameManager.Instance.PropNumber == null)
+		{
+			Debug.LogError("GameManager.PropNumber is not initialized");
+			return;
+		}
+
+		LevelData nowLevelData = GameManager.Instance.GetNowLevelData();
+		if (nowLevelData == null)
+		{
+			Debug.LogError("GetNowLevelData returned null");
+			return;
+		}
+
+		if (!GameManager.Instance.PropNumber.TryGetValue(nowLevelData.Item_1ID.ToString(), out Prop_1Value))
+		{
+			Debug.LogError($"No entry found in PropNumber for key {nowLevelData.Item_1ID}");
+		}
+
+		GameManager.Instance.PropNumber.TryGetValue(GameManager.Instance.GetNowLevelData().Item_1ID.ToString(),out Prop_1Value);
+		Prop_1Text.text = Prop_1Value.ToString();
+		GameManager.Instance.PropNumber.TryGetValue(GameManager.Instance.GetNowLevelData().Item_2ID.ToString(), out Prop_2Value);
+		Prop_2Text.text = Prop_2Value.ToString();
+		GameManager.Instance.PropNumber.TryGetValue(GameManager.Instance.GetNowLevelData().Item_3ID.ToString(), out Prop_3Value);
+		Prop_3Text.text = Prop_3Value.ToString();
 
 	}
 
