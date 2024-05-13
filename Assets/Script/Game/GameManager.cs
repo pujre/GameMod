@@ -14,7 +14,10 @@ public class GameManager : MonoBehaviour
 	private Vector3 blockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
 	private Vector3 startPosition = new Vector3(0, 0, 0);
-	
+	private Camera cam;
+	private bool isDragging = false;
+	private GameObject selectedObject;
+
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
@@ -51,6 +54,7 @@ public class GameManager : MonoBehaviour
 		{
 			Destroy(gameObject);  // 销毁多余的实例
 		}
+		cam = Camera.main; // 获取主摄像机
 		PropNumber = new Dictionary<string, int>();
 		LoadlevelData();
 		LoadLevel(1);
@@ -67,7 +71,46 @@ public class GameManager : MonoBehaviour
 
 	void Update()
 	{
+		if (!isDragging && Input.GetMouseButtonDown(0))
+		{
+			RaycastHit hit;
+			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(ray, out hit))
+			{
+				if (hit.transform.CompareTag("Draggable"))
+				{
+					selectedObject = hit.transform.gameObject;
+					isDragging = true;
+				}
+			}
+		}
 
+		if (isDragging && selectedObject != null)
+		{
+			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
+			{
+				Vector3 newPosition = hitInfo.point;
+				newPosition.y = selectedObject.transform.position.y; // 保持Y轴不变
+				selectedObject.transform.position = newPosition;
+			}
+		}
+
+		if (Input.GetMouseButtonUp(0) && isDragging)
+		{
+			isDragging = false;
+			SnapToGrid(selectedObject);
+			selectedObject = null;
+		}
+	}
+
+	private void SnapToGrid(GameObject obj)
+	{
+		if (obj != null)
+		{
+			Vector3 position = obj.transform.position;
+			obj.transform.position = position;
+		}
 	}
 
 	public LevelData GetNowLevelData() {
@@ -85,11 +128,8 @@ public class GameManager : MonoBehaviour
 		GenerateBoxMatrix(levedata.ChapterSize.x,levedata.ChapterSize.y);
 		PropNumber.Clear();
 		PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
-
 		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
-
 		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
-		Debug.Log("触发更新道具数量UI逻辑");
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
 	}
 
