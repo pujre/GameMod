@@ -37,6 +37,15 @@ public class GoundBackItem : MonoBehaviour
 		}
 	}
 
+	public void AddSurfacesList(List<Surface> surfacesList)
+	{
+		foreach (Surface item in surfacesList)
+		{
+			SurfacesList.Add(item);
+		}
+		SetChinderPosition();
+	}
+
 	/// <summary>
 	/// 获取当前子节点下颜色类别总数
 	/// </summary>

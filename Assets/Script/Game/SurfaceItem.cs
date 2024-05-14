@@ -1,11 +1,34 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SurfaceItem : MonoBehaviour
 {
+	public bool IsOnMove = false;//是否允许拖动
+	public Vector3 QreVector3;//初始坐标
 	public GameObject Prefab;
 	public List<Surface> Surfaces = new List<Surface>();
+
+
+	public void QurStart(Vector3 pos) {
+		QreVector3 = pos;
+		transform.DOMove(pos, 0.3f).OnComplete(() => {
+			IsOnMove = true;
+		});
+	}
+
+	public void QueMoveCancel()
+	{
+		transform.DOMove(QreVector3, 0.3f).OnComplete(() => {
+			IsOnMove = true;
+		});
+	}
+
+	public void QueMoveEnd(){
+		IsOnMove = false;
+	}
 
 	/// <summary>
 	/// 生成指定颜色数得随机surface
@@ -20,10 +43,11 @@ public class SurfaceItem : MonoBehaviour
 		color.Sort();
         for (int i = 0; i < color.Count; i++)
         {
-			GameObject gameObject = Instantiate(Prefab,new Vector3(0, i,0), Quaternion.identity, transform);
+			GameObject gameObject = Instantiate(Prefab,new Vector3(transform.position.x, transform.position.y+i, transform.position.z), Quaternion.identity, transform);
 			gameObject.GetComponent<Surface>().SetColor(color[i]);
 		}
     }
+
 
 
 }

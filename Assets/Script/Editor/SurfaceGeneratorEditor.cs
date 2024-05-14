@@ -18,9 +18,9 @@ public class SurfaceGeneratorEditor : Editor
 		//}
 
 
-		if (GUILayout.Button("整理子物体坐标"))
-		{
-			//generator.AssignPositions();
-		}
+		//if (GUILayout.Button("整理子物体坐标"))
+		//{
+		//	//generator.AssignPositions();
+		//}
 	}
 }

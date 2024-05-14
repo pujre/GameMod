@@ -15,9 +15,9 @@ public class ArrayManagerEditor : Editor
 
 		GameManager script = (GameManager)target;
 
-		if (GUILayout.Button(string.Format("初始化一个{0}*{1}的数组", script.mapSize.x, script.mapSize.y)))
+		if (GUILayout.Button(string.Format("初始化一个{0}*{1}的数组", script.MapSize.x, script.MapSize.y)))
 		{
-			script.GenerateBoxMatrix(script.mapSize.x,script.mapSize.y);  // Example dimensions or read from user input
+			script.GenerateBoxMatrix(script.MapSize.x,script.MapSize.y);  // Example dimensions or read from user input
 		}
 		if (GUILayout.Button(string.Format("生成一个测试json,{0}", "5关数据")))
 		{

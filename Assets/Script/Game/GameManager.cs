@@ -8,15 +8,17 @@ public class GameManager : MonoBehaviour
 {
 	[Tooltip("网格方块预制体，通用型")]
 	[Header("网格预制体")]
-	public GameObject blockPrefab; // 预制方块
-	public Vector2Int mapSize = new Vector2Int(5, 5);
-	private Vector3 blockSize = new Vector3(5.22f, 0, 6);//偏移值
-	private Vector3 blockSizeDeviation = new Vector3(0, 0, 3);//偏移值
+	public GameObject BlockPrefab; // 预制方块
+	[Header("surface预制体")]
+	public GameObject SurFacePrefab; // 预制方块
+	public Vector2Int MapSize = new Vector2Int(5, 5);
+	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
+	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
-	private Vector3 startPosition = new Vector3(0, 0, 0);
-	private Camera cam;
-	private bool isDragging = false;
-	private GameObject selectedObject;
+	private Vector3 StartPosition = new Vector3(0, 0, 0);
+	private Camera Cam;
+	private bool IsDragging = false;
+	private GameObject SelectedObject;
 
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
@@ -54,10 +56,11 @@ public class GameManager : MonoBehaviour
 		{
 			Destroy(gameObject);  // 销毁多余的实例
 		}
-		cam = Camera.main; // 获取主摄像机
+		Cam = Camera.main; // 获取主摄像机
 		PropNumber = new Dictionary<string, int>();
 		LoadlevelData();
 		LoadLevel(1);
+		ScelfJob();
 	}
 
 	
@@ -71,36 +74,36 @@ public class GameManager : MonoBehaviour
 
 	void Update()
 	{
-		if (!isDragging && Input.GetMouseButtonDown(0))
+		if (!IsDragging&& SelectedObject==null && Input.GetMouseButtonDown(0))
 		{
 			RaycastHit hit;
-			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+			Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit))
 			{
-				if (hit.transform.CompareTag("Draggable"))
+				if (hit.transform.GetComponent<SurfaceItem>().IsOnMove)
 				{
-					selectedObject = hit.transform.gameObject;
-					isDragging = true;
+					SelectedObject = hit.transform.gameObject;
+					IsDragging = true;
 				}
 			}
 		}
 
-		if (isDragging && selectedObject != null)
+		if (IsDragging && SelectedObject != null)
 		{
-			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+			Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 			{
 				Vector3 newPosition = hitInfo.point;
-				newPosition.y = selectedObject.transform.position.y; // 保持Y轴不变
-				selectedObject.transform.position = newPosition;
+				newPosition.y = SelectedObject.transform.position.y; // 保持Y轴不变
+				SelectedObject.transform.position = newPosition;
 			}
 		}
 
-		if (Input.GetMouseButtonUp(0) && isDragging)
+		if (Input.GetMouseButtonUp(0) && IsDragging)
 		{
-			isDragging = false;
-			SnapToGrid(selectedObject);
-			selectedObject = null;
+			IsDragging = false;
+			SnapToGrid(SelectedObject);
+			SelectedObject = null;
 		}
 	}
 
@@ -108,8 +111,26 @@ public class GameManager : MonoBehaviour
 	{
 		if (obj != null)
 		{
-			Vector3 position = obj.transform.position;
-			obj.transform.position = position;
+			for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
+			{
+				for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
+				{
+					GoundBackItem hexTile = GoundBackItemArray2D[i,j];
+					float distance = Vector3.Distance(obj.transform.position, hexTile.transform.position);
+					Debug.Log(i.ToString()+"  "+j.ToString()+"  "+distance);
+					if (distance <= 4.5f)
+					{
+						obj.transform.position = hexTile.transform.position;
+						SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
+						si.QueMoveEnd();
+						hexTile.AddSurfacesList(si.Surfaces);
+						CalculateElimination(i, j);
+						ScelfJob();
+						break;
+					}
+				}
+            }
+			obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
 		}
 	}
 
@@ -134,7 +155,11 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	
+	public void ScelfJob() {
+		GameObject obj = Instantiate(SurFacePrefab, new Vector3(80, 1, -10), Quaternion.identity, GameObject.Find("Game/Panel").transform);
+		obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
+		obj.GetComponent<SurfaceItem>().QurStart(new Vector3(0,1,-10));
+	}
 
 	/// <summary>
 	/// 计算堆叠逻辑
@@ -233,9 +258,9 @@ public class GameManager : MonoBehaviour
 			for (int z = 0; z < height; z++)
 			{
 				Vector3 position = new Vector3(
-					startPosition.x + (x == 0 ? 0 : x * blockSize.x) + blockSizeDeviation.x, 0,
-					startPosition.z + (isOn ? z * blockSize.z + blockSizeDeviation.z : z * blockSize.z));
-				GameObject block = Instantiate(blockPrefab, position, Quaternion.identity, ItemParent.transform);
+					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
+					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
+				GameObject block = Instantiate(BlockPrefab, position, Quaternion.identity, ItemParent.transform);
 				block.transform.position = new Vector3(block.transform.position.x + ItemParent.transform.position.x,
 					ItemParent.transform.position.y + block.transform.position.y,
 					ItemParent.transform.position.z + block.transform.position.z);
