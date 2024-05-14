@@ -10,7 +10,7 @@ using static UnityEditor.Progress;
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
-	private float Assign_Y=1.3f;
+	private float Assign_Y;
 	/// <summary>
 	/// 该节点所属得坐标
 	/// </summary>
@@ -20,6 +20,7 @@ public class GoundBackItem : MonoBehaviour
 	private void Awake()
 	{
 		SurfacesList = new List<Surface>();
+		Assign_Y = 1.3f;
 	}
 
 
@@ -40,8 +41,10 @@ public class GoundBackItem : MonoBehaviour
 		if (SurfacesList == null) return;
         for (int i = 0; i < SurfacesList.Count; i++)
         {
-            SurfacesList[i].transform.position = new Vector3(transform.position.x, (SurfacesList.Count-i) * Assign_Y, transform.position.z);
+            SurfacesList[i].transform.position = new Vector3(0, i * Assign_Y, 0);
+			Debug.Log(i+"______"+0+"______"+ i * Assign_Y+"________"+ 0);
 		}
+		Debug.Log("排序了子节点");
 	}
 
 	public void AddSurfacesList(List<Surface> surfacess)

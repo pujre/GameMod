@@ -2,25 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-[CustomEditor(typeof(EditorSettings))]
+[CustomEditor(typeof(GoundBackItem))]
 public class MatrixGeneratorEditor : Editor
 {
-	//public override void OnInspectorGUI()
-	//{
-	//	base.OnInspectorGUI();
+	public override void OnInspectorGUI()
+	{
+		base.OnInspectorGUI();
 
-	//	EditorSettings generator = (EditorSettings)target;
+		GoundBackItem generator = (GoundBackItem)target;
 
-	//	//if (GUILayout.Button("生成UGUI格子面板"))
-	//	//{
-	//	//	generator.GenerateMatrix();
-	//	//}
+		//if (GUILayout.Button("生成UGUI格子面板"))
+		//{
+		//	generator.GenerateMatrix();
+		//}
 
 
-	//	if (GUILayout.Button("生成格子面板"))
-	//	{
-	//		generator.RemoveBoxMatrix();
-	//		generator.GenerateBoxMatrix();
-	//	}
-	//}
+		if (GUILayout.Button("排序子节点"))
+		{
+			generator.SetChinderPosition();
+		}
+	}
 }

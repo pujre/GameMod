@@ -43,7 +43,7 @@ public class SurfaceItem : MonoBehaviour
 		color.Sort();
         for (int i = 0; i < color.Count; i++)
         {
-			GameObject gameObject = Instantiate(Prefab,new Vector3(transform.position.x, transform.position.y+i, transform.position.z), Quaternion.identity, transform);
+			GameObject gameObject = Instantiate(Prefab,new Vector3(transform.position.x, transform.position.y+i, transform.position.z),/* Quaternion.Euler(90, 0, 0)*/ Quaternion.identity, transform);
 			gameObject.GetComponent<Surface>().SetColor(color[i]);
 			Surfaces.Add(gameObject.GetComponent<Surface>());
 		}

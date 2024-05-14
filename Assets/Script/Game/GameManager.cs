@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
 	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
+	public Material[] defaultORHightMaterial;
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
 	private Camera Cam;
 	private bool IsDragging = false;
@@ -24,6 +25,12 @@ public class GameManager : MonoBehaviour
 	public LevelDataRoot LevelDataRoot;
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
 	private int NowLevel=1;
+	private RaycastHit hit;
+	private RaycastHit hit2;
+	private Ray ray;
+	private Transform lastHighlightedObject;
+
+
 	private static GameManager instance;
 	public static GameManager Instance
 	{
@@ -76,8 +83,7 @@ public class GameManager : MonoBehaviour
 	{
 		if (!IsDragging&& SelectedObject==null && Input.GetMouseButtonDown(0))
 		{
-			RaycastHit hit;
-			Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
+			 ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit))
 			{
 				if (hit.transform.GetComponent<SurfaceItem>().IsOnMove)
@@ -90,12 +96,42 @@ public class GameManager : MonoBehaviour
 
 		if (IsDragging && SelectedObject != null)
 		{
-			Ray ray = Cam.ScreenPointToRay(Input.mousePosition);
+			 ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 			{
 				Vector3 newPosition = hitInfo.point;
 				newPosition.y = SelectedObject.transform.position.y; // 保持Y轴不变
 				SelectedObject.transform.position = newPosition;
+			}
+
+			// 使用 RaycastAll 检测所有碰撞
+			RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+			bool foundBottom = false;
+
+			foreach (RaycastHit hit in hits)
+			{
+
+				if (hit.transform.gameObject.tag == "bottom")
+				{
+					if (lastHighlightedObject != null)
+					{
+						lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[0];
+					}
+
+					lastHighlightedObject = hit.transform;
+					lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[1];
+					foundBottom = true;
+					break; // 找到目标对象后退出循环
+				}
+			}
+
+			if (!foundBottom)
+			{
+				if (lastHighlightedObject != null)
+				{
+					lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[0];
+					lastHighlightedObject = null;
+				}
 			}
 		}
 
@@ -110,27 +146,20 @@ public class GameManager : MonoBehaviour
 	{
 		if (obj != null)
 		{
-			for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
+			if (lastHighlightedObject != null)
 			{
-				for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
-				{
-					GoundBackItem hexTile = GoundBackItemArray2D[i,j];
-					float distance = Vector3.Distance(obj.transform.position, hexTile.transform.position);
-					if (distance <= 45f)
-					{
-						obj.transform.position = hexTile.transform.position;
-						SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
-						si.QueMoveEnd();
-						hexTile.AddSurfacesList(si.Surfaces);
-						si.Surfaces.Clear();
-						CalculateElimination(i, j);
-						ScelfJob();
-						SelectedObject = null;
-						Destroy(obj);
-						break;
-					}
-				}
-            }
+				lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[0];
+				obj.transform.position =new Vector3(lastHighlightedObject.transform.position.x, lastHighlightedObject.transform.position.y+1, lastHighlightedObject.transform.position.z);
+				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
+				si.QueMoveEnd();
+				lastHighlightedObject.GetComponent<GoundBackItem>().AddSurfacesList(si.Surfaces);
+				si.Surfaces.Clear();
+				string[] parts = lastHighlightedObject.name.Split(',');
+				CalculateElimination(int.Parse(parts[0]), int.Parse(parts[1]));
+				ScelfJob();
+				SelectedObject = null;
+				Destroy(obj);
+			}
 			obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
 			SelectedObject = null;
 		}
@@ -262,7 +291,7 @@ public class GameManager : MonoBehaviour
 				Vector3 position = new Vector3(
 					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
 					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
-				GameObject block = Instantiate(BlockPrefab, position, Quaternion.identity, ItemParent.transform);
+				GameObject block = Instantiate(BlockPrefab, position, Quaternion.Euler(90, 0, 0)/*Quaternion.identity*/, ItemParent.transform);
 				block.transform.position = new Vector3(block.transform.position.x + ItemParent.transform.position.x,
 					ItemParent.transform.position.y + block.transform.position.y,
 					ItemParent.transform.position.z + block.transform.position.z);

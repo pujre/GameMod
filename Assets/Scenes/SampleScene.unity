@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2101,8 +2101,8 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
+  m_Intensity: 0.7
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2619,10 +2619,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5262850ab54374a922d200e72e2f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlockPrefab: {fileID: 3005077235693161996, guid: 14b8cf2c3ea9aff408098a5b8b9353fd, type: 3}
+  BlockPrefab: {fileID: 1696577214377366100, guid: b51cd3130769f014a9773528179db8cc, type: 3}
   SurFacePrefab: {fileID: 1725058810649328144, guid: 95133c675d3269e4984dfdc7da40eb55, type: 3}
   MapSize: {x: 5, y: 5}
   ItemParent: {fileID: 1422668236}
+  defaultORHightMaterial:
+  - {fileID: 2100000, guid: 17411c03558c52545a974a8f22c5ec32, type: 2}
+  - {fileID: 2100000, guid: 5298433dfaa321e48b33929abb87368b, type: 2}
 --- !u!114 &924926689
 MonoBehaviour:
   m_ObjectHideFlags: 0
