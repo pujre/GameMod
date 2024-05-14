@@ -103,7 +103,6 @@ public class GameManager : MonoBehaviour
 		{
 			IsDragging = false;
 			SnapToGrid(SelectedObject);
-			SelectedObject = null;
 		}
 	}
 
@@ -117,20 +116,23 @@ public class GameManager : MonoBehaviour
 				{
 					GoundBackItem hexTile = GoundBackItemArray2D[i,j];
 					float distance = Vector3.Distance(obj.transform.position, hexTile.transform.position);
-					Debug.Log(i.ToString()+"  "+j.ToString()+"  "+distance);
-					if (distance <= 4.5f)
+					if (distance <= 45f)
 					{
 						obj.transform.position = hexTile.transform.position;
 						SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 						si.QueMoveEnd();
 						hexTile.AddSurfacesList(si.Surfaces);
+						si.Surfaces.Clear();
 						CalculateElimination(i, j);
 						ScelfJob();
+						SelectedObject = null;
+						Destroy(obj);
 						break;
 					}
 				}
             }
 			obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
+			SelectedObject = null;
 		}
 	}
 

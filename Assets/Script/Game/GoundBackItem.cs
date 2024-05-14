@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
@@ -16,8 +17,13 @@ public class GoundBackItem : MonoBehaviour
 	public Vector2Int ItemPosition;
     public List<Surface> SurfacesList = new List<Surface>();
 
+	private void Awake()
+	{
+		SurfacesList = new List<Surface>();
+	}
 
-    public GoundBackItem(int x, int y, string name) {
+
+	public GoundBackItem(int x, int y, string name) {
 		SetData(x,y,name);
 	}
 
@@ -31,17 +37,19 @@ public class GoundBackItem : MonoBehaviour
 	/// 从新布局位置
 	/// </summary>
 	public void SetChinderPosition() {
+		if (SurfacesList == null) return;
         for (int i = 0; i < SurfacesList.Count; i++)
         {
             SurfacesList[i].transform.position = new Vector3(transform.position.x, (SurfacesList.Count-i) * Assign_Y, transform.position.z);
 		}
 	}
 
-	public void AddSurfacesList(List<Surface> surfacesList)
+	public void AddSurfacesList(List<Surface> surfacess)
 	{
-		foreach (Surface item in surfacesList)
+		for (int i = 0; i < surfacess.Count; i++)
 		{
-			SurfacesList.Add(item);
+			SurfacesList.Add(surfacess[i]);
+			surfacess[i].transform.SetParent(transform);
 		}
 		SetChinderPosition();
 	}
@@ -81,13 +89,18 @@ public class GoundBackItem : MonoBehaviour
                 break;
             }
         }
-		SurfacesList.RemoveRange(0, x);
+		for (int j = 0; j < surfaces.Count; j++)
+		{
+			SurfacesList.Remove(surfaces[j]);
+		}
         return surfaces;
 	}
 
 
 	public void AddSurfaces(List<Surface> listsurface, MoveTweenType moveTweenType,Action action=null)
 	{
+		Debug.Log("___"+ listsurface.Count);
+		if (listsurface.Count == 0) return;
 		if (listsurface[0].GetColorType() == SurfacesList[0].GetColorType())
 		{
 			if (moveTweenType== MoveTweenType.One) {
@@ -132,7 +145,8 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	/// <returns></returns>
 	public ItemColorType GetTopColor(){
-        return SurfacesList[0].GetColorType();
+		return ItemColorType.Yello;
+		//return SurfacesList[SurfacesList.Count-1].GetColorType();
 
 	}
 

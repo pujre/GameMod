@@ -45,6 +45,7 @@ public class SurfaceItem : MonoBehaviour
         {
 			GameObject gameObject = Instantiate(Prefab,new Vector3(transform.position.x, transform.position.y+i, transform.position.z), Quaternion.identity, transform);
 			gameObject.GetComponent<Surface>().SetColor(color[i]);
+			Surfaces.Add(gameObject.GetComponent<Surface>());
 		}
     }
 
