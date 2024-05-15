@@ -24,6 +24,8 @@ public class ArrayManagerEditor : Editor
 			TestLevel(5);
 		}
 
+		EditorGUILayout.Space();
+
 		if (script.GoundBackItemArray2D != null)
 		{
 			//for (int y = 0; y < script.height; y++)

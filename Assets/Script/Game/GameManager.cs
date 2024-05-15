@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
 	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
-	public Material[] defaultORHightMaterial;
+	public Material[] DefaultORHightMaterial;
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
 	private Camera Cam;
 	private bool IsDragging = false;
@@ -26,8 +26,9 @@ public class GameManager : MonoBehaviour
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
 	private int NowLevel=1;
 	private RaycastHit hit;
-	private RaycastHit hit2;
 	private Ray ray;
+	private bool foundBottom=false;
+	private Vector3 newPosition;
 	private Transform lastHighlightedObject;
 
 
@@ -86,7 +87,7 @@ public class GameManager : MonoBehaviour
 			 ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit))
 			{
-				if (hit.transform.GetComponent<SurfaceItem>().IsOnMove)
+				if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove)
 				{
 					SelectedObject = hit.transform.gameObject;
 					IsDragging = true;
@@ -99,37 +100,39 @@ public class GameManager : MonoBehaviour
 			 ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 			{
-				Vector3 newPosition = hitInfo.point;
+				newPosition = hitInfo.point;
 				newPosition.y = SelectedObject.transform.position.y; // 保持Y轴不变
 				SelectedObject.transform.position = newPosition;
 			}
 
 			// 使用 RaycastAll 检测所有碰撞
 			RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
-			bool foundBottom = false;
+			foundBottom = false;
 
 			foreach (RaycastHit hit in hits)
 			{
 
-				if (hit.transform.gameObject.tag == "bottom")
+				if (hit.transform.gameObject.tag == "bottom"&&
+					hit.transform.GetComponent<GoundBackItem>()&&
+					hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
 				{
 					if (lastHighlightedObject != null)
 					{
-						lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[0];
+						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 					}
 
 					lastHighlightedObject = hit.transform;
-					lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[1];
+					lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
 					foundBottom = true;
 					break; // 找到目标对象后退出循环
 				}
 			}
-
+			// 当离开各自区域得时候判定
 			if (!foundBottom)
 			{
 				if (lastHighlightedObject != null)
 				{
-					lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[0];
+					lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 					lastHighlightedObject = null;
 				}
 			}
@@ -148,14 +151,14 @@ public class GameManager : MonoBehaviour
 		{
 			if (lastHighlightedObject != null)
 			{
-				lastHighlightedObject.GetComponent<MeshRenderer>().material = defaultORHightMaterial[0];
+				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 				obj.transform.position =new Vector3(lastHighlightedObject.transform.position.x, lastHighlightedObject.transform.position.y+1, lastHighlightedObject.transform.position.z);
 				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 				si.QueMoveEnd();
-				lastHighlightedObject.GetComponent<GoundBackItem>().AddSurfacesList(si.Surfaces);
+				GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
+				lj.AddSurfacesList(si.Surfaces);
 				si.Surfaces.Clear();
-				string[] parts = lastHighlightedObject.name.Split(',');
-				CalculateElimination(int.Parse(parts[0]), int.Parse(parts[1]));
+				CalculateElimination(lj.ItemPosition.x,lj.ItemPosition.y);
 				ScelfJob();
 				SelectedObject = null;
 				Destroy(obj);
@@ -197,7 +200,9 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	public void CalculateElimination(int x, int y) {
 		if(GoundBackItemArray2D!=null){
-			var GoundBackItemList = GetGoundBackItems(x, y);
+			Debug.Log("堆叠点x，y坐标为：" + x + "   " + y);
+			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
+			Debug.Log("判断周围："+ GoundBackItemList.Count);
 			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
 			{
 				int topNumber = 0;
@@ -212,20 +217,19 @@ public class GameManager : MonoBehaviour
 						topNumber=ux;
 					}
 				}
-				if (GoundBackItemArray2D[x, y].GetNowColorNumber()> top.GetNowColorNumber()) {
-					var ubs = top.RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
-					if (ubs != null) GoundBackItemArray2D[x, y].AddSurfaces(ubs,MoveTweenType.Continuity,() => {
+				var ubs = top.RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
+				Debug.Log(GoundBackItemArray2D[x, y].GetTopColor().ToString());
+				if (ubs != null && ubs.Count > 0)
+				{
+					GoundBackItemArray2D[x, y].AddSurfaces(ubs, MoveTweenType.One, () =>
+					{
 						CalculateElimination(x, y);
 					});
 				}
-                else
-                {
-					var ubs = GoundBackItemArray2D[x, y].RemoveSurfaces(top.GetTopColor());
-					if (ubs != null) top.AddSurfaces(ubs, MoveTweenType.Continuity, () => {
-						CalculateElimination(x,y);
-					});
+				else {
+					Debug.Log("-无");
 				}
-            }
+			}
 			else {
 				Debug.Log("无");
 			}
@@ -233,21 +237,29 @@ public class GameManager : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 获取当前颜色六边可以堆叠的数组
+	/// 获取当前六边数组中是否有可消除的
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
 	private List<GoundBackItem> GetGoundBackItems(int x, int y) {
 		List<GoundBackItem> ayx=new List<GoundBackItem>();
-		List<Vector2Int> vector2s = new List<Vector2Int>() {new Vector2Int(x-1,y), new Vector2Int(x - 1, y+1), new Vector2Int(x, y-1), new Vector2Int(x, y+1), new Vector2Int(x + 1, y), new Vector2Int(x - 1, y) };
+		List<Vector2Int> vector2s = new List<Vector2Int>() {
+			new Vector2Int(x-1,y), 
+			new Vector2Int(x - 1, y+1), 
+			new Vector2Int(x, y-1), 
+			new Vector2Int(x, y+1), 
+			new Vector2Int(x + 1, y), 
+			new Vector2Int(x + 1, y+1) };
         for (int i = 0; i < vector2s.Count; i++)
         {
 			Vector2Int vex = vector2s[i];
 			if (vex.x >= 0 && vex.y >= 0 && vex.x < GoundBackItemArray2D.GetLength(0) && vex.y < GoundBackItemArray2D.GetLength(1))
 			{
-				if (GoundBackItemArray2D[x, y].GetTopColor()== GetGoundBackItem(vex.x, vex.y).GetTopColor()){
+				if (!GoundBackItemArray2D[x, y].IsAddSurface()&& !GetGoundBackItem(vex.x, vex.y).IsAddSurface() && 
+					(GoundBackItemArray2D[x, y].GetTopColor()== GetGoundBackItem(vex.x, vex.y).GetTopColor())){
 					ayx.Add(GetGoundBackItem(vex.x, vex.y));
+					Debug.Log(string.Format("x:{0},y:{1}",vex.x,vex.y));
 				}
 			}
 		}
@@ -296,7 +308,6 @@ public class GameManager : MonoBehaviour
 					ItemParent.transform.position.y + block.transform.position.y,
 					ItemParent.transform.position.z + block.transform.position.z);
 				//block.transform.localScale = new Vector3(1, 1, 1);
-				block.name = string.Format("Surface_{0},{1}", x, z);
 				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
 				goundBackItem.SetData(x, z, $"{x},{z}");
 				GoundBackItemArray2D[x, z] = goundBackItem;

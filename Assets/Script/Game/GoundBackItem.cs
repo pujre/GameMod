@@ -1,15 +1,13 @@
 using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
+
+
 	private float Assign_Y;
 	/// <summary>
 	/// 该节点所属得坐标
@@ -20,7 +18,7 @@ public class GoundBackItem : MonoBehaviour
 	private void Awake()
 	{
 		SurfacesList = new List<Surface>();
-		Assign_Y = 1.3f;
+		Assign_Y = 1f;
 	}
 
 
@@ -34,6 +32,9 @@ public class GoundBackItem : MonoBehaviour
 		if (gameObject) gameObject.name = name;
 	}
 
+	public bool IsAddSurface() {
+		return SurfacesList.Count == 0?true:false;
+	}
 	/// <summary>
 	/// 从新布局位置
 	/// </summary>
@@ -41,10 +42,8 @@ public class GoundBackItem : MonoBehaviour
 		if (SurfacesList == null) return;
         for (int i = 0; i < SurfacesList.Count; i++)
         {
-            SurfacesList[i].transform.position = new Vector3(0, i * Assign_Y, 0);
-			Debug.Log(i+"______"+0+"______"+ i * Assign_Y+"________"+ 0);
+            SurfacesList[i].transform.position = new Vector3(0,transform.position.y+ i * Assign_Y, 0);
 		}
-		Debug.Log("排序了子节点");
 	}
 
 	public void AddSurfacesList(List<Surface> surfacess)
@@ -70,6 +69,7 @@ public class GoundBackItem : MonoBehaviour
                 ColorType.Add(colorTypeName);
             }
         }
+		Debug.Log(string.Format("坐标为{0}，{1}颜色数为：{2}", ItemPosition.x, ItemPosition.y, ColorType.Count));
         return ColorType.Count;
     }
 
@@ -81,7 +81,7 @@ public class GoundBackItem : MonoBehaviour
 	public List<Surface> RemoveSurfaces(ItemColorType itemColor) {
 		List<Surface> surfaces= new List<Surface>();
         int x = 0;
-        for (int i = 0; i < SurfacesList.Count; i++)
+        for (int i = SurfacesList.Count-1; i >0 ; i--)
         {
             if (SurfacesList[i].GetColorType() == itemColor)
             {
@@ -96,50 +96,51 @@ public class GoundBackItem : MonoBehaviour
 		{
 			SurfacesList.Remove(surfaces[j]);
 		}
+		Debug.Log("计算得item为："+ ItemPosition.x+" "+ItemPosition.y+" "+ surfaces.Count);
         return surfaces;
 	}
 
 
-	public void AddSurfaces(List<Surface> listsurface, MoveTweenType moveTweenType,Action action=null)
+	public void AddSurfaces(List<Surface> listsurface, MoveTweenType moveTweenType, Action action = null)
 	{
-		Debug.Log("___"+ listsurface.Count);
-		if (listsurface.Count == 0) return;
-		if (listsurface[0].GetColorType() == SurfacesList[0].GetColorType())
+		Debug.Log("__堆叠__" + listsurface.Count);
+		if (moveTweenType == MoveTweenType.One)
 		{
-			if (moveTweenType== MoveTweenType.One) {
-				int x = 0;
-				for (int i = 0; i < listsurface.Count; i++)
+			int x = 0;
+			for (int i = 0; i < listsurface.Count; i++)
+			{
+				Vector3 targetPosition = new Vector3(transform.position.x, (SurfacesList.Count + i * Assign_Y) * Assign_Y, transform.position.z);
+				listsurface[i].transform.SetParent(transform);
+				listsurface[i].transform.DOMove(targetPosition,0.5f).SetEase(Ease.InOutQuad).OnComplete(() =>
 				{
-					Vector3 targetPosition = new Vector3(transform.position.x, (SurfacesList.Count + i * Assign_Y) * Assign_Y, transform.position.z);
-					listsurface[x].transform.DOMove(targetPosition, 0.15f).SetEase(Ease.InOutQuad).OnComplete(() =>
+					SurfacesList.Add(listsurface[i]);
+					if (x == listsurface.Count - 1)
 					{
-						listsurface[x].transform.SetParent(transform);
-						if (i == listsurface.Count - 1)
-						{
-							SurfacesList.AddRange(listsurface);
-							SetChinderPosition();
-							Debug.Log("移动完成，开始下一轮的判定");
-							action?.Invoke();
-						}
-					});
-				}
-			}
-			else if(moveTweenType == MoveTweenType.Continuity) {
-				Surface surfacePic = listsurface[0];
-				Vector3 targetPosition = new Vector3(transform.position.x, (SurfacesList.Count + Assign_Y) * Assign_Y, transform.position.z);
-				surfacePic.transform.DOMove(targetPosition, 0.15f).SetEase(Ease.InOutQuad).OnComplete(() =>
-				{
-					surfacePic.transform.SetParent(transform);
-					listsurface.Remove(surfacePic);
-					SurfacesList.Insert(0,surfacePic);
-					SetChinderPosition();
-					if (listsurface.Count<=0) {
-						Debug.Log("移动一个完成，开始下一轮的判定");
+						SetChinderPosition();
+						Debug.Log("移动完成，开始下一轮的判定");
 						action?.Invoke();
 					}
 				});
+				x++;
 			}
 		}
+		else if (moveTweenType == MoveTweenType.Continuity)
+		{
+			Surface surfacePic = listsurface[listsurface.Count-1];
+			Vector3 targetPosition = new Vector3(transform.position.x, (SurfacesList.Count + Assign_Y) * Assign_Y, transform.position.z);
+			surfacePic.transform.DOMove(targetPosition, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() =>
+			{
+				surfacePic.transform.SetParent(transform);
+				listsurface.Remove(surfacePic);
+				SetChinderPosition();
+				if (listsurface.Count <= 0)
+				{
+					Debug.Log("移动一个完成，开始下一轮的判定");
+					action?.Invoke();
+				}
+			});
+		}
+
 	}
 
 
@@ -148,8 +149,7 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	/// <returns></returns>
 	public ItemColorType GetTopColor(){
-		return ItemColorType.Yello;
-		//return SurfacesList[SurfacesList.Count-1].GetColorType();
+		return SurfacesList[SurfacesList.Count-1].GetColorType();
 
 	}
 
