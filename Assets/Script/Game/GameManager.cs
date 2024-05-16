@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -152,19 +153,21 @@ public class GameManager : MonoBehaviour
 			if (lastHighlightedObject != null)
 			{
 				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-				obj.transform.position =new Vector3(lastHighlightedObject.transform.position.x, lastHighlightedObject.transform.position.y+1, lastHighlightedObject.transform.position.z);
+				obj.transform.position = new Vector3(lastHighlightedObject.transform.position.x, lastHighlightedObject.transform.position.y + 1, lastHighlightedObject.transform.position.z);
 				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 				si.QueMoveEnd();
 				GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
 				lj.AddSurfacesList(si.Surfaces);
 				si.Surfaces.Clear();
-				CalculateElimination(lj.ItemPosition.x,lj.ItemPosition.y);
+				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 				ScelfJob();
 				SelectedObject = null;
 				Destroy(obj);
 			}
-			obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
-			SelectedObject = null;
+			else {
+				obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
+				SelectedObject = null;
+			}
 		}
 	}
 
@@ -217,11 +220,10 @@ public class GameManager : MonoBehaviour
 						topNumber=ux;
 					}
 				}
-				var ubs = top.RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
-				Debug.Log(GoundBackItemArray2D[x, y].GetTopColor().ToString());
+				var ubs = GoundBackItemArray2D[x, y].RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
 				if (ubs != null && ubs.Count > 0)
 				{
-					GoundBackItemArray2D[x, y].AddSurfaces(ubs, MoveTweenType.One, () =>
+					top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
 					{
 						CalculateElimination(x, y);
 					});
@@ -244,16 +246,22 @@ public class GameManager : MonoBehaviour
 	/// <returns></returns>
 	private List<GoundBackItem> GetGoundBackItems(int x, int y) {
 		List<GoundBackItem> ayx=new List<GoundBackItem>();
-		List<Vector2Int> vector2s = new List<Vector2Int>() {
-			new Vector2Int(x-1,y), 
-			new Vector2Int(x - 1, y+1), 
-			new Vector2Int(x, y-1), 
-			new Vector2Int(x, y+1), 
-			new Vector2Int(x + 1, y), 
-			new Vector2Int(x + 1, y+1) };
+		List<Vector2Int> vector2s;
+		if (!(x % 2 == 0))
+		{
+			vector2s = new List<Vector2Int>() {new Vector2Int(x-1,y),new Vector2Int(x-1, y-1),new Vector2Int(x, y-1),
+			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y-1) };
+		}
+		else {
+			vector2s = new List<Vector2Int>() {
+			new Vector2Int(x-1,y),new Vector2Int(x-1, y+1),new Vector2Int(x, y-1),
+			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y+1) };
+		}
+		
         for (int i = 0; i < vector2s.Count; i++)
         {
 			Vector2Int vex = vector2s[i];
+			//Debug.Log(string.Format("判断当前周围的点，坐标为：x：{0}，y：{1}，1：{2}  2：{3}",vex.x, vex.y, GoundBackItemArray2D.GetLength(0), GoundBackItemArray2D.GetLength(0)));
 			if (vex.x >= 0 && vex.y >= 0 && vex.x < GoundBackItemArray2D.GetLength(0) && vex.y < GoundBackItemArray2D.GetLength(1))
 			{
 				if (!GoundBackItemArray2D[x, y].IsAddSurface()&& !GetGoundBackItem(vex.x, vex.y).IsAddSurface() && 
@@ -303,7 +311,7 @@ public class GameManager : MonoBehaviour
 				Vector3 position = new Vector3(
 					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
 					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
-				GameObject block = Instantiate(BlockPrefab, position, Quaternion.Euler(90, 0, 0)/*Quaternion.identity*/, ItemParent.transform);
+				GameObject block = Instantiate(BlockPrefab, position, Quaternion.Euler(0, 0, 0), ItemParent.transform);
 				block.transform.position = new Vector3(block.transform.position.x + ItemParent.transform.position.x,
 					ItemParent.transform.position.y + block.transform.position.y,
 					ItemParent.transform.position.z + block.transform.position.z);

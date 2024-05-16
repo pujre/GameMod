@@ -1,12 +1,13 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
-
+	public float delayBetweenMoves = 0.5f;  // 每个对象移动之间的延迟
 
 	private float Assign_Y;
 	/// <summary>
@@ -18,7 +19,7 @@ public class GoundBackItem : MonoBehaviour
 	private void Awake()
 	{
 		SurfacesList = new List<Surface>();
-		Assign_Y = 1f;
+		Assign_Y = 1.2f;
 	}
 
 
@@ -42,8 +43,18 @@ public class GoundBackItem : MonoBehaviour
 		if (SurfacesList == null) return;
         for (int i = 0; i < SurfacesList.Count; i++)
         {
-            SurfacesList[i].transform.position = new Vector3(0,transform.position.y+ i * Assign_Y, 0);
+			SurfacesList[i].transform.localPosition = new Vector3(0,transform.localPosition.y+ Assign_Y+( i * Assign_Y), 0);
 		}
+	}
+
+	public List<Vector3> GetEndListVector3(int x) { 
+		List<Vector3> vectors = new List<Vector3>();
+		Vector3 startVectpr3 = SurfacesList[SurfacesList.Count-1].transform.localPosition;
+		for (int i = 0; i < x; i++)
+		{
+			vectors.Add(new Vector3(startVectpr3.x, startVectpr3.y + Assign_Y + (i * Assign_Y), startVectpr3.z));
+		}
+		return vectors;
 	}
 
 	public void AddSurfacesList(List<Surface> surfacess)
@@ -80,12 +91,10 @@ public class GoundBackItem : MonoBehaviour
 	/// <returns></returns>
 	public List<Surface> RemoveSurfaces(ItemColorType itemColor) {
 		List<Surface> surfaces= new List<Surface>();
-        int x = 0;
-        for (int i = SurfacesList.Count-1; i >0 ; i--)
+        for (int i = SurfacesList.Count-1; i >=0 ; i--)
         {
             if (SurfacesList[i].GetColorType() == itemColor)
             {
-                x++;
                 surfaces.Add(SurfacesList[i]);
 			}
             else {
@@ -96,7 +105,6 @@ public class GoundBackItem : MonoBehaviour
 		{
 			SurfacesList.Remove(surfaces[j]);
 		}
-		Debug.Log("计算得item为："+ ItemPosition.x+" "+ItemPosition.y+" "+ surfaces.Count);
         return surfaces;
 	}
 
@@ -109,9 +117,9 @@ public class GoundBackItem : MonoBehaviour
 			int x = 0;
 			for (int i = 0; i < listsurface.Count; i++)
 			{
-				Vector3 targetPosition = new Vector3(transform.position.x, (SurfacesList.Count + i * Assign_Y) * Assign_Y, transform.position.z);
+				Vector3 targetPosition = new Vector3(transform.localPosition.x, (SurfacesList.Count * (1+ Assign_Y))+i * Assign_Y, transform.localPosition.z);
 				listsurface[i].transform.SetParent(transform);
-				listsurface[i].transform.DOMove(targetPosition,0.5f).SetEase(Ease.InOutQuad).OnComplete(() =>
+				listsurface[i].transform.DOMove(targetPosition, 1).SetEase(Ease.InOutQuad).OnComplete(() =>
 				{
 					SurfacesList.Add(listsurface[i]);
 					if (x == listsurface.Count - 1)
@@ -126,23 +134,31 @@ public class GoundBackItem : MonoBehaviour
 		}
 		else if (moveTweenType == MoveTweenType.Continuity)
 		{
-			Surface surfacePic = listsurface[listsurface.Count-1];
-			Vector3 targetPosition = new Vector3(transform.position.x, (SurfacesList.Count + Assign_Y) * Assign_Y, transform.position.z);
-			surfacePic.transform.DOMove(targetPosition, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() =>
+			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
+			List<Vector3> o3s = GetEndListVector3(listsurface.Count);
+
+			for (int i = 0; i < listsurface.Count; i++)
 			{
-				surfacePic.transform.SetParent(transform);
-				listsurface.Remove(surfacePic);
+				var obj= listsurface[i];
+
+				obj.transform.SetParent(transform);
+				Vector3 ka = new Vector3((o3s[i].x + obj.transform.localPosition.x) / 2, o3s[i].y + 4, (o3s[i].z + obj.transform.localPosition.z) / 2);
+
+				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
+				sequence.Append(obj.transform.DOLocalMove(ka, 0.25f).SetEase(Ease.Linear));
+				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.25f).SetEase(Ease.Linear));
+				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
+				SurfacesList.Add(obj);
+			}
+
+			sequence.OnComplete(() => {
 				SetChinderPosition();
-				if (listsurface.Count <= 0)
-				{
-					Debug.Log("移动一个完成，开始下一轮的判定");
-					action?.Invoke();
-				}
+				action?.Invoke();
 			});
+			sequence.Play();  // 播放序列
 		}
 
 	}
-
 
 	/// <summary>
 	/// 获取当前顶端的surface颜色

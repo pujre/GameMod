@@ -61,7 +61,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 5, z: 5}
+  m_Size: {x: 5, y: 1, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7402727273359007471
 MonoBehaviour:
@@ -77,5 +77,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsOnMove: 0
   QreVector3: {x: 0, y: 0, z: 0}
-  Prefab: {fileID: 914240641398312545, guid: 457ca15e6a4068547887d4dcb231429b, type: 3}
+  Prefab: {fileID: 8138841645379444608, guid: f9cf5b2a261cb734b944965b41a944aa, type: 3}
   Surfaces: []
