@@ -1,13 +1,12 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using UnityEngine;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
-	public float delayBetweenMoves = 0.5f;  // 每个对象移动之间的延迟
+	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
 
 	private float Assign_Y;
 	/// <summary>
@@ -20,8 +19,12 @@ public class GoundBackItem : MonoBehaviour
 	{
 		SurfacesList = new List<Surface>();
 		Assign_Y = 1.2f;
+		DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
-
+	void DelegateCallback(object[] args)
+	{
+		RemoveTopColorObject();
+	}
 
 	public GoundBackItem(int x, int y, string name) {
 		SetData(x,y,name);
@@ -85,6 +88,28 @@ public class GoundBackItem : MonoBehaviour
     }
 
 	/// <summary>
+	/// 获取当前顶部同颜色的节点数
+	/// </summary>
+	/// <returns></returns>
+	public int GetTopColorNumber()
+	{
+		if (SurfacesList == null || SurfacesList.Count == 0) return 0;
+		string colorTypeName = SurfacesList[SurfacesList.Count-1].GetColorType().ToString();
+		int colorNumber = 0;
+        for (int i = SurfacesList.Count - 1; i >= 0; i--)
+        {
+			if (colorTypeName == SurfacesList[i].GetColorType().ToString())
+			{
+				colorNumber++; 
+			}
+			else {
+				break;
+			}
+        }
+		return colorNumber;
+    }
+
+	/// <summary>
 	/// 从当前的Surface里面从0开始移除指定颜色的surface，并返回移除的surface数组
 	/// </summary>
 	/// <param name="itemColor"></param>
@@ -111,7 +136,6 @@ public class GoundBackItem : MonoBehaviour
 
 	public void AddSurfaces(List<Surface> listsurface, MoveTweenType moveTweenType, Action action = null)
 	{
-		Debug.Log("__堆叠__" + listsurface.Count);
 		if (moveTweenType == MoveTweenType.One)
 		{
 			int x = 0;
@@ -142,11 +166,11 @@ public class GoundBackItem : MonoBehaviour
 				var obj= listsurface[i];
 
 				obj.transform.SetParent(transform);
-				Vector3 ka = new Vector3((o3s[i].x + obj.transform.localPosition.x) / 2, o3s[i].y + 4, (o3s[i].z + obj.transform.localPosition.z) / 2);
+				Vector3 ka = new Vector3((o3s[i].x + obj.transform.localPosition.x) / 2, o3s[i].y + 5, (o3s[i].z + obj.transform.localPosition.z) / 2);
 
 				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
-				sequence.Append(obj.transform.DOLocalMove(ka, 0.25f).SetEase(Ease.Linear));
-				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.25f).SetEase(Ease.Linear));
+				sequence.Append(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
+				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.1f).SetEase(Ease.Linear));
 				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
 				SurfacesList.Add(obj);
 			}
@@ -166,18 +190,37 @@ public class GoundBackItem : MonoBehaviour
 	/// <returns></returns>
 	public ItemColorType GetTopColor(){
 		return SurfacesList[SurfacesList.Count-1].GetColorType();
-
 	}
 
 	/// <summary>
-	/// 叠
+	/// 移除满足条件的顶端的物体
 	/// </summary>
-	/// <param name="surfacesList"></param>
-	/// <param name="isOn"></param>
-	public void EntrIntoWarehouse(List<Surface> surfacesList) {
-        for (int i = 0; i < surfacesList.Count; i++)
-        {
-            
-        }
-    }
+	public void RemoveTopColorObject()
+	{
+		int count = GetTopColorNumber();
+		if (count >= 10)
+		{
+			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
+			for (int i = SurfacesList.Count - 1; i <= count; i--)
+			{
+				var obj = SurfacesList[i];
+				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
+				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0, 2, 0), 0.15f).SetEase(Ease.Linear).OnComplete(() =>
+				{
+					SurfacesList.Remove(obj);
+					GameManager.Instance.ReturnObject(obj.gameObject);
+				}));
+				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
+			}
+			sequence.OnComplete(() =>
+			{
+				SetChinderPosition();
+			});
+			sequence.Play();  // 播放序列
+		}
+		else {
+			Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", ItemPosition.x, ItemPosition.y,count));
+		}
+	}
 }
+

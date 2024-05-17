@@ -8,7 +8,6 @@ public class SurfaceItem : MonoBehaviour
 {
 	public bool IsOnMove = false;//是否允许拖动
 	public Vector3 QreVector3;//初始坐标
-	public GameObject Prefab;
 	public List<Surface> Surfaces = new List<Surface>();
 
 
@@ -43,7 +42,10 @@ public class SurfaceItem : MonoBehaviour
 		color.Sort();
         for (int i = 0; i < color.Count; i++)
         {
-			GameObject gameObject = Instantiate(Prefab,new Vector3(transform.position.x, transform.position.y+i, transform.position.z),/* Quaternion.Euler(90, 0, 0)*/ Quaternion.identity, transform);
+			GameObject gameObject = GameManager.Instance.GetObject();
+			gameObject.transform.SetParent(transform);
+			gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + i, transform.position.z);
+			gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 			gameObject.GetComponent<Surface>().SetColor(color[i]);
 			Surfaces.Add(gameObject.GetComponent<Surface>());
 		}

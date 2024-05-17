@@ -9,14 +9,17 @@ public class GameManager : MonoBehaviour
 {
 	[Tooltip("网格方块预制体，通用型")]
 	[Header("网格预制体")]
-	public GameObject BlockPrefab; // 预制方块
-	[Header("surface预制体")]
-	public GameObject SurFacePrefab; // 预制方块
+	public GameObject BottomsPrefab; //
+	[Header("surface拖动预制体")]
+	public GameObject SurfaceItemPrefab; //
+	[Header("Color基础物体预制体")]
+	public GameObject SurfacePrefab;
 	public Vector2Int MapSize = new Vector2Int(5, 5);
 	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
 	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
+	private List<GameObject> Pool;  // 对象池列表
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
 	private Camera Cam;
 	private bool IsDragging = false;
@@ -69,12 +72,45 @@ public class GameManager : MonoBehaviour
 		PropNumber = new Dictionary<string, int>();
 		LoadlevelData();
 		LoadLevel(1);
+		InitPool();
 		ScelfJob();
 	}
 
-	
 
+	void InitPool() {
+		Pool = new List<GameObject>();
+		for (int i = 0; i < 10; i++)
+		{
+			GameObject obj = Instantiate(SurfacePrefab);
+			obj.SetActive(false);
+			Pool.Add(obj);
+		}
+	}
 
+	// 从对象池中获取对象
+	public GameObject GetObject()
+	{
+		foreach (GameObject obj in Pool)
+		{
+			if (!obj.activeInHierarchy)
+			{
+				obj.SetActive(true);
+				return obj;
+			}
+		}
+
+		// 如果池中没有可用对象，则创建新的对象并添加到池中
+		GameObject newObj = Instantiate(SurfacePrefab);
+		Pool.Add(newObj);
+		return newObj;
+	}
+
+	// 将对象返回到对象池
+	public void ReturnObject(GameObject obj)
+	{
+		obj.transform.SetParent(transform);
+		obj.SetActive(false);
+	}
 
 	void Start()
 	{
@@ -193,7 +229,7 @@ public class GameManager : MonoBehaviour
 
 
 	public void ScelfJob() {
-		GameObject obj = Instantiate(SurFacePrefab, new Vector3(80, 1, -10), Quaternion.identity, GameObject.Find("Game/Panel").transform);
+		GameObject obj = Instantiate(SurfaceItemPrefab, new Vector3(80, 1, -10), Quaternion.identity, GameObject.Find("Game/Panel").transform);
 		obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
 		obj.GetComponent<SurfaceItem>().QurStart(new Vector3(0,1,-10));
 	}
@@ -203,9 +239,8 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	public void CalculateElimination(int x, int y) {
 		if(GoundBackItemArray2D!=null){
-			Debug.Log("堆叠点x，y坐标为：" + x + "   " + y);
 			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
-			Debug.Log("判断周围："+ GoundBackItemList.Count);
+			Debug.Log(string.Format("堆叠点坐标为：x:{0}，y:{1},该点左右可堆叠的同色堆数为：{2}", x,y, GoundBackItemList.Count));
 			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
 			{
 				int topNumber = 0;
@@ -214,26 +249,20 @@ public class GameManager : MonoBehaviour
 				//比较哪堆颜色多
 				for (int i = 0; i < GoundBackItemList.Count; i++)
                 {
-					int ux=GoundBackItemList[i].GetNowColorNumber();
+					int ux=GoundBackItemList[i].GetTopColorNumber();
 					if (ux>= topNumber) {
 						top = GoundBackItemList[i];
 						topNumber=ux;
 					}
 				}
 				var ubs = GoundBackItemArray2D[x, y].RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
-				if (ubs != null && ubs.Count > 0)
+				top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
 				{
-					top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
-					{
-						CalculateElimination(x, y);
-					});
-				}
-				else {
-					Debug.Log("-无");
-				}
+					CalculateElimination(x, y);
+				});
 			}
 			else {
-				Debug.Log("无");
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString());
 			}
 		}
 	}
@@ -255,7 +284,7 @@ public class GameManager : MonoBehaviour
 		else {
 			vector2s = new List<Vector2Int>() {
 			new Vector2Int(x-1,y),new Vector2Int(x-1, y+1),new Vector2Int(x, y-1),
-			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y+1) };
+			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y+1)};
 		}
 		
         for (int i = 0; i < vector2s.Count; i++)
@@ -311,7 +340,7 @@ public class GameManager : MonoBehaviour
 				Vector3 position = new Vector3(
 					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
 					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
-				GameObject block = Instantiate(BlockPrefab, position, Quaternion.Euler(0, 0, 0), ItemParent.transform);
+				GameObject block = Instantiate(BottomsPrefab, position, Quaternion.Euler(0, 0, 0), ItemParent.transform);
 				block.transform.position = new Vector3(block.transform.position.x + ItemParent.transform.position.x,
 					ItemParent.transform.position.y + block.transform.position.y,
 					ItemParent.transform.position.z + block.transform.position.z);

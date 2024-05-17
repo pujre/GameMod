@@ -2618,8 +2618,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5262850ab54374a922d200e72e2f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BlockPrefab: {fileID: 7556228015642027760, guid: b51cd3130769f014a9773528179db8cc, type: 3}
-  SurFacePrefab: {fileID: 1725058810649328144, guid: 95133c675d3269e4984dfdc7da40eb55, type: 3}
+  BottomsPrefab: {fileID: 7556228015642027760, guid: b51cd3130769f014a9773528179db8cc, type: 3}
+  SurfaceItemPrefab: {fileID: 1725058810649328144, guid: 95133c675d3269e4984dfdc7da40eb55, type: 3}
+  SurfacePrefab: {fileID: 8138841645379444608, guid: f9cf5b2a261cb734b944965b41a944aa, type: 3}
   MapSize: {x: 5, y: 5}
   ItemParent: {fileID: 1422668236}
   DefaultORHightMaterial:
