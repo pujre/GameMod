@@ -23,7 +23,10 @@ public class GoundBackItem : MonoBehaviour
 	}
 	void DelegateCallback(object[] args)
 	{
-		RemoveTopColorObject();
+		if (args.Length >= 2 && args[0] is int x && args[1] is int y) {
+			RemoveTopColorObject(x, y);
+		}
+		
 	}
 
 	public GoundBackItem(int x, int y, string name) {
@@ -39,6 +42,7 @@ public class GoundBackItem : MonoBehaviour
 	public bool IsAddSurface() {
 		return SurfacesList.Count == 0?true:false;
 	}
+
 	/// <summary>
 	/// 从新布局位置
 	/// </summary>
@@ -195,31 +199,46 @@ public class GoundBackItem : MonoBehaviour
 	/// <summary>
 	/// 移除满足条件的顶端的物体
 	/// </summary>
-	public void RemoveTopColorObject()
+	public void RemoveTopColorObject(int x,int y)
 	{
+		Debug.Log("移除物体");
 		int count = GetTopColorNumber();
-		if (count >= 10)
+		if (count >= 8)
 		{
+			List<Surface> sl = RemoveSurfaces(GetTopColor());
+			Debug.Log("移除满足条件的顶端的物体");
 			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
-			for (int i = SurfacesList.Count - 1; i <= count; i--)
+			for (int i = 0; i < sl.Count; i++)
 			{
-				var obj = SurfacesList[i];
-				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
-				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0, 2, 0), 0.15f).SetEase(Ease.Linear).OnComplete(() =>
+				var obj = sl[i];
+				Vector3 ka = obj.transform.localPosition + new Vector3(0,5, 0);
+
+				// 创建一个子序列来同时进行移动和透明度变化
+				Sequence subSequence = DOTween.Sequence();
+				subSequence.Join(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
+				subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).SetEase(Ease.Linear));
+
+				// 在子序列完成时执行回调
+				subSequence.OnComplete(() =>
 				{
-					SurfacesList.Remove(obj);
 					GameManager.Instance.ReturnObject(obj.gameObject);
-				}));
+					obj.transform.localScale = Vector3.one;
+				});
+
+				// 将子序列添加到主序列中
+				sequence.Append(subSequence);
 				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
 			}
 			sequence.OnComplete(() =>
 			{
 				SetChinderPosition();
+				GameManager.Instance.CalculateElimination(x, y);
 			});
 			sequence.Play();  // 播放序列
 		}
-		else {
-			Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", ItemPosition.x, ItemPosition.y,count));
+		else
+		{
+			Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", x, y, count));
 		}
 	}
 }

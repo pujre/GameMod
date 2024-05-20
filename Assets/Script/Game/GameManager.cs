@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
-	private List<GameObject> Pool;  // 对象池列表
+	public List<GameObject> Pool;  // 对象池列表
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
 	private Camera Cam;
 	private bool IsDragging = false;
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 	private bool foundBottom=false;
 	private Vector3 newPosition;
 	private Transform lastHighlightedObject;
+	public Vector2Int OnlastObj;
 
 
 	private static GameManager instance;
@@ -234,13 +235,15 @@ public class GameManager : MonoBehaviour
 		obj.GetComponent<SurfaceItem>().QurStart(new Vector3(0,1,-10));
 	}
 
+
+
+
 	/// <summary>
 	/// 计算堆叠逻辑
 	/// </summary>
 	public void CalculateElimination(int x, int y) {
 		if(GoundBackItemArray2D!=null){
 			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
-			Debug.Log(string.Format("堆叠点坐标为：x:{0}，y:{1},该点左右可堆叠的同色堆数为：{2}", x,y, GoundBackItemList.Count));
 			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
 			{
 				int topNumber = 0;
@@ -256,16 +259,25 @@ public class GameManager : MonoBehaviour
 					}
 				}
 				var ubs = GoundBackItemArray2D[x, y].RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
+				OnlastObj = top.ItemPosition;
 				top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
 				{
-					CalculateElimination(x, y);
+					if (GetGoundBackItems(x, y).Count > 0)
+					{
+						CalculateElimination(x, y);
+					}
+					else {
+						CalculateElimination(OnlastObj.x, OnlastObj.y);
+					}
 				});
 			}
 			else {
-				DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString());
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString(), x, y);
 			}
 		}
 	}
+
+	
 
 	/// <summary>
 	/// 获取当前六边数组中是否有可消除的
@@ -273,9 +285,10 @@ public class GameManager : MonoBehaviour
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	private List<GoundBackItem> GetGoundBackItems(int x, int y) {
+	public List<GoundBackItem> GetGoundBackItems(int x, int y) {
 		List<GoundBackItem> ayx=new List<GoundBackItem>();
 		List<Vector2Int> vector2s;
+		string debug = "";
 		if (!(x % 2 == 0))
 		{
 			vector2s = new List<Vector2Int>() {new Vector2Int(x-1,y),new Vector2Int(x-1, y-1),new Vector2Int(x, y-1),
@@ -296,10 +309,11 @@ public class GameManager : MonoBehaviour
 				if (!GoundBackItemArray2D[x, y].IsAddSurface()&& !GetGoundBackItem(vex.x, vex.y).IsAddSurface() && 
 					(GoundBackItemArray2D[x, y].GetTopColor()== GetGoundBackItem(vex.x, vex.y).GetTopColor())){
 					ayx.Add(GetGoundBackItem(vex.x, vex.y));
-					Debug.Log(string.Format("x:{0},y:{1}",vex.x,vex.y));
+					debug += string.Format("x:{0},y:{1}{2}",vex.x,vex.y,"\n");
 				}
 			}
 		}
+		Debug.Log(debug);
 		return ayx;
 	}
 

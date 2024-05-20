@@ -21,12 +21,15 @@ public class MatrixGeneratorEditor : Editor
 		{
 			generator.SetChinderPosition();
 		}
-		if (GUILayout.Button("消除子节点")) {
-			if (generator.GetTopColorNumber()>=10) {
-				generator.RemoveTopColorObject();
+		if (GUILayout.Button("消除子节点"))
+		{
+			if (generator.GetTopColorNumber() >= 10)
+			{
+				generator.RemoveTopColorObject(generator.ItemPosition.x, generator.ItemPosition.y);
 			}
-			else {
-				Debug.Log(string.Format("未满足条件，当前数为{0}",generator.GetTopColorNumber()));
+			else
+			{
+				Debug.Log(string.Format("未满足条件，当前数为{0}", generator.GetTopColorNumber()));
 
 			}
 		}
