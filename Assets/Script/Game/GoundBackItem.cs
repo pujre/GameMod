@@ -87,7 +87,6 @@ public class GoundBackItem : MonoBehaviour
                 ColorType.Add(colorTypeName);
             }
         }
-		Debug.Log(string.Format("坐标为{0}，{1}颜色数为：{2}", ItemPosition.x, ItemPosition.y, ColorType.Count));
         return ColorType.Count;
     }
 
@@ -201,12 +200,10 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	public void RemoveTopColorObject(int x,int y)
 	{
-		Debug.Log("移除物体");
 		int count = GetTopColorNumber();
-		if (count >= 8)
+		if (count >= 10&& GetNowColorNumber()==1)
 		{
 			List<Surface> sl = RemoveSurfaces(GetTopColor());
-			Debug.Log("移除满足条件的顶端的物体");
 			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
 			for (int i = 0; i < sl.Count; i++)
 			{

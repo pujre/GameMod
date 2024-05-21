@@ -3,21 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DelegateManager : MonoBehaviour
+public class DelegateManager : SingletonMono<DelegateManager>
 {
-	private static DelegateManager instance;
-	public static DelegateManager Instance
-	{
-		get
-		{
-			if (instance == null)
-			{
-				var manager = new GameObject("DelegateManager").AddComponent<DelegateManager>();
-				DontDestroyOnLoad(manager.gameObject);
-				instance = manager;
-			}
-			return instance;
-		}
+	protected override void Awake() {
+		base.Awake();
 	}
 
 	private Dictionary<string, Action<object[]>> eventDictionary = new Dictionary<string, Action<object[]>>();
@@ -57,8 +46,4 @@ public class DelegateManager : MonoBehaviour
 		}
 	}
 
-	void OnDestroy()
-	{
-		instance = null;
-	}
 }

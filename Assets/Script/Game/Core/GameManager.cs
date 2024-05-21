@@ -5,7 +5,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManager : SingletonMono<GameManager>
 {
 	[Tooltip("网格方块预制体，通用型")]
 	[Header("网格预制体")]
@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 	public Material[] DefaultORHightMaterial;
 	public List<GameObject> Pool;  // 对象池列表
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
+	public Vector2Int OnlastObj;
+
 	private Camera Cam;
 	private bool IsDragging = false;
 	private GameObject SelectedObject;
@@ -34,41 +36,11 @@ public class GameManager : MonoBehaviour
 	private bool foundBottom=false;
 	private Vector3 newPosition;
 	private Transform lastHighlightedObject;
-	public Vector2Int OnlastObj;
 
 
-	private static GameManager instance;
-	public static GameManager Instance
+	protected override void Awake()
 	{
-		get
-		{
-			if (instance == null)
-			{
-				// 在场景中查找 GameManager 实例
-				instance = FindObjectOfType<GameManager>();
-
-				// 如果实例不存在，则创建一个新的 GameObject 并添加 GameManager 组件
-				if (instance == null)
-				{
-					GameObject go = new GameObject("Manager");
-					instance = go.AddComponent<GameManager>();
-				}
-			}
-			return instance;
-		}
-	}
-
-	private void Awake()
-	{
-		if (instance == null)
-		{
-			instance = this;
-			DontDestroyOnLoad(gameObject);  // 确保单例对象跨场景不被销毁
-		}
-		else if (instance != this)
-		{
-			Destroy(gameObject);  // 销毁多余的实例
-		}
+		base.Awake();
 		Cam = Camera.main; // 获取主摄像机
 		PropNumber = new Dictionary<string, int>();
 		LoadlevelData();
@@ -246,14 +218,13 @@ public class GameManager : MonoBehaviour
 			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
 			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
 			{
-				int topNumber = 0;
+				int topNumber = 10;
 				GoundBackItem top=null;
-				//优先从颜色少的，堆叠到颜色多的那一堆
-				//比较哪堆颜色多
+				//优先将顶部同颜色，数量多的向数量少的那堆堆
 				for (int i = 0; i < GoundBackItemList.Count; i++)
                 {
 					int ux=GoundBackItemList[i].GetTopColorNumber();
-					if (ux>= topNumber) {
+					if (ux<= topNumber) {
 						top = GoundBackItemList[i];
 						topNumber=ux;
 					}
