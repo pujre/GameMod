@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class UIManager : SingletonMono<UIManager>
 {
 	private Dictionary<string, PanelBase> PanelDic = new Dictionary<string, PanelBase>();
+	public Material[] Colors;
 
 
 	protected override void Awake()
 	{
-		base.Awake();
+		Debug.Log("UIManager");
 	}
 
 	void FindAllPanel()

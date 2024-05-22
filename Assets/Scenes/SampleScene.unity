@@ -2557,8 +2557,10 @@ GameObject:
   - component: {fileID: 924926685}
   - component: {fileID: 924926686}
   - component: {fileID: 924926688}
-  - component: {fileID: 924926687}
   - component: {fileID: 924926689}
+  - component: {fileID: 924926687}
+  - component: {fileID: 924926691}
+  - component: {fileID: 924926690}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -2618,15 +2620,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5262850ab54374a922d200e72e2f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BottomsPrefab: {fileID: 7556228015642027760, guid: b51cd3130769f014a9773528179db8cc, type: 3}
-  SurfaceItemPrefab: {fileID: 1725058810649328144, guid: 95133c675d3269e4984dfdc7da40eb55, type: 3}
-  SurfacePrefab: {fileID: 8138841645379444608, guid: f9cf5b2a261cb734b944965b41a944aa, type: 3}
-  MapSize: {x: 5, y: 5}
   ItemParent: {fileID: 1422668236}
   DefaultORHightMaterial:
   - {fileID: 2100000, guid: 17411c03558c52545a974a8f22c5ec32, type: 2}
   - {fileID: 2100000, guid: 5298433dfaa321e48b33929abb87368b, type: 2}
-  Pool: []
+  OnlastObj: {x: 0, y: 0}
 --- !u!114 &924926689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2637,6 +2635,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a50bfb4bb81da104f8542a2125ebeb4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Colors:
+  - {fileID: 2100000, guid: 264e17f5cf0e3884babc6c64f072d95e, type: 2}
+  - {fileID: 2100000, guid: df8c20325bce47d43b263d35f9859615, type: 2}
+  - {fileID: 2100000, guid: c5021a32092428a41925e829616106db, type: 2}
+  - {fileID: 2100000, guid: fac58d5e26617f242b686a5275e4e7ae, type: 2}
+--- !u!114 &924926690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924926684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c132944c38aa8f489d46f83e0b2f090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &924926691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924926684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1bd2669d6d180143aba70525d66f17f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &952855178
@@ -3279,6 +3306,7 @@ MonoBehaviour:
   Prop_1Text: {fileID: 817360750}
   Prop_2Text: {fileID: 137594919}
   Prop_3Text: {fileID: 246162813}
+  ScoreFractionalBar: {fileID: 163229357}
 --- !u!1 &1332766637
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,7 +3561,7 @@ Transform:
   m_GameObject: {fileID: 1422668236}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: 0, z: -1}
+  m_LocalPosition: {x: -5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

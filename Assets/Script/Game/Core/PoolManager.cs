@@ -8,19 +8,19 @@ using System.IO;
 public class PoolManager : SingletonMono<PoolManager>
 {
 	private static Vector3 OutOfRange = new Vector3(9000, 9000, 9000);
-	private static Dictionary<string, Dictionary<int, GameObject>> createPools = new Dictionary<string, Dictionary<int, GameObject>>();
-	private static Dictionary<string, Dictionary<int, GameObject>> recyclePools = new Dictionary<string, Dictionary<int, GameObject>>();
+	private  Dictionary<string, Dictionary<int, GameObject>> createPools = new Dictionary<string, Dictionary<int, GameObject>>();
+	private  Dictionary<string, Dictionary<int, GameObject>> recyclePools = new Dictionary<string, Dictionary<int, GameObject>>();
 
     protected override void Awake()
     {
         base.Awake();
     }
-	public static Dictionary<string, Dictionary<int, GameObject>> GetCreatePool()
+	public  Dictionary<string, Dictionary<int, GameObject>> GetCreatePool()
 	{
 		return createPools;
 	}
 
-	public static Dictionary<string, Dictionary<int, GameObject>> GetRecyclePool()
+	public  Dictionary<string, Dictionary<int, GameObject>> GetRecyclePool()
 	{
 		return recyclePools;
 	}
@@ -28,49 +28,49 @@ public class PoolManager : SingletonMono<PoolManager>
 	#region 创建
 
 	//通过创建对象名字 直接实例化
-	public static GameObject CreateGameObject(string name, GameObject parent = null, bool isActive = true)
+	public  GameObject CreateGameObject(string name, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(true, name, null, parent, isActive);
 	}
 
 	//通过预制体 直接实例化
-	public static GameObject CreateGameObject(GameObject prefab, GameObject parent = null, bool isActive = true)
+	public GameObject CreateGameObject(GameObject prefab, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(true, null, prefab, parent, isActive);
 	}
 
 	//通过名字 对象池实例化
-	public static GameObject CreateGameObjectByPool(string name, GameObject parent = null, bool isActive = true)
+	public GameObject CreateGameObjectByPool(string name, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(false, name, null, parent, isActive);
 	}
 
 	//通过预制体 直接实例化
-	public static GameObject CreateGameObjectByPool(GameObject prefab, GameObject parent = null, bool isActive = true)
+	public  GameObject CreateGameObjectByPool(GameObject prefab, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(false, null, prefab, parent, isActive);
 	}
 
 	//通过创建对象名字 直接实例化
-	public static T CreateGameObject<T>(string name, GameObject parent = null, bool isActive = true)
+	public  T CreateGameObject<T>(string name, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(true, name, null, parent, isActive).GetComponent<T>();
 	}
 
 	//通过预制体 直接实例化
-	public static T CreateGameObject<T>(GameObject prefab, GameObject parent = null, bool isActive = true)
+	public  T CreateGameObject<T>(GameObject prefab, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(true, null, prefab, parent, isActive).GetComponent<T>(); ;
 	}
 
 	//通过名字 对象池实例化
-	public static T CreateGameObjectByPool<T>(string name, GameObject parent = null, bool isActive = true)
+	public  T CreateGameObjectByPool<T>(string name, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(false, name, null, parent, isActive).GetComponent<T>(); ;
 	}
 
 	//通过预制体 直接实例化
-	public static T CreateGameObjectByPool<T>(GameObject prefab, GameObject parent = null, bool isActive = true)
+	public  T CreateGameObjectByPool<T>(GameObject prefab, GameObject parent = null, bool isActive = true)
 	{
 		return GetNewObject(false, null, prefab, parent, isActive).GetComponent<T>(); ;
 	}
@@ -85,7 +85,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	/// <param name="parent">实例化父对象</param>
 	/// <param name="isActive"></param>
 	/// <returns></returns>
-	private static GameObject GetNewObject(bool isNew, string objName, GameObject prefab, GameObject parent = null, bool isActive = true)
+	private  GameObject GetNewObject(bool isNew, string objName, GameObject prefab, GameObject parent = null, bool isActive = true)
 	{
 		GameObject go = null;
 
@@ -155,7 +155,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	//实例化
-	private static GameObject InstantiateObject(GameObject prefab, GameObject parent = null)
+	private  GameObject InstantiateObject(GameObject prefab, GameObject parent = null)
 	{
 		if (prefab == null)
 		{
@@ -172,7 +172,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	//加载一个对象并实例化
-	private static GameObject NewGameObject(string gameObjectName, GameObject parent = null)
+	private  GameObject NewGameObject(string gameObjectName, GameObject parent = null)
 	{
 		/****暂时从Resources读取****/
 		GameObject goTmp = Resources.Load<GameObject>(ResPath.GetPath(gameObjectName));
@@ -190,7 +190,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	#region 销毁
 
 	//回收对象
-	public static void DestoryByRecycle(GameObject gameObject, bool isSetInactive = true)
+	public  void DestoryByRecycle(GameObject gameObject, bool isSetInactive = true)
 	{
 		if (!gameObject) return;
 
@@ -219,14 +219,14 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	//延时多久 回收
-	public static void DestoryByRecycle(GameObject gameObject, float time)
+	public  void DestoryByRecycle(GameObject gameObject, float time)
 	{
 		DestoryByRecycle(gameObject);
 	}
 
 
 	//直接销毁
-	public static void Destory(GameObject gameObject)
+	public  void Destory(GameObject gameObject)
 	{
 		if (gameObject == null) return;
 
@@ -246,7 +246,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	//直接销毁
-	public static void Destory(GameObject gameObject, float time)
+	public  void Destory(GameObject gameObject, float time)
 	{
 		if (gameObject == null) return;
 
@@ -268,7 +268,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	#endregion
 
 	//判断是否存在改对象
-	public static bool IsExist(string objName)
+	public  bool IsExist(string objName)
 	{
 		if (string.IsNullOrEmpty(objName))
 		{
@@ -285,7 +285,7 @@ public class PoolManager : SingletonMono<PoolManager>
 		return false;
 	}
 
-	public static bool IsExist(GameObject gameObject)
+	public  bool IsExist(GameObject gameObject)
 	{
 		if (gameObject == null) return false;
 
@@ -293,7 +293,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	//对象池回收 已经创建的了的对象池  对没有元素的清空  销毁所有在回收对象池
-	public static void PoolClean()
+	public  void PoolClean()
 	{
 		//清创创建了的对象池
 		List<string> cleanPool = new List<string>();
@@ -323,7 +323,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	//回收某一对象的池
-	public static void PoolClean(string name)
+	public  void PoolClean(string name)
 	{
 		if (recyclePools.ContainsKey(name))
 		{

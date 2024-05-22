@@ -42,7 +42,7 @@ public class SurfaceItem : MonoBehaviour
 		color.Sort();
         for (int i = 0; i < color.Count; i++)
         {
-			GameObject gameObject = GameManager.Instance.GetObject();
+			GameObject gameObject = PoolManager.Instance.CreateGameObject("surface");
 			gameObject.transform.SetParent(transform);
 			gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + i, transform.position.z);
 			gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);

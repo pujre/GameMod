@@ -7,10 +7,13 @@ using UnityEngine.UI;
 public class GamePanel : PanelBase
 {
     public Text Prop_1Text, Prop_2Text, Prop_3Text;
+	public Image ScoreFractionalBar;
+	
 
 	private void Awake()
 	{
 		DelegateManager.Instance.AddEvent(OnEventKey.OnApplyProp.ToString(), DelegateCallback);
+		DelegateManager.Instance.AddEvent(OnEventKey.OnBonusEvent.ToString(), Score); 
 	}
 
 
@@ -95,7 +98,15 @@ public class GamePanel : PanelBase
         }
     }
 
-    void UpdatePropNumber() {
+	void Score(object[] args)
+	{
+		if (args.Length >= 1 && args[0] is int score)
+		{
+			ScoreFractionalBar.fillAmount += score;
+		}
+	}
+
+	void UpdatePropNumber() {
 
 		int Prop_1Value = 0;
 		int Prop_2Value = 0;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7258804335448255272}
   - component: {fileID: 1218847826161703366}
   - component: {fileID: 7402727273359007471}
+  - component: {fileID: -7888087475725328570}
   m_Layer: 0
   m_Name: surfaceItem
   m_TagString: Untagged
@@ -77,5 +78,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsOnMove: 0
   QreVector3: {x: 0, y: 0, z: 0}
-  Prefab: {fileID: 8138841645379444608, guid: f9cf5b2a261cb734b944965b41a944aa, type: 3}
   Surfaces: []
+--- !u!114 &-7888087475725328570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725058810649328144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5db1cf859d7f7ae489ed2d6e58455cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

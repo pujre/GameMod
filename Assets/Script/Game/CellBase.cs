@@ -52,6 +52,7 @@ public enum OnEventKey
 	OnGameOver,
 	OnAd,
 	OnApplyProp,
+	OnBonusEvent,//加分
 	OnCalculate,//消除事件
 }
 

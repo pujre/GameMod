@@ -25,7 +25,6 @@ public class ResPath : MonoBehaviour
 			{
 				if (string.IsNullOrEmpty(pathes[i])) continue;
 				string[] path = pathes[i].Split('\t');
-				//Debug.Log(path[0] + " " + path[1]);
 				pathDic.Add(path[0], path[1]);
 			}
 		}
@@ -44,7 +43,7 @@ public class ResPath : MonoBehaviour
 	{
 		if (pathDic.ContainsKey(name))
 		{
-			return pathDic[name];
+			return pathDic[name]+ name;
 		}
 
 		Debug.Log("get path name is not exist ->" + name);

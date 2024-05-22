@@ -26,7 +26,6 @@ public class GoundBackItem : MonoBehaviour
 		if (args.Length >= 2 && args[0] is int x && args[1] is int y) {
 			RemoveTopColorObject(x, y);
 		}
-		
 	}
 
 	public GoundBackItem(int x, int y, string name) {
@@ -152,7 +151,6 @@ public class GoundBackItem : MonoBehaviour
 					if (x == listsurface.Count - 1)
 					{
 						SetChinderPosition();
-						Debug.Log("移动完成，开始下一轮的判定");
 						action?.Invoke();
 					}
 				});
@@ -218,8 +216,9 @@ public class GoundBackItem : MonoBehaviour
 				// 在子序列完成时执行回调
 				subSequence.OnComplete(() =>
 				{
-					GameManager.Instance.ReturnObject(obj.gameObject);
+					PoolManager.Instance.DestoryByRecycle(obj.gameObject,false);
 					obj.transform.localScale = Vector3.one;
+					DelegateManager.Instance.TriggerEvent(OnEventKey.OnBonusEvent.ToString(), 1);
 				});
 
 				// 将子序列添加到主序列中

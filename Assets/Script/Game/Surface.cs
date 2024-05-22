@@ -5,10 +5,10 @@ using UnityEngine;
 public class Surface : MonoBehaviour
 {
 	public ItemColorType SurfaceColor= ItemColorType.Gray;
-	public Material[] Colors; 
+	
 	public void SetColor(int x) {
 		SurfaceColor= (ItemColorType)x;
-		transform.GetComponent<MeshRenderer>().material = Colors[x];
+		transform.GetComponent<MeshRenderer>().material = UIManager.Instance.Colors[x];
 	}
 
 	public ItemColorType GetColorType()

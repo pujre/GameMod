@@ -7,19 +7,10 @@ using UnityEngine.UI;
 
 public class GameManager : SingletonMono<GameManager>
 {
-	[Tooltip("网格方块预制体，通用型")]
-	[Header("网格预制体")]
-	public GameObject BottomsPrefab; //
-	[Header("surface拖动预制体")]
-	public GameObject SurfaceItemPrefab; //
-	[Header("Color基础物体预制体")]
-	public GameObject SurfacePrefab;
-	public Vector2Int MapSize = new Vector2Int(5, 5);
 	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
 	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
-	public List<GameObject> Pool;  // 对象池列表
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
 	public Vector2Int OnlastObj;
 
@@ -43,46 +34,10 @@ public class GameManager : SingletonMono<GameManager>
 		base.Awake();
 		Cam = Camera.main; // 获取主摄像机
 		PropNumber = new Dictionary<string, int>();
+		ResPath.Init();
 		LoadlevelData();
 		LoadLevel(1);
-		InitPool();
 		ScelfJob();
-	}
-
-
-	void InitPool() {
-		Pool = new List<GameObject>();
-		for (int i = 0; i < 10; i++)
-		{
-			GameObject obj = Instantiate(SurfacePrefab);
-			obj.SetActive(false);
-			Pool.Add(obj);
-		}
-	}
-
-	// 从对象池中获取对象
-	public GameObject GetObject()
-	{
-		foreach (GameObject obj in Pool)
-		{
-			if (!obj.activeInHierarchy)
-			{
-				obj.SetActive(true);
-				return obj;
-			}
-		}
-
-		// 如果池中没有可用对象，则创建新的对象并添加到池中
-		GameObject newObj = Instantiate(SurfacePrefab);
-		Pool.Add(newObj);
-		return newObj;
-	}
-
-	// 将对象返回到对象池
-	public void ReturnObject(GameObject obj)
-	{
-		obj.transform.SetParent(transform);
-		obj.SetActive(false);
 	}
 
 	void Start()
@@ -202,7 +157,9 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	public void ScelfJob() {
-		GameObject obj = Instantiate(SurfaceItemPrefab, new Vector3(80, 1, -10), Quaternion.identity, GameObject.Find("Game/Panel").transform);
+		GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem",GameObject.Find("Game/Panel"));
+		obj.transform.localRotation = Quaternion.identity;
+		obj.transform.localPosition = new Vector3(80, 1, -10);
 		obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
 		obj.GetComponent<SurfaceItem>().QurStart(new Vector3(0,1,-10));
 	}
@@ -218,18 +175,10 @@ public class GameManager : SingletonMono<GameManager>
 			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
 			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
 			{
-				int topNumber = 10;
-				GoundBackItem top=null;
-				//优先将顶部同颜色，数量多的向数量少的那堆堆
-				for (int i = 0; i < GoundBackItemList.Count; i++)
-                {
-					int ux=GoundBackItemList[i].GetTopColorNumber();
-					if (ux<= topNumber) {
-						top = GoundBackItemList[i];
-						topNumber=ux;
-					}
-				}
-				var ubs = GoundBackItemArray2D[x, y].RemoveSurfaces(GoundBackItemArray2D[x, y].GetTopColor());
+				GoundBackItemList.Sort((item1, item2) => item2.GetTopColorNumber().CompareTo(item1.GetTopColorNumber()));
+				GoundBackItem top = GoundBackItemList[0];
+				var o = GoundBackItemArray2D[x, y];
+				var ubs = o.RemoveSurfaces(o.GetTopColor());
 				OnlastObj = top.ItemPosition;
 				top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
 				{
@@ -325,11 +274,15 @@ public class GameManager : SingletonMono<GameManager>
 				Vector3 position = new Vector3(
 					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
 					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
-				GameObject block = Instantiate(BottomsPrefab, position, Quaternion.Euler(0, 0, 0), ItemParent.transform);
-				block.transform.position = new Vector3(block.transform.position.x + ItemParent.transform.position.x,
-					ItemParent.transform.position.y + block.transform.position.y,
-					ItemParent.transform.position.z + block.transform.position.z);
+				//GameObject block = Instantiate(BottomsPrefab, position, Quaternion.Euler(0, 0, 0), ItemParent.transform);
+				GameObject block = PoolManager.Instance.CreateGameObject("bottoms", ItemParent);
+				block.transform.localRotation = Quaternion.Euler(0, 0, 0);
+				block.transform.localPosition = position;
+				block.transform.localPosition = new Vector3(block.transform.localPosition.x + ItemParent.transform.position.x,
+					ItemParent.transform.position.y + block.transform.localPosition.y,
+					ItemParent.transform.position.z + block.transform.localPosition.z);
 				//block.transform.localScale = new Vector3(1, 1, 1);
+				block.transform.SetParent(ItemParent.transform);
 				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
 				goundBackItem.SetData(x, z, $"{x},{z}");
 				GoundBackItemArray2D[x, z] = goundBackItem;
