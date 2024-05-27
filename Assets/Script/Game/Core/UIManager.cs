@@ -10,7 +10,8 @@ public class UIManager : SingletonMono<UIManager>
 
 	protected override void Awake()
 	{
-		Debug.Log("UIManager");
+		base.Awake();
+		FindAllPanel();
 	}
 
 	void FindAllPanel()
@@ -18,7 +19,8 @@ public class UIManager : SingletonMono<UIManager>
 		PanelBase[] allPanel = FindObjectsOfType<PanelBase>(true);
 		for (int i = 0; i < allPanel.Length; i++)
 		{
-			PanelDic.Add(allPanel[i].gameObject.name, allPanel[i]);
+			if (!PanelDic.ContainsKey(allPanel[i].gameObject.name))
+				PanelDic.Add(allPanel[i].gameObject.name, allPanel[i]);
 		}
 	}
 
@@ -46,7 +48,19 @@ public class UIManager : SingletonMono<UIManager>
 		}
 	}
 
-	// 触发特定的方法
+	public PanelBase GetPanel(string panelName)
+	{
+		PanelBase p;
+		PanelDic.TryGetValue(panelName, out p);
+		if (p)
+		{
+			return p;
+		}
+		Debug.Log(string.Format("未找到名为 {0} 的面板", panelName));
+		return null;
+	}
+
+	// 触发指定名字特定的方法
 	public void TriggerPanelMethod(string panelName, string methodName, object[] parameters)
 	{
 		if (PanelDic.TryGetValue(panelName, out PanelBase panel))

@@ -8,13 +8,19 @@ public class GamePanel : PanelBase
 {
     public Text Prop_1Text, Prop_2Text, Prop_3Text;
 	public Image ScoreFractionalBar;
-	
+	public List<Selected> SelectedList = new List<Selected>();
+
+
 
 	private void Awake()
 	{
 		DelegateManager.Instance.AddEvent(OnEventKey.OnApplyProp.ToString(), DelegateCallback);
-		DelegateManager.Instance.AddEvent(OnEventKey.OnBonusEvent.ToString(), Score); 
+		DelegateManager.Instance.AddEvent(OnEventKey.OnBonusEvent.ToString(), Score);
 	}
+
+
+
+
 
 
 	void Start()
@@ -26,17 +32,14 @@ public class GamePanel : PanelBase
             button.onClick.AddListener(() => { OnClickEvent(button.gameObject);});
         }
 		UpdatePropNumber();
-
 	}
 
 	
 
-	void Update()
-    {
-        
-    }
 
-    void OnClickEvent(GameObject but) {
+
+
+	void OnClickEvent(GameObject but) {
 		int Value = 0;
 		switch (but.name) {
             case "Prop_1Btn":
@@ -79,24 +82,8 @@ public class GamePanel : PanelBase
     }
 
     void DelegateCallback(object[] args){
-        switch (args[0])
-        {
-            case "Prop_1":
-                Debug.Log("Use Prop_1");
-                UpdatePropNumber();
-				break;
-            case "Prop_2":
-				Debug.Log("Use Prop_2");
-				UpdatePropNumber();
-				break;
-            case "Prop_3":
-				Debug.Log("Use Prop_3");
-				UpdatePropNumber();
-				break;
-			default:
-                break;
-        }
-    }
+		UpdatePropNumber();
+	}
 
 	void Score(object[] args)
 	{
@@ -111,18 +98,6 @@ public class GamePanel : PanelBase
 		int Prop_1Value = 0;
 		int Prop_2Value = 0;
 		int Prop_3Value = 0;
-		if (GameManager.Instance == null)
-		{
-			Debug.LogError("GameManager instance is null");
-			return;
-		}
-
-		if (GameManager.Instance.PropNumber == null)
-		{
-			Debug.LogError("GameManager.PropNumber is not initialized");
-			return;
-		}
-
 		LevelData nowLevelData = GameManager.Instance.GetNowLevelData();
 		if (nowLevelData == null)
 		{

@@ -1,9 +1,13 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+using WeChatWASM;
+using static UnityEditor.PlayerSettings;
 
 public class GameManager : SingletonMono<GameManager>
 {
@@ -18,16 +22,19 @@ public class GameManager : SingletonMono<GameManager>
 	private bool IsDragging = false;
 	private GameObject SelectedObject;
 
+
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
 	private int NowLevel=1;
+
+	#region 局部变量private
 	private RaycastHit hit;
 	private Ray ray;
 	private bool foundBottom=false;
 	private Vector3 newPosition;
 	private Transform lastHighlightedObject;
-
+	#endregion
 
 	protected override void Awake()
 	{
@@ -35,14 +42,15 @@ public class GameManager : SingletonMono<GameManager>
 		Cam = Camera.main; // 获取主摄像机
 		PropNumber = new Dictionary<string, int>();
 		ResPath.Init();
-		LoadlevelData();
-		LoadLevel(1);
-		ScelfJob();
 	}
 
 	void Start()
 	{
-		
+		LoadlevelData();
+		LoadLevel(1);
+		ScelfJob();
+		ScelfJob();
+		ScelfJob();
 	}
 
 	void Update()
@@ -124,6 +132,14 @@ public class GameManager : SingletonMono<GameManager>
 				lj.AddSurfacesList(si.Surfaces);
 				si.Surfaces.Clear();
 				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
+				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
+				for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+				{
+					if (gamePanel.SelectedList[i].SelfGameMove == SelectedObject)
+					{
+						gamePanel.SelectedList[i].SelfGameMove = null;
+					}
+				}
 				ScelfJob();
 				SelectedObject = null;
 				Destroy(obj);
@@ -160,11 +176,19 @@ public class GameManager : SingletonMono<GameManager>
 		GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem",GameObject.Find("Game/Panel"));
 		obj.transform.localRotation = Quaternion.identity;
 		obj.transform.localPosition = new Vector3(80, 1, -10);
-		obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
-		obj.GetComponent<SurfaceItem>().QurStart(new Vector3(0,1,-10));
+		GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
+		for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+		{
+			if (gamePanel.SelectedList[i].SelfGameMove == null)
+			{
+				gamePanel.SelectedList[i].SelfGameMove = obj;
+				obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
+				obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);
+				break;
+			}
+		}
+		
 	}
-
-
 
 
 	/// <summary>
