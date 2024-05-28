@@ -9,7 +9,6 @@ public abstract class PanelBase : MonoBehaviour
 		gameObject.SetActive(isOn);
 	}
 
-
 	// 调用特定方法
 	public abstract void CallSpecificMethod(string methodName, object[] parameters);
 }

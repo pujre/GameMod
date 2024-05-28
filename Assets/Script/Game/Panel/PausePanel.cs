@@ -38,6 +38,7 @@ public class PausePanel : PanelBase
 		toggles.FirstOrDefault(t => t.gameObject.name == "SoundToggle").isOn = DataManager.Instance.GetData(OnDataKey.Sound_On) == 0 ? true : false;
 	}
 
+
 	void OnClickEvent(GameObject but)
 	{
 		switch (but.name)
