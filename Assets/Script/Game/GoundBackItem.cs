@@ -170,6 +170,7 @@ public class GoundBackItem : MonoBehaviour
 				Vector3 ka = new Vector3((o3s[i].x + obj.transform.localPosition.x) / 2, o3s[i].y + 5, (o3s[i].z + obj.transform.localPosition.z) / 2);
 
 				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
+				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0,2,0), 0.1f).SetEase(Ease.Linear));
 				sequence.Append(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
 				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.1f).SetEase(Ease.Linear));
 				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
@@ -234,7 +235,7 @@ public class GoundBackItem : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", x, y, count));
+			//Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", x, y, count));
 		}
 	}
 }

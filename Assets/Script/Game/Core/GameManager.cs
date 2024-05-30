@@ -206,6 +206,7 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				if (GoundBackItemList.Count > 1)
 				{
+					Debug.Log("多个堆叠逻辑");
 					GoundBackItemList.Sort((item1, item2) => item2.GetNowColorNumber().CompareTo(item1.GetNowColorNumber()));
 					// 定义一个递归函数来处理连续的动画
 					void StartNextAnimation(int index)
@@ -213,7 +214,7 @@ public class GameManager : SingletonMono<GameManager>
 						if (index < GoundBackItemList.Count)
 						{
 							var currentItem = GoundBackItemList[index];
-							if (index == GoundBackItemList.Count - 1 && o.GetNowColorNumber() > currentItem.GetNowColorNumber())
+							if (index == GoundBackItemList.Count - 1 && o.GetNowColorNumber() >= currentItem.GetNowColorNumber())
 							{
 								GoundBackItem mos = currentItem;
 								currentItem = o;
@@ -235,9 +236,10 @@ public class GameManager : SingletonMono<GameManager>
 				}
 				else
 				{
+					Debug.Log("单个堆叠逻辑");
 					//从大到小得顺序排列
-					GoundBackItemList.Sort((item1, item2) => item2.GetTopColorNumber().CompareTo(item1.GetTopColorNumber()));
-					GoundBackItem top = GoundBackItemList[0];
+					GoundBackItemList.Sort((item1, item2) => item2.GetNowColorNumber().CompareTo(item1.GetNowColorNumber()));
+					GoundBackItem top = GoundBackItemList[GoundBackItemList.Count -1];
 					var ubs = o.RemoveSurfaces(o.GetTopColor());
 					OnlastObj = top.ItemPosition;
 					top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
@@ -297,7 +299,7 @@ public class GameManager : SingletonMono<GameManager>
 				}
 			}
 		}
-		Debug.Log(debug);
+		if(!string.IsNullOrEmpty(debug))Debug.Log(debug);
 		return ayx;
 	}
 
