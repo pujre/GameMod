@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Hardware;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -195,34 +196,72 @@ public class GameManager : SingletonMono<GameManager>
 	/// <summary>
 	/// 计算堆叠逻辑
 	/// </summary>
-	public void CalculateElimination(int x, int y) {
-		if(GoundBackItemArray2D!=null){
+	public void CalculateElimination(int x, int y)
+	{
+		if (GoundBackItemArray2D != null)
+		{
 			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
-			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
+			var o = GoundBackItemArray2D[x, y];
+			if (GoundBackItemList != null && GoundBackItemList.Count > 0)
 			{
-				GoundBackItemList.Sort((item1, item2) => item2.GetTopColorNumber().CompareTo(item1.GetTopColorNumber()));
-				GoundBackItem top = GoundBackItemList[0];
-				var o = GoundBackItemArray2D[x, y];
-				var ubs = o.RemoveSurfaces(o.GetTopColor());
-				OnlastObj = top.ItemPosition;
-				top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
+				if (GoundBackItemList.Count > 1)
 				{
-					if (GetGoundBackItems(x, y).Count > 0)
+					GoundBackItemList.Sort((item1, item2) => item2.GetNowColorNumber().CompareTo(item1.GetNowColorNumber()));
+					// 定义一个递归函数来处理连续的动画
+					void StartNextAnimation(int index)
 					{
-						CalculateElimination(x, y);
+						if (index < GoundBackItemList.Count)
+						{
+							var currentItem = GoundBackItemList[index];
+							if (index == GoundBackItemList.Count - 1 && o.GetNowColorNumber() > currentItem.GetNowColorNumber())
+							{
+								GoundBackItem mos = currentItem;
+								currentItem = o;
+								o = mos;
+							}
+							var ops = currentItem.RemoveSurfaces(o.GetTopColor());
+							o.AddSurfaces(ops, MoveTweenType.Continuity, () =>
+							{
+								// 当前动画完成后，递归调用下一个动画
+								StartNextAnimation(index + 1);
+							});
+						}
+						else {
+							CalculateElimination(x, y);
+						}
 					}
-					else {
-						CalculateElimination(OnlastObj.x, OnlastObj.y);
-					}
-				});
+					// 开始第一个动画
+					StartNextAnimation(0);
+				}
+				else
+				{
+					//从大到小得顺序排列
+					GoundBackItemList.Sort((item1, item2) => item2.GetTopColorNumber().CompareTo(item1.GetTopColorNumber()));
+					GoundBackItem top = GoundBackItemList[0];
+					var ubs = o.RemoveSurfaces(o.GetTopColor());
+					OnlastObj = top.ItemPosition;
+					top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
+					{
+
+						if (GetGoundBackItems(x, y).Count > 0)
+						{
+							CalculateElimination(x, y);
+						}
+						else
+						{
+							CalculateElimination(OnlastObj.x, OnlastObj.y);
+						}
+					});
+				}
 			}
-			else {
+			else
+			{
 				DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString(), x, y);
 			}
 		}
 	}
 
-	
+
 
 	/// <summary>
 	/// 获取当前六边数组中是否有可消除的
