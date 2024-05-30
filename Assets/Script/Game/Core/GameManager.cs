@@ -169,6 +169,7 @@ public class GameManager : SingletonMono<GameManager>
 		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
 		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
+		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
 	}
 
 

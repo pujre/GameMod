@@ -47,11 +47,12 @@ public enum ItemColorType
 /// </summary>
 public enum OnEventKey
 {
-	OngameStar,
-	OnStop,
-	OnGameOver,
-	OnAd,
-	OnApplyProp,
+	OngameStar,//
+	OnLoadGameLevel,//加载游戏关卡
+	OnStop,//
+	OnGameOver,//游戏结束
+	OnAd,//看广告
+	OnApplyProp,//使用道具
 	OnBonusEvent,//加分
 	OnCalculate,//消除事件
 }
