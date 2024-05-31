@@ -96,6 +96,9 @@ public class GamePanel : PanelBase
 			Debug.Log("¼Ó·Ö");
 			NowScore += score;
 			ScoreFractionalBar.fillAmount = ((float)NowScore / (float)TagerScore);
+			if (NowScore>= TagerScore) {
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameOverWin.ToString());
+			}
 		}
 	}
 

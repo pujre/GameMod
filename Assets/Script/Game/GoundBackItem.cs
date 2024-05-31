@@ -6,19 +6,22 @@ using UnityEngine;
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
+	public bool IsLock = false;//true表示锁上，需要解锁
 	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
 
-	private float Assign_Y;
+	private float GoundBack_Y = 1.2f;
+	private float Assign_Y=0.25f;
 	/// <summary>
 	/// 该节点所属得坐标
 	/// </summary>
 	public Vector2Int ItemPosition;
-    public List<Surface> SurfacesList = new List<Surface>();
+	public List<Surface> SurfacesList = new List<Surface>();
 
 	private void Awake()
 	{
+		GoundBack_Y = 1.2f;
+		Assign_Y = 0.25f;
 		SurfacesList = new List<Surface>();
-		Assign_Y = 1.2f;
 		DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
 	void DelegateCallback(object[] args)
@@ -26,6 +29,10 @@ public class GoundBackItem : MonoBehaviour
 		if (args.Length >= 2 && args[0] is int x && args[1] is int y) {
 			RemoveTopColorObject(x, y);
 		}
+	}
+
+	public void LockOrUnLockTheItem(bool isOn){
+		IsLock=isOn;
 	}
 
 	public GoundBackItem(int x, int y, string name) {
@@ -36,10 +43,11 @@ public class GoundBackItem : MonoBehaviour
 	{
 		ItemPosition = new Vector2Int(x, y);
 		if (gameObject) gameObject.name = name;
+
 	}
 
 	public bool IsAddSurface() {
-		return SurfacesList.Count == 0?true:false;
+		return SurfacesList.Count == 0|| IsLock ? true:false;
 	}
 
 	/// <summary>
@@ -49,7 +57,7 @@ public class GoundBackItem : MonoBehaviour
 		if (SurfacesList == null) return;
         for (int i = 0; i < SurfacesList.Count; i++)
         {
-			SurfacesList[i].transform.localPosition = new Vector3(0,transform.localPosition.y+ Assign_Y+( i * Assign_Y), 0);
+			SurfacesList[i].transform.localPosition = new Vector3(0,GoundBack_Y+ (i * Assign_Y), 0);
 		}
 	}
 
@@ -58,7 +66,7 @@ public class GoundBackItem : MonoBehaviour
 		Vector3 startVectpr3 = SurfacesList[SurfacesList.Count-1].transform.localPosition;
 		for (int i = 0; i < x; i++)
 		{
-			vectors.Add(new Vector3(startVectpr3.x, startVectpr3.y + Assign_Y + (i * Assign_Y), startVectpr3.z));
+			vectors.Add(new Vector3(startVectpr3.x, startVectpr3.y + (i * Assign_Y), startVectpr3.z));
 		}
 		return vectors;
 	}
@@ -168,8 +176,10 @@ public class GoundBackItem : MonoBehaviour
 
 				obj.transform.SetParent(transform);
 				Vector3 ka = new Vector3((o3s[i].x + obj.transform.localPosition.x) / 2, o3s[i].y + 5, (o3s[i].z + obj.transform.localPosition.z) / 2);
-
 				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
+				sequence.AppendCallback(() => {
+					AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
+				});
 				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0,5,0), 0.1f).SetEase(Ease.Linear));
 				sequence.Append(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
 				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.1f).SetEase(Ease.Linear));
@@ -209,8 +219,11 @@ public class GoundBackItem : MonoBehaviour
 				var obj = sl[i];
 				Vector3 ka = obj.transform.localPosition + new Vector3(0,5, 0);
 
-				// 创建一个子序列来同时进行移动和透明度变化
+				// 创建一个子序列来同时进行移动和缩放的变化
 				Sequence subSequence = DOTween.Sequence();
+				subSequence.AppendCallback(() => {
+					AudioManager.Instance.PlaySFX("Ding（消完飞上去增加积分）");
+				});
 				subSequence.Join(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
 				subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).SetEase(Ease.Linear));
 

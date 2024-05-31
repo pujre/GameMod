@@ -126,11 +126,12 @@ public class GameManager : SingletonMono<GameManager>
 			if (lastHighlightedObject != null)
 			{
 				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-				obj.transform.position = new Vector3(lastHighlightedObject.transform.position.x, lastHighlightedObject.transform.position.y + 1, lastHighlightedObject.transform.position.z);
+				obj.transform.position = lastHighlightedObject.transform.position+ new Vector3(0,1.2f,0);
 				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 				si.QueMoveEnd();
 				GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
 				lj.AddSurfacesList(si.Surfaces);
+				AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
 				si.Surfaces.Clear();
 				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
@@ -147,6 +148,7 @@ public class GameManager : SingletonMono<GameManager>
 			}
 			else {
 				obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
+				
 				SelectedObject = null;
 			}
 		}
@@ -186,6 +188,7 @@ public class GameManager : SingletonMono<GameManager>
 				gamePanel.SelectedList[i].SelfGameMove = obj;
 				obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
 				obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);
+				AudioManager.Instance.PlaySFX("Hu（出现三个新的堆叠物）");
 				break;
 			}
 		}
@@ -351,6 +354,9 @@ public class GameManager : SingletonMono<GameManager>
 				block.transform.SetParent(ItemParent.transform);
 				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
 				goundBackItem.SetData(x, z, $"{x},{z}");
+				if (GetNowLevelData().IsLock(x,z)) {
+					goundBackItem.LockOrUnLockTheItem(true);
+				}
 				GoundBackItemArray2D[x, z] = goundBackItem;
 			}
 			isOn = !isOn;
