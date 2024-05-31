@@ -82,9 +82,10 @@ public class GamePanel : PanelBase
 				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
 				break;
         }
-    }
+		AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
+	}
 
-    void DelegateCallback(object[] args){
+	void DelegateCallback(object[] args){
 		UpdatePropNumber();
 	}
 

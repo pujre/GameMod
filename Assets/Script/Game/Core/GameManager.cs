@@ -52,6 +52,7 @@ public class GameManager : SingletonMono<GameManager>
 		ScelfJob();
 		ScelfJob();
 		ScelfJob();
+		AudioManager.Instance.PlayBGM("bgm2£®”Œœ∑ΩÁ√Ê£©");
 	}
 
 	void Update()

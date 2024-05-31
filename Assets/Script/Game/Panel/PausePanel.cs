@@ -52,6 +52,7 @@ public class PausePanel : PanelBase
 			case "WinBtn":
 				break;
 		}
+		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 
 	}
 
@@ -62,6 +63,13 @@ public class PausePanel : PanelBase
 		{
 			case "MusicToggle":
 				DataManager.Instance.SetData(OnDataKey.Music_On, isOn ? 0 : 1);
+				if (isOn)
+				{
+					AudioManager.Instance.PlayBGM("bgm2（游戏界面）");
+				}
+				else {
+					AudioManager.Instance.StopBGM();
+				}
 				break;
 			case "ShakeToggle":
 				DataManager.Instance.SetData(OnDataKey.Shake_On, isOn ? 0 : 1);
@@ -70,6 +78,7 @@ public class PausePanel : PanelBase
 				DataManager.Instance.SetData(OnDataKey.Sound_On, isOn ? 0 : 1);
 				break;
 		}
+		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 	}
 
 	void DelegateCallback(object[] args)

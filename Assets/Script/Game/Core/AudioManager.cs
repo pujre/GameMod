@@ -40,8 +40,7 @@ public class AudioManager : SingletonMono<AudioManager>{
 				BgmDictionary[bgmName] = clip;
 			}
 		}
-
-		if (BgmDictionary.ContainsKey(bgmName))
+		if (BgmDictionary.ContainsKey(bgmName)&&DataManager.Instance.GetData(OnDataKey.Music_On)==0)
 		{
 			BgmSource.clip = BgmDictionary[bgmName];
 			BgmSource.Play();
@@ -64,7 +63,7 @@ public class AudioManager : SingletonMono<AudioManager>{
 			}
 		}
 
-		if (SfxDictionary.ContainsKey(sfxName))
+		if (SfxDictionary.ContainsKey(sfxName) && DataManager.Instance.GetData(OnDataKey.Sound_On) == 0)
 		{
 			AudioSource sfxSource = gameObject.AddComponent<AudioSource>();
 			sfxSource.clip = SfxDictionary[sfxName];
