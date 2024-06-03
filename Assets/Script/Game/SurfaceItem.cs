@@ -8,6 +8,7 @@ public class SurfaceItem : MonoBehaviour
 {
 	public bool IsOnMove = false;//是否允许拖动
 	public Vector3 QreVector3;//初始坐标
+	private float Assign_Y=0.25F;
 	public List<Surface> Surfaces = new List<Surface>();
 
 
@@ -35,7 +36,7 @@ public class SurfaceItem : MonoBehaviour
 	/// <param name="colorNumber"></param>
 	public void CreatorSurface(int colorNumber=3) {
 		List<int> color = new List<int>();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 9; i++)
 		{
 			color.Add(Random.Range(0, colorNumber));
 		}
@@ -44,7 +45,7 @@ public class SurfaceItem : MonoBehaviour
         {
 			GameObject gameObject = PoolManager.Instance.CreateGameObject("surface");
 			gameObject.transform.SetParent(transform);
-			gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + i, transform.position.z);
+			gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + (i* Assign_Y), transform.position.z);
 			gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 			gameObject.GetComponent<Surface>().SetColor(color[i]);
 			Surfaces.Add(gameObject.GetComponent<Surface>());

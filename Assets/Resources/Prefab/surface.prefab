@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,12 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SurfaceColor: 0
-  Colors:
-  - {fileID: 2100000, guid: 4e51d659ea8a46a4db0ae47faea285e5, type: 2}
-  - {fileID: 2100000, guid: 264e17f5cf0e3884babc6c64f072d95e, type: 2}
-  - {fileID: 2100000, guid: df8c20325bce47d43b263d35f9859615, type: 2}
-  - {fileID: 2100000, guid: c5021a32092428a41925e829616106db, type: 2}
-  - {fileID: 2100000, guid: fac58d5e26617f242b686a5275e4e7ae, type: 2}
 --- !u!114 &-4661564378940666850
 MonoBehaviour:
   m_ObjectHideFlags: 0

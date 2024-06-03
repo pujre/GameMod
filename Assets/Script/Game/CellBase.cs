@@ -47,11 +47,13 @@ public enum ItemColorType
 /// </summary>
 public enum OnEventKey
 {
-	OngameStar,
-	OnStop,
-	OnGameOver,
-	OnAd,
-	OnApplyProp,
+	OngameStar,//
+	OnLoadGameLevel,//加载游戏关卡
+	OnStop,//
+	OnGameOverWin,//游戏结束胜利
+	OnGameOverLose,//游戏结束失败
+	OnAd,//看广告
+	OnApplyProp,//使用道具
 	OnBonusEvent,//加分
 	OnCalculate,//消除事件
 }
@@ -108,9 +110,11 @@ public class LevelDataRoot
 public class LevelData
 {
 	public int Level;
+	//地图大小
 	public Vector2Int ChapterSize;
-	public Vector2Int GridLock;
-	public Vector2Int ChapterDefault;
+	//锁住了哪些格子
+	public List<Vector2Int> GridLock;
+	public List<Vector2Int> ChapterDefault;
 	public int ClearanceScore;
 	public int ColourNum;
 	public int MaxNum;
@@ -150,6 +154,19 @@ public class LevelData
 	/// </summary>
 	public string Describe_3;
 	public LevelData() {
+		GridLock = new List<Vector2Int>();
+		ChapterDefault = new List<Vector2Int>();
+	}
+
+	public bool IsLock(int x,int y) {
+		if(GridLock==null) { return false; }
+        for (int i = 0; i < GridLock.Count; i++)
+        {
+			if (GridLock[i].x==x&& GridLock[i].y==y) {
+				return true;
+			}
+        }
+        return false;
 	}
 }
 

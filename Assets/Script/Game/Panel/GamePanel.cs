@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class GamePanel : PanelBase
@@ -9,13 +10,15 @@ public class GamePanel : PanelBase
     public Text Prop_1Text, Prop_2Text, Prop_3Text;
 	public Image ScoreFractionalBar;
 	public List<Selected> SelectedList = new List<Selected>();
-
+	public int NowScore = 0;
+	public int TagerScore = 0;
 
 
 	private void Awake()
 	{
 		DelegateManager.Instance.AddEvent(OnEventKey.OnApplyProp.ToString(), DelegateCallback);
 		DelegateManager.Instance.AddEvent(OnEventKey.OnBonusEvent.ToString(), Score);
+		DelegateManager.Instance.AddEvent(OnEventKey.OnLoadGameLevel.ToString(), LoadGameLevel);
 	}
 
 
@@ -79,18 +82,31 @@ public class GamePanel : PanelBase
 				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
 				break;
         }
-    }
+		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
+	}
 
-    void DelegateCallback(object[] args){
+	void DelegateCallback(object[] args){
 		UpdatePropNumber();
 	}
 
 	void Score(object[] args)
 	{
+		Debug.Log("得分");
 		if (args.Length >= 1 && args[0] is int score)
 		{
-			ScoreFractionalBar.fillAmount += score;
+			Debug.Log("加分");
+			NowScore += score;
+			ScoreFractionalBar.fillAmount = ((float)NowScore / (float)TagerScore);
+			if (NowScore>= TagerScore) {
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameOverWin.ToString());
+			}
 		}
+	}
+
+	void LoadGameLevel(object[] args) {
+		ScoreFractionalBar.fillAmount = 0;
+		NowScore = 0;
+		TagerScore = GameManager.Instance.GetNowLevelData().ClearanceScore;
 	}
 
 	void UpdatePropNumber() {

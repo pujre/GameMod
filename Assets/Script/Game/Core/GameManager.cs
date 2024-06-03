@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Hardware;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -51,6 +52,7 @@ public class GameManager : SingletonMono<GameManager>
 		ScelfJob();
 		ScelfJob();
 		ScelfJob();
+		AudioManager.Instance.PlayBGM("bgm2（游戏界面）");
 	}
 
 	void Update()
@@ -125,11 +127,12 @@ public class GameManager : SingletonMono<GameManager>
 			if (lastHighlightedObject != null)
 			{
 				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-				obj.transform.position = new Vector3(lastHighlightedObject.transform.position.x, lastHighlightedObject.transform.position.y + 1, lastHighlightedObject.transform.position.z);
+				obj.transform.position = lastHighlightedObject.transform.position+ new Vector3(0,1.2f,0);
 				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 				si.QueMoveEnd();
 				GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
 				lj.AddSurfacesList(si.Surfaces);
+				AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
 				si.Surfaces.Clear();
 				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
@@ -146,6 +149,7 @@ public class GameManager : SingletonMono<GameManager>
 			}
 			else {
 				obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
+				
 				SelectedObject = null;
 			}
 		}
@@ -169,6 +173,7 @@ public class GameManager : SingletonMono<GameManager>
 		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
 		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
+		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
 	}
 
 
@@ -184,6 +189,7 @@ public class GameManager : SingletonMono<GameManager>
 				gamePanel.SelectedList[i].SelfGameMove = obj;
 				obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
 				obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);
+				AudioManager.Instance.PlaySFX("Hu（出现三个新的堆叠物）");
 				break;
 			}
 		}
@@ -194,34 +200,74 @@ public class GameManager : SingletonMono<GameManager>
 	/// <summary>
 	/// 计算堆叠逻辑
 	/// </summary>
-	public void CalculateElimination(int x, int y) {
-		if(GoundBackItemArray2D!=null){
+	public void CalculateElimination(int x, int y)
+	{
+		if (GoundBackItemArray2D != null)
+		{
 			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
-			if (GoundBackItemList!=null&&GoundBackItemList.Count > 0)
+			var o = GoundBackItemArray2D[x, y];
+			if (GoundBackItemList != null && GoundBackItemList.Count > 0)
 			{
-				GoundBackItemList.Sort((item1, item2) => item2.GetTopColorNumber().CompareTo(item1.GetTopColorNumber()));
-				GoundBackItem top = GoundBackItemList[0];
-				var o = GoundBackItemArray2D[x, y];
-				var ubs = o.RemoveSurfaces(o.GetTopColor());
-				OnlastObj = top.ItemPosition;
-				top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
+				if (GoundBackItemList.Count > 1)
 				{
-					if (GetGoundBackItems(x, y).Count > 0)
+					Debug.Log("多个堆叠逻辑");
+					GoundBackItemList.Sort((item1, item2) => item2.GetNowColorNumber().CompareTo(item1.GetNowColorNumber()));
+					// 定义一个递归函数来处理连续的动画
+					void StartNextAnimation(int index)
 					{
-						CalculateElimination(x, y);
+						if (index < GoundBackItemList.Count)
+						{
+							var currentItem = GoundBackItemList[index];
+							if (index == GoundBackItemList.Count - 1 && o.GetNowColorNumber() >= currentItem.GetNowColorNumber())
+							{
+								GoundBackItem mos = currentItem;
+								currentItem = o;
+								o = mos;
+							}
+							var ops = currentItem.RemoveSurfaces(o.GetTopColor());
+							o.AddSurfaces(ops, MoveTweenType.Continuity, () =>
+							{
+								// 当前动画完成后，递归调用下一个动画
+								StartNextAnimation(index + 1);
+							});
+						}
+						else {
+							CalculateElimination(x, y);
+						}
 					}
-					else {
-						CalculateElimination(OnlastObj.x, OnlastObj.y);
-					}
-				});
+					// 开始第一个动画
+					StartNextAnimation(0);
+				}
+				else
+				{
+					Debug.Log("单个堆叠逻辑");
+					//从大到小得顺序排列
+					GoundBackItemList.Sort((item1, item2) => item2.GetNowColorNumber().CompareTo(item1.GetNowColorNumber()));
+					GoundBackItem top = GoundBackItemList[GoundBackItemList.Count -1];
+					var ubs = o.RemoveSurfaces(o.GetTopColor());
+					OnlastObj = top.ItemPosition;
+					top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
+					{
+
+						if (GetGoundBackItems(x, y).Count > 0)
+						{
+							CalculateElimination(x, y);
+						}
+						else
+						{
+							CalculateElimination(OnlastObj.x, OnlastObj.y);
+						}
+					});
+				}
 			}
-			else {
+			else
+			{
 				DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString(), x, y);
 			}
 		}
 	}
 
-	
+
 
 	/// <summary>
 	/// 获取当前六边数组中是否有可消除的
@@ -257,7 +303,7 @@ public class GameManager : SingletonMono<GameManager>
 				}
 			}
 		}
-		Debug.Log(debug);
+		if(!string.IsNullOrEmpty(debug))Debug.Log(debug);
 		return ayx;
 	}
 
@@ -309,6 +355,9 @@ public class GameManager : SingletonMono<GameManager>
 				block.transform.SetParent(ItemParent.transform);
 				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
 				goundBackItem.SetData(x, z, $"{x},{z}");
+				if (GetNowLevelData().IsLock(x,z)) {
+					goundBackItem.LockOrUnLockTheItem(true);
+				}
 				GoundBackItemArray2D[x, z] = goundBackItem;
 			}
 			isOn = !isOn;
