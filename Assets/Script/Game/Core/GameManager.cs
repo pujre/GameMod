@@ -1,14 +1,6 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Hardware;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
-using WeChatWASM;
-using static UnityEditor.PlayerSettings;
 
 public class GameManager : SingletonMono<GameManager>
 {
@@ -72,7 +64,7 @@ public class GameManager : SingletonMono<GameManager>
 
 		if (IsDragging && SelectedObject != null)
 		{
-			 ray = Cam.ScreenPointToRay(Input.mousePosition);
+			ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 			{
 				newPosition = hitInfo.point;
@@ -86,7 +78,6 @@ public class GameManager : SingletonMono<GameManager>
 
 			foreach (RaycastHit hit in hits)
 			{
-
 				if (hit.transform.gameObject.tag == "bottom"&&
 					hit.transform.GetComponent<GoundBackItem>()&&
 					hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
@@ -149,7 +140,6 @@ public class GameManager : SingletonMono<GameManager>
 			}
 			else {
 				obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
-				
 				SelectedObject = null;
 			}
 		}
@@ -211,6 +201,7 @@ public class GameManager : SingletonMono<GameManager>
 				if (GoundBackItemList.Count > 1)
 				{
 					Debug.Log("多个堆叠逻辑");
+					//从大到小得顺序排列
 					GoundBackItemList.Sort((item1, item2) => item2.GetNowColorNumber().CompareTo(item1.GetNowColorNumber()));
 					// 定义一个递归函数来处理连续的动画
 					void StartNextAnimation(int index)
@@ -248,7 +239,6 @@ public class GameManager : SingletonMono<GameManager>
 					OnlastObj = top.ItemPosition;
 					top.AddSurfaces(ubs, MoveTweenType.Continuity, () =>
 					{
-
 						if (GetGoundBackItems(x, y).Count > 0)
 						{
 							CalculateElimination(x, y);
@@ -303,7 +293,7 @@ public class GameManager : SingletonMono<GameManager>
 				}
 			}
 		}
-		if(!string.IsNullOrEmpty(debug))Debug.Log(debug);
+		//if(!string.IsNullOrEmpty(debug))Debug.Log(debug);
 		return ayx;
 	}
 
@@ -344,14 +334,10 @@ public class GameManager : SingletonMono<GameManager>
 				Vector3 position = new Vector3(
 					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
 					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
-				//GameObject block = Instantiate(BottomsPrefab, position, Quaternion.Euler(0, 0, 0), ItemParent.transform);
 				GameObject block = PoolManager.Instance.CreateGameObject("bottoms", ItemParent);
 				block.transform.localRotation = Quaternion.Euler(0, 0, 0);
 				block.transform.localPosition = position;
-				block.transform.localPosition = new Vector3(block.transform.localPosition.x + ItemParent.transform.position.x,
-					ItemParent.transform.position.y + block.transform.localPosition.y,
-					ItemParent.transform.position.z + block.transform.localPosition.z);
-				//block.transform.localScale = new Vector3(1, 1, 1);
+				block.transform.localPosition += ItemParent.transform.position;
 				block.transform.SetParent(ItemParent.transform);
 				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
 				goundBackItem.SetData(x, z, $"{x},{z}");
@@ -369,11 +355,9 @@ public class GameManager : SingletonMono<GameManager>
 	/// </summary>
 	public void RemoveBoxMatrix()
 	{
-		int childCount = ItemParent.transform.childCount;
-		for (int i = childCount - 1; i >= 0; i--)
+		for (int i = ItemParent.transform.childCount - 1; i >= 0; i--)
 		{
-			Transform child = ItemParent.transform.GetChild(i);
-			DestroyImmediate(child.gameObject);
+			DestroyImmediate(ItemParent.transform.GetChild(i).gameObject);
 		}
 	}
 }

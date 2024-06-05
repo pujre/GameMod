@@ -20,7 +20,7 @@ public class GoundBackItem : MonoBehaviour
 	private void Awake()
 	{
 		GoundBack_Y = 1.2f;
-		Assign_Y = 0.25f;
+		Assign_Y = 0.3f;
 		SurfacesList = new List<Surface>();
 		DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
