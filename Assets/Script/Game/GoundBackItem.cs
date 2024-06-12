@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.StickyNote;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
@@ -20,7 +21,7 @@ public class GoundBackItem : MonoBehaviour
 	private void Awake()
 	{
 		GoundBack_Y = 1.2f;
-		Assign_Y = 0.25f;
+		Assign_Y = 0.3f;
 		SurfacesList = new List<Surface>();
 		DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
@@ -144,29 +145,8 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 
-	public void AddSurfaces(List<Surface> listsurface, MoveTweenType moveTweenType, Action action = null)
+	public void AddSurfaces(List<Surface> listsurface, Action action = null)
 	{
-		if (moveTweenType == MoveTweenType.One)
-		{
-			int x = 0;
-			for (int i = 0; i < listsurface.Count; i++)
-			{
-				Vector3 targetPosition = new Vector3(transform.localPosition.x, (SurfacesList.Count * (1+ Assign_Y))+i * Assign_Y, transform.localPosition.z);
-				listsurface[i].transform.SetParent(transform);
-				listsurface[i].transform.DOMove(targetPosition, 1).SetEase(Ease.InOutQuad).OnComplete(() =>
-				{
-					SurfacesList.Add(listsurface[i]);
-					if (x == listsurface.Count - 1)
-					{
-						SetChinderPosition();
-						action?.Invoke();
-					}
-				});
-				x++;
-			}
-		}
-		else if (moveTweenType == MoveTweenType.Continuity)
-		{
 			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
 			List<Vector3> o3s = GetEndListVector3(listsurface.Count);
 
@@ -180,9 +160,9 @@ public class GoundBackItem : MonoBehaviour
 				sequence.AppendCallback(() => {
 					AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
 				});
-				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0,5,0), 0.1f).SetEase(Ease.Linear));
-				sequence.Append(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
-				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.1f).SetEase(Ease.Linear));
+				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0,5,0), 0.08f).SetEase(Ease.Linear));
+				sequence.Append(obj.transform.DOLocalMove(ka, 0.08f).SetEase(Ease.Linear));
+				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.08f).SetEase(Ease.Linear));
 				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
 				SurfacesList.Add(obj);
 			}
@@ -192,8 +172,7 @@ public class GoundBackItem : MonoBehaviour
 				action?.Invoke();
 			});
 			sequence.Play();  // 播放序列
-		}
-
+		
 	}
 
 	/// <summary>
@@ -204,6 +183,43 @@ public class GoundBackItem : MonoBehaviour
 		return SurfacesList[SurfacesList.Count-1].GetColorType();
 	}
 
+	/// <summary>
+	/// 获取当前从顶端开始往下数第x个不同颜色的surface颜色
+	/// </summary>
+	/// <param name="x"></param>
+	/// <returns></returns>
+	public ItemColorType GetSpecifyLayerColor(int x)
+	{
+		List<string> ColorType = new List<string>();
+		for (int i = 0; i < SurfacesList.Count; i++)
+		{
+			string colorTypeName = SurfacesList[i].GetColorType().ToString();
+			if (!ColorType.Contains(colorTypeName))
+			{
+				ColorType.Add(colorTypeName);
+			}
+		}
+		ItemColorType colorEnum;
+		colorEnum = (ItemColorType)Enum.Parse(typeof(ItemColorType), ColorType[x]);
+		return colorEnum;
+	}
+
+	/// <summary>
+	/// 比较器
+	/// </summary>
+	/// <param name="item2"></param>
+	/// <returns></returns>
+	public int Compare(GoundBackItem item2)
+	{
+		if (GetNowColorNumber() > 1 && item2.GetNowColorNumber() > 1 &&
+		GetSpecifyLayerColor(1) == item2.GetSpecifyLayerColor(1))
+		{
+			return 1;
+		}
+		else {
+			return -1;
+		}
+	}
 	/// <summary>
 	/// 移除满足条件的顶端的物体
 	/// </summary>
