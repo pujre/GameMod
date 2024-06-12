@@ -10,8 +10,8 @@ public class GoundBackItem : MonoBehaviour
 	public bool IsLock = false;//true表示锁上，需要解锁
 	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
 
-	private float GoundBack_Y = 1.2f;
-	private float Assign_Y=0.25f;
+	public float GoundBack_Y = 1.2f;
+	public float Assign_Y=0.25f;
 	/// <summary>
 	/// 该节点所属得坐标
 	/// </summary>
@@ -20,8 +20,8 @@ public class GoundBackItem : MonoBehaviour
 
 	private void Awake()
 	{
-		GoundBack_Y = 1.2f;
-		Assign_Y = 0.3f;
+		GoundBack_Y = 1.9f;
+		Assign_Y = 0.65f;
 		SurfacesList = new List<Surface>();
 		DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}

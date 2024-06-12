@@ -69,7 +69,7 @@ public class GameManager : SingletonMono<GameManager>
 			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 			{
 				newPosition = hitInfo.point;
-				newPosition.y = SelectedObject.transform.position.y; // 保持Y轴不变
+				newPosition.y = 10; //SelectedObject.transform.position.y; // 保持Y轴不变
 				SelectedObject.transform.position = newPosition;
 			}
 

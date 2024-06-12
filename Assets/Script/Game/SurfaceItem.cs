@@ -7,7 +7,7 @@ public class SurfaceItem : MonoBehaviour
 {
 	public bool IsOnMove = false; // 是否允许拖动
 	public Vector3 QreVector3; // 初始坐标
-	private float Assign_Y = 0.3f;
+	private float Assign_Y = 0.65f;
 	public List<Surface> Surfaces = new List<Surface>();
 
 	public void QurStart(Vector3 pos)
