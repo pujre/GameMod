@@ -196,6 +196,9 @@ public class GameManager : SingletonMono<GameManager>
 	/// <summary>
 	/// ¼ÆËã¶ÑµþÂß¼­
 	/// </summary>
+	#region MyRegion
+
+
 	public void CalculateElimination(int x, int y)
 	{
 		if (GoundBackItemArray2D == null) return;
@@ -239,7 +242,7 @@ public class GameManager : SingletonMono<GameManager>
 
 		StartNextAnimation(0);
 	}
-
+	#endregion
 
 
 
