@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : SingletonMono<GameManager>
@@ -256,6 +257,38 @@ public class GameManager : SingletonMono<GameManager>
 	public List<GoundBackItem> GetGoundBackItems(int x, int y)
 	{
 		List<GoundBackItem> ayx = new List<GoundBackItem>();
+		List<Vector2Int> vector2s = GetAroundPos(x, y);
+
+		for (int i = 0; i < vector2s.Count; i++)
+		{
+			Vector2Int vex = vector2s[i];
+			if (CheckAndAddIfMatch(x, y, vex))
+			{
+				ayx.Add(GetGoundBackItem(vex.x, vex.y));
+			}
+
+		}
+		return ayx;
+	}
+
+	// 检查特定点是否满足条件
+	private bool CheckAndAddIfMatch(int x, int y,Vector2Int vex) {
+		if (!GoundBackItemArray2D[x, y].IsAddSurface() && !GetGoundBackItem(vex.x, vex.y).IsAddSurface() &&
+				(GoundBackItemArray2D[x, y].GetTopColor() == GetGoundBackItem(vex.x, vex.y).GetTopColor()))
+		{
+			return true;
+		}
+		return false;
+	}
+
+
+	/// <summary>
+	/// 获取指定坐标的周围的点
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <returns></returns>
+	private List<Vector2Int> GetAroundPos(int x, int y) {
 		List<Vector2Int> vector2s;
 		if (!(x % 2 == 0))
 		{
@@ -268,28 +301,8 @@ public class GameManager : SingletonMono<GameManager>
 			new Vector2Int(x-1,y),new Vector2Int(x-1, y+1),new Vector2Int(x, y-1),
 			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y+1)};
 		}
-
-		for (int i = 0; i < vector2s.Count; i++)
-		{
-			Vector2Int vex = vector2s[i];
-			//Debug.Log(string.Format("判断当前周围的点，坐标为：x：{0}，y：{1}，1：{2}  2：{3}",vex.x, vex.y, GoundBackItemArray2D.GetLength(0), GoundBackItemArray2D.GetLength(0)));
-			if (vex.x >= 0 && vex.y >= 0 && vex.x < GoundBackItemArray2D.GetLength(0) && vex.y < GoundBackItemArray2D.GetLength(1))
-			{
-				if (!GoundBackItemArray2D[x, y].IsAddSurface() && !GetGoundBackItem(vex.x, vex.y).IsAddSurface() &&
-					(GoundBackItemArray2D[x, y].GetTopColor() == GetGoundBackItem(vex.x, vex.y).GetTopColor()))
-				{
-					ayx.Add(GetGoundBackItem(vex.x, vex.y));
-					if (GoundBackItemArray2D[x, y].GetNowColorNumber() > 1 && GetGoundBackItem(vex.x, vex.y).GetNowColorNumber() > 1 &&
-						GoundBackItemArray2D[x, y].GetSpecifyLayerColor(1) == GetGoundBackItem(vex.x, vex.y).GetSpecifyLayerColor(1))
-					{
-						var temp = ayx[0];
-						ayx[0] = GetGoundBackItem(vex.x, vex.y);
-						ayx[ayx.Count - 1] = temp;
-					}
-				}
-			}
-		}
-		return ayx;
+		List<Vector2Int> filteredVectors = vector2s.Where(v => v.x >= 0 && v.y >= 0&& x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)).ToList();
+		return filteredVectors;
 	}
 
 
@@ -339,6 +352,7 @@ public class GameManager : SingletonMono<GameManager>
 				goundBackItem.SetData(x, z, $"{x},{z}");
 				if (GetNowLevelData().IsLock(x, z))
 				{
+					Debug.Log(string.Format("设置lock，x：{0}，y：{1}",x,z));
 					goundBackItem.LockOrUnLockTheItem(true);
 				}
 				GoundBackItemArray2D[x, z] = goundBackItem;

@@ -151,6 +151,7 @@ public class GoundBackItem : MonoBehaviour
 	{
 		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
 		List<Vector3> o3s = GetEndListVector3(listsurface.Count);
+		Vector3 direction = (listsurface[listsurface.Count-1].transform.position - o3s[o3s.Count-1]).normalized;
 		for (int i = 0; i < listsurface.Count; i++)
 		{
 			var obj = listsurface[i];
@@ -159,7 +160,6 @@ public class GoundBackItem : MonoBehaviour
 			Vector3[] path = new Vector3[] { obj.transform.position, controlPoint, o3s[i] };
 			float delay = 0.03f * i;
 			// 计算方向向量
-			Vector3 direction = (obj.transform.position- o3s[i]).normalized;
 			// 计算垂直向量（法向量）
 			Vector3 normal = Vector3.Cross(direction, Vector3.up).normalized;
 			// 创建一个表示沿着法向量旋转180度的四元数
