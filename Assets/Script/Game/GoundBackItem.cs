@@ -1,6 +1,8 @@
 using DG.Tweening;
+using DG.Tweening.Plugins.Core.PathCore;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static Unity.VisualScripting.StickyNote;
 
@@ -10,8 +12,8 @@ public class GoundBackItem : MonoBehaviour
 	public bool IsLock = false;//true表示锁上，需要解锁
 	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
 
-	public float GoundBack_Y = 1.2f;
-	public float Assign_Y=0.25f;
+	public float GoundBack_Y;
+	public float Assign_Y;
 	/// <summary>
 	/// 该节点所属得坐标
 	/// </summary>
@@ -64,7 +66,7 @@ public class GoundBackItem : MonoBehaviour
 
 	public List<Vector3> GetEndListVector3(int x) { 
 		List<Vector3> vectors = new List<Vector3>();
-		Vector3 startVectpr3 = SurfacesList[SurfacesList.Count-1].transform.localPosition;
+		Vector3 startVectpr3 = SurfacesList[SurfacesList.Count-1].transform.position;
 		for (int i = 0; i < x; i++)
 		{
 			vectors.Add(new Vector3(startVectpr3.x, startVectpr3.y + (i * Assign_Y), startVectpr3.z));
@@ -147,32 +149,41 @@ public class GoundBackItem : MonoBehaviour
 
 	public void AddSurfaces(List<Surface> listsurface, Action action = null)
 	{
-			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
-			List<Vector3> o3s = GetEndListVector3(listsurface.Count);
+		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
+		List<Vector3> o3s = GetEndListVector3(listsurface.Count);
+		for (int i = 0; i < listsurface.Count; i++)
+		{
+			var obj = listsurface[i];
+			Vector3 controlPoint = new Vector3((o3s[i].x + obj.transform.position.x) / 2, o3s[i].y + 5, (o3s[i].z + obj.transform.position.z) / 2);
+			obj.transform.SetParent(transform);
+			Vector3[] path = new Vector3[] { obj.transform.position, controlPoint, o3s[i] };
+			float delay = 0.03f * i;
+			// 计算方向向量
+			Vector3 direction = (obj.transform.position- o3s[i]).normalized;
+			// 计算垂直向量（法向量）
+			Vector3 normal = Vector3.Cross(direction, Vector3.up).normalized;
+			// 创建一个表示沿着法向量旋转180度的四元数
+			Quaternion rotation = Quaternion.AngleAxis(180, normal);
+			sequence.Insert(delay,
+				obj.transform.DOPath(path,0.5f, PathType.CatmullRom)
+					.SetEase(Ease.Linear)
+					.OnStart(() => {
+						obj.transform.DORotateQuaternion(rotation, 0.5f)
+								 .SetEase(Ease.Linear);
+					})
+					.OnComplete(() => {
+						SurfacesList.Add(obj);
+						AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
+					})
+			);
+		}
 
-			for (int i = 0; i < listsurface.Count; i++)
-			{
-				var obj= listsurface[i];
-
-				obj.transform.SetParent(transform);
-				Vector3 ka = new Vector3((o3s[i].x + obj.transform.localPosition.x) / 2, o3s[i].y + 5, (o3s[i].z + obj.transform.localPosition.z) / 2);
-				// 为每个对象添加一个移动到终点的动画，并在前一个动画结束后开始
-				sequence.AppendCallback(() => {
-					AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
-				});
-				sequence.Append(obj.transform.DOLocalMove(obj.transform.localPosition + new Vector3(0,5,0), 0.08f).SetEase(Ease.Linear));
-				sequence.Append(obj.transform.DOLocalMove(ka, 0.08f).SetEase(Ease.Linear));
-				sequence.Append(obj.transform.DOLocalMove(o3s[i], 0.08f).SetEase(Ease.Linear));
-				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
-				SurfacesList.Add(obj);
-			}
-
-			sequence.OnComplete(() => {
-				SetChinderPosition();
-				action?.Invoke();
-			});
-			sequence.Play();  // 播放序列
-		
+		sequence.OnComplete(() =>
+		{
+			//SetChinderPosition();
+			action?.Invoke();
+		});
+		sequence.Play();  // 播放序列
 	}
 
 	/// <summary>
