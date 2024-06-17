@@ -154,7 +154,7 @@ public class GoundBackItem : MonoBehaviour
 		for (int i = 0; i < listsurface.Count; i++)
 		{
 			var obj = listsurface[i];
-			Vector3 controlPoint = new Vector3((o3s[i].x + obj.transform.position.x) / 2, o3s[i].y + 5, (o3s[i].z + obj.transform.position.z) / 2);
+			Vector3 controlPoint = new Vector3((o3s[i].x + obj.transform.position.x) / 2, o3s[i].y + 10, (o3s[i].z + obj.transform.position.z) / 2);
 			obj.transform.SetParent(transform);
 			Vector3[] path = new Vector3[] { obj.transform.position, controlPoint, o3s[i] };
 			float delay = 0.03f * i;
@@ -253,8 +253,8 @@ public class GoundBackItem : MonoBehaviour
 				subSequence.AppendCallback(() => {
 					AudioManager.Instance.PlaySFX("Ding（消完飞上去增加积分）");
 				});
-				subSequence.Join(obj.transform.DOLocalMove(ka, 0.1f).SetEase(Ease.Linear));
-				subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).SetEase(Ease.Linear));
+				subSequence.Join(obj.transform.DOLocalMove(ka, 0.05f).SetEase(Ease.Linear));
+				subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.05f).SetEase(Ease.Linear));
 
 				// 在子序列完成时执行回调
 				subSequence.OnComplete(() =>
