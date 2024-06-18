@@ -204,29 +204,21 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (GoundBackItemArray2D == null) return;
 
-		List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
+		List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y,new List<GoundBackItem>());
 		if (GoundBackItemList == null || GoundBackItemList.Count == 0)
 		{
 			DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString(), x, y);
 			return;
 		}
-		var o = GoundBackItemArray2D[x, y];
-
 		void StartNextAnimation(int index)
 		{
-			if (index >= GoundBackItemList.Count)
+			if (index > GoundBackItemList.Count)
 			{
 				CalculateElimination(OnlastObj.x, OnlastObj.y);
 				return;
 			}
 			var currentItem = GoundBackItemList[index];
-			if (index == GoundBackItemList.Count - 1 && o.GetTopColorNumber() >= currentItem.GetTopColorNumber())
-			{
-				var temp = currentItem;
-				currentItem = o;
-				o = temp;
-			}
-			var ops = currentItem.RemoveSurfaces(o.GetTopColor());
+			var ops = currentItem.RemoveSurfaces(GoundBackItemList[index+1].GetTopColor());
 			if (currentItem.GetNowColorNumber() > 1)
 			{
 				OnlastObj = currentItem.ItemPosition;
@@ -235,7 +227,7 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				OnlastObj = new Vector2Int(x, y);
 			}
-			o.AddSurfaces(ops, () =>
+			GoundBackItemList[index + 1].AddSurfaces(ops, () =>
 			{
 				StartNextAnimation(index + 1);
 			});
@@ -249,30 +241,76 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// 获取当前六边数组中是否有可消除的,并且把
+	/// 获取当前/*六边数*/组中是否有可消除的,并且把
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	public List<GoundBackItem> GetGoundBackItems(int x, int y)
+	public List<GoundBackItem> GetGoundBackItems(int x, int y, List<GoundBackItem> ayx)
 	{
-		List<GoundBackItem> ayx = new List<GoundBackItem>();
-		List<Vector2Int> vector2s = GetAroundPos(x, y);
-
-		for (int i = 0; i < vector2s.Count; i++)
+		var topColor = GetGoundBackItem(x, y).GetTopColor();
+		List<Vector2Int> coordinates = new List<Vector2Int>();
+		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
 		{
-			Vector2Int vex = vector2s[i];
-			if (CheckAndAddIfMatch(x, y, vex))
+			for (int j = 0; j <  GoundBackItemArray2D.GetLength(1); j++)
 			{
-				ayx.Add(GetGoundBackItem(vex.x, vex.y));
+				if (!GoundBackItemArray2D[i, j].IsAddSurface()&&GoundBackItemArray2D[i,j].GetTopColor()== topColor)
+				{
+					coordinates.Add(new Vector2Int(i,j));
+				}
 			}
-
 		}
+		List<GoundBackItem> groupedItems = ProcessCoordinates(coordinates);
+		ayx.AddRange(groupedItems);
 		return ayx;
 	}
 
+	List<GoundBackItem> ProcessCoordinates(List<Vector2Int> coordinates)
+	{
+		List<GoundBackItem> result = new List<GoundBackItem>();
+		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+
+		foreach (var coord in coordinates)
+		{
+			if (!visited.Contains(coord))
+			{
+				List<Vector2Int> group = new List<Vector2Int>();
+				DFS(coord, coordinates, visited, group);
+
+				if (group.Count > 1)
+				{
+					foreach (var position in group)
+					{
+						result.Add(GoundBackItemArray2D[position.x, position.y]);
+						Debug.Log(position);
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+
+
+	void DFS(Vector2Int coord, List<Vector2Int> coordinates, HashSet<Vector2Int> visited, List<Vector2Int> group)
+	{
+		visited.Add(coord);
+		group.Add(coord);
+
+		foreach (var neighbor in GetAroundPos(coord.x, coord.y))
+		{
+			if (coordinates.Contains(neighbor) && !visited.Contains(neighbor))
+			{
+				DFS(neighbor, coordinates, visited, group);
+			}
+		}
+	}
+
+	
+
 	// 检查特定点是否满足条件
-	private bool CheckAndAddIfMatch(int x, int y,Vector2Int vex) {
+	public bool CheckAndAddIfMatch(int x, int y,Vector2Int vex) {
 		if (!GoundBackItemArray2D[x, y].IsAddSurface() && !GetGoundBackItem(vex.x, vex.y).IsAddSurface() &&
 				(GoundBackItemArray2D[x, y].GetTopColor() == GetGoundBackItem(vex.x, vex.y).GetTopColor()))
 		{
@@ -288,7 +326,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	private List<Vector2Int> GetAroundPos(int x, int y) {
+	public List<Vector2Int> GetAroundPos(int x, int y) {
 		List<Vector2Int> vector2s;
 		if (!(x % 2 == 0))
 		{
@@ -312,7 +350,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	private GoundBackItem GetGoundBackItem(int x, int y)
+	public GoundBackItem GetGoundBackItem(int x, int y)
 	{
 		if (x >= 0 && y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1))
 		{
