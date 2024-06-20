@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 [CustomEditor(typeof(GoundBackItem))]
@@ -25,7 +23,7 @@ public class MatrixGeneratorEditor : Editor
 		{
 			if (generator.GetTopColorNumber() >= 10)
 			{
-				generator.RemoveTopColorObject(generator.ItemPosition.x, generator.ItemPosition.y);
+				generator.RemoveTopColorObject();
 			}
 			else
 			{

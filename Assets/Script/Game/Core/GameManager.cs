@@ -2,7 +2,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GameManager : SingletonMono<GameManager>
 {
@@ -11,7 +13,7 @@ public class GameManager : SingletonMono<GameManager>
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
-	public Vector2Int OnlastObj;
+	public List<Vector2Int> OperationPath=new List<Vector2Int>();
 
 	private Camera Cam;
 	private bool IsDragging = false;
@@ -127,6 +129,7 @@ public class GameManager : SingletonMono<GameManager>
 				lj.AddSurfacesList(si.Surfaces);
 				AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
 				si.Surfaces.Clear();
+				OperationPath.Clear();
 				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
 				for (int i = 0; i < gamePanel.SelectedList.Count; i++)
@@ -202,97 +205,150 @@ public class GameManager : SingletonMono<GameManager>
 
 	public void CalculateElimination(int x, int y)
 	{
-		if (GoundBackItemArray2D == null) return;
-
-		List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y,new List<GoundBackItem>());
-		if (GoundBackItemList == null || GoundBackItemList.Count == 0)
+		if (GoundBackItemArray2D != null)
 		{
-			DelegateManager.Instance.TriggerEvent(OnEventKey.OnCalculate.ToString(), x, y);
-			return;
-		}
-		void StartNextAnimation(int index)
-		{
-			if (index > GoundBackItemList.Count)
+			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
+			if (GoundBackItemList == null || GoundBackItemList.Count == 0 || !GoundBackItemList.Contains(GoundBackItemArray2D[x, y]))
 			{
-				CalculateElimination(OnlastObj.x, OnlastObj.y);
 				return;
 			}
-			var currentItem = GoundBackItemList[index];
-			var ops = currentItem.RemoveSurfaces(GoundBackItemList[index+1].GetTopColor());
-			if (currentItem.GetNowColorNumber() > 1)
+			void StartNextAnimation(int index)
 			{
-				OnlastObj = currentItem.ItemPosition;
-			}
-			else
-			{
-				OnlastObj = new Vector2Int(x, y);
-			}
-			GoundBackItemList[index + 1].AddSurfaces(ops, () =>
-			{
-				StartNextAnimation(index + 1);
-			});
-		}
+				if ((index + 1) >= GoundBackItemList.Count) { return; }
+				var currentItem = GoundBackItemList[index];
+				var ops = currentItem.RemoveSurfaces();
+				OperationPath.Add(currentItem.ItemPosition);
+				Debug.Log("添加了坐标数据：x:" + currentItem.ItemPosition.x + " Y:" + currentItem.ItemPosition.y);
+				GoundBackItemList[index + 1].AddSurfaces(ops, () =>
+				{
+					if ((index + 2) >= GoundBackItemList.Count)
+					{
+						GoundBackItemList[index + 1].RemoveTopColorObject(() =>
+						{
+							ChainCall();
+						});
+						return;
+					}
+					else
+					{
+						StartNextAnimation(index + 1);
+					}
+				});
 
-		StartNextAnimation(0);
+			}
+			StartNextAnimation(0);
+		}
 	}
+
+
+	void ChainCall() {
+		Debug.Log("开始连锁数据");
+		for (int i = OperationPath.Count - 1; i >= 0; i--)
+		{
+			var po = OperationPath[i];
+			Debug.Log(OperationPath.Count+"开始连锁数据----x:" + po.x+"y:"+ po.y);
+			OperationPath.Remove(po);
+			if (GoundBackItemArray2D[po.x, po.y].GetComponent<GoundBackItem>().IsSurface())
+			{
+				if (OperationPath.Count>0) {
+					Debug.Log(OperationPath.Count + "余下的坐标的位置为 X:" + OperationPath[OperationPath.Count - 1].x + "Y:" + OperationPath[OperationPath.Count - 1].y);
+				}
+				CalculateElimination(po.x, po.y);
+				break;
+			}
+		}
+	}
+
 	#endregion
 
 
 
 
 	/// <summary>
-	/// 获取当前/*六边数*/组中是否有可消除的,并且把
+	/// 获取当前坐标顶部的颜色及其整个盘的颜色做坐标集合
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	public List<GoundBackItem> GetGoundBackItems(int x, int y, List<GoundBackItem> ayx)
+	public List<GoundBackItem> GetGoundBackItems(int x, int y)
 	{
 		var topColor = GetGoundBackItem(x, y).GetTopColor();
 		List<Vector2Int> coordinates = new List<Vector2Int>();
+		Debug.Log(string.Format("等待处理的颜色为： Color:{0}", topColor.ToString()));
+		string log = "";
 		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
 		{
-			for (int j = 0; j <  GoundBackItemArray2D.GetLength(1); j++)
+			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
 			{
-				if (!GoundBackItemArray2D[i, j].IsAddSurface()&&GoundBackItemArray2D[i,j].GetTopColor()== topColor)
+				if (GoundBackItemArray2D[i, j].IsSurface() && GoundBackItemArray2D[i, j].GetTopColor() == topColor)
 				{
-					coordinates.Add(new Vector2Int(i,j));
+					coordinates.Add(new Vector2Int(i, j));
+					log += string.Format("({0},{1})、", i, j);
 				}
 			}
 		}
+		Debug.Log("顶部相同颜色的坐标为：" + log);
 		List<GoundBackItem> groupedItems = ProcessCoordinates(coordinates);
-		ayx.AddRange(groupedItems);
-		return ayx;
+		return groupedItems;
 	}
 
 	List<GoundBackItem> ProcessCoordinates(List<Vector2Int> coordinates)
 	{
-		List<GoundBackItem> result = new List<GoundBackItem>();
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-
+		List<Vector2Int> resultCoordinates = new List<Vector2Int>();
+		List<GoundBackItem> result = new List<GoundBackItem>();
+		string log = "";
 		foreach (var coord in coordinates)
 		{
 			if (!visited.Contains(coord))
 			{
 				List<Vector2Int> group = new List<Vector2Int>();
 				DFS(coord, coordinates, visited, group);
-
 				if (group.Count > 1)
 				{
 					foreach (var position in group)
 					{
-						result.Add(GoundBackItemArray2D[position.x, position.y]);
-						Debug.Log(position);
+						resultCoordinates.Add(new Vector2Int(position.x, position.y));
+						log += position + "、";
 					}
 				}
 			}
 		}
+		bool needsResorting = false;
+		for (int i = 0; i < resultCoordinates.Count - 1; i++)
+		{
+			if (!GetAroundPos(resultCoordinates[i].x, resultCoordinates[i].y).Contains(resultCoordinates[i + 1]))
+			{
+				needsResorting = true;
+				break;
+			}
+		}
 
+		if (needsResorting)
+		{
+			Debug.Log("初步排序的数组为：" + log);
+			Debug.Log("——重新排序——");
+			log +="";
+			resultCoordinates = SortAndFilter(resultCoordinates);
+			Debug.Log("——重新排序后的数组长度为："+ resultCoordinates.Count);
+		}
+		foreach (var item in resultCoordinates)
+		{
+			result.Add(GoundBackItemArray2D[item.x, item.y]);
+			log += item + "、";
+		}
+		Debug.Log("排序后的数组为：" + log);
 		return result;
 	}
 
 
-
+	/// <summary>
+	/// 筛选出独立的那些
+	/// </summary>
+	/// <param name="coord"></param>
+	/// <param name="coordinates"></param>
+	/// <param name="visited"></param>
+	/// <param name="group"></param>
 	void DFS(Vector2Int coord, List<Vector2Int> coordinates, HashSet<Vector2Int> visited, List<Vector2Int> group)
 	{
 		visited.Add(coord);
@@ -307,11 +363,69 @@ public class GameManager : SingletonMono<GameManager>
 		}
 	}
 
-	
+	/// <summary>
+	/// 将给定的数据按照指定的规则排序
+	/// </summary>
+	/// <param name="coordinates"></param>
+	/// <returns></returns>
+	public List<Vector2Int> SortAndFilter(List<Vector2Int> coordinates)
+	{
+		if (coordinates == null || coordinates.Count == 0)
+		{
+			return null;
+		}
+
+		List<Vector2Int> sortedList = new List<Vector2Int>();
+		HashSet<Vector2Int> remainingCoords = new HashSet<Vector2Int>(coordinates);
+		Stack<(Vector2Int current, List<Vector2Int> path)> stack = new Stack<(Vector2Int, List<Vector2Int>)>();
+
+		Vector2Int start = coordinates[0];
+		stack.Push((start, new List<Vector2Int> { start }));
+		remainingCoords.Remove(start);
+
+		while (stack.Count > 0)
+		{
+			var (current, path) = stack.Pop();
+
+			if (path.Count == coordinates.Count)
+			{
+				return path;
+			}
+
+			var around = GetAroundPos(current.x, current.y);
+			var nextSteps = around.Where(remainingCoords.Contains).ToList();
+
+			if (nextSteps.Count == 0 && path.Count < coordinates.Count)
+			{
+				continue;
+			}
+
+			foreach (var next in nextSteps)
+			{
+				List<Vector2Int> newPath = new List<Vector2Int>(path) { next };
+				stack.Push((next, newPath));
+				remainingCoords.Remove(next);
+			}
+
+			if (nextSteps.Count == 0 && path.Count == coordinates.Count)
+			{
+				return path;
+			}
+		}
+
+		return null;
+	}
+
+
+
+
+
+
 
 	// 检查特定点是否满足条件
-	public bool CheckAndAddIfMatch(int x, int y,Vector2Int vex) {
-		if (!GoundBackItemArray2D[x, y].IsAddSurface() && !GetGoundBackItem(vex.x, vex.y).IsAddSurface() &&
+	public bool CheckAndAddIfMatch(int x, int y, Vector2Int vex)
+	{
+		if (GoundBackItemArray2D[x, y].IsSurface() && GetGoundBackItem(vex.x, vex.y).IsSurface() &&
 				(GoundBackItemArray2D[x, y].GetTopColor() == GetGoundBackItem(vex.x, vex.y).GetTopColor()))
 		{
 			return true;
@@ -326,7 +440,8 @@ public class GameManager : SingletonMono<GameManager>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	public List<Vector2Int> GetAroundPos(int x, int y) {
+	public List<Vector2Int> GetAroundPos(int x, int y)
+	{
 		List<Vector2Int> vector2s;
 		if (!(x % 2 == 0))
 		{
@@ -339,7 +454,7 @@ public class GameManager : SingletonMono<GameManager>
 			new Vector2Int(x-1,y),new Vector2Int(x-1, y+1),new Vector2Int(x, y-1),
 			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y+1)};
 		}
-		List<Vector2Int> filteredVectors = vector2s.Where(v => v.x >= 0 && v.y >= 0&& x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)).ToList();
+		List<Vector2Int> filteredVectors = vector2s.Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)).ToList();
 		return filteredVectors;
 	}
 
@@ -390,7 +505,7 @@ public class GameManager : SingletonMono<GameManager>
 				goundBackItem.SetData(x, z, $"{x},{z}");
 				if (GetNowLevelData().IsLock(x, z))
 				{
-					Debug.Log(string.Format("设置lock，x：{0}，y：{1}",x,z));
+					Debug.Log(string.Format("设置lock，x：{0}，y：{1}", x, z));
 					goundBackItem.LockOrUnLockTheItem(true);
 				}
 				GoundBackItemArray2D[x, z] = goundBackItem;

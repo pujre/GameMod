@@ -25,14 +25,9 @@ public class GoundBackItem : MonoBehaviour
 		GoundBack_Y = 1.9f;
 		Assign_Y = 0.65f;
 		SurfacesList = new List<Surface>();
-		DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
+		//DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
-	void DelegateCallback(object[] args)
-	{
-		if (args.Length >= 2 && args[0] is int x && args[1] is int y) {
-			RemoveTopColorObject(x, y);
-		}
-	}
+	
 
 	public void LockOrUnLockTheItem(bool isOn){
 		IsLock=isOn;
@@ -50,7 +45,12 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	public bool IsAddSurface() {
-		return SurfacesList.Count == 0|| IsLock ? true:false;
+		return SurfacesList.Count == 0&&!IsLock ? true:false;
+	}
+
+	public bool IsSurface()
+	{
+		return SurfacesList.Count > 0;
 	}
 
 	/// <summary>
@@ -127,9 +127,10 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	/// <param name="itemColor"></param>
 	/// <returns></returns>
-	public List<Surface> RemoveSurfaces(ItemColorType itemColor) {
+	public List<Surface> RemoveSurfaces() {
 		List<Surface> surfaces= new List<Surface>();
-        for (int i = SurfacesList.Count-1; i >=0 ; i--)
+		ItemColorType itemColor = SurfacesList[SurfacesList.Count - 1].GetColorType();
+		for (int i = SurfacesList.Count-1; i >=0 ; i--)
         {
             if (SurfacesList[i].GetColorType() == itemColor)
             {
@@ -159,7 +160,6 @@ public class GoundBackItem : MonoBehaviour
 			obj.transform.SetParent(transform);
 			Vector3[] path = new Vector3[] { obj.transform.position, controlPoint, o3s[i] };
 			float delay = 0.03f * i;
-			// 计算方向向量
 			// 计算垂直向量（法向量）
 			Vector3 normal = Vector3.Cross(direction, Vector3.up).normalized;
 			// 创建一个表示沿着法向量旋转180度的四元数
@@ -168,12 +168,12 @@ public class GoundBackItem : MonoBehaviour
 				obj.transform.DOPath(path,0.5f, PathType.CatmullRom)
 					.SetEase(Ease.Linear)
 					.OnStart(() => {
-						obj.transform.DORotateQuaternion(rotation, 0.5f)
+						AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
+						obj.transform.DORotateQuaternion(rotation, 0.45f)
 								 .SetEase(Ease.Linear);
 					})
 					.OnComplete(() => {
 						SurfacesList.Add(obj);
-						AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
 					})
 			);
 		}
@@ -236,12 +236,12 @@ public class GoundBackItem : MonoBehaviour
 	/// <summary>
 	/// 移除满足条件的顶端的物体
 	/// </summary>
-	public void RemoveTopColorObject(int x,int y)
+	public void RemoveTopColorObject(Action action=null)
 	{
 		int count = GetTopColorNumber();
 		if (count >= 10&& GetNowColorNumber()==1)
 		{
-			List<Surface> sl = RemoveSurfaces(GetTopColor());
+			List<Surface> sl = RemoveSurfaces();
 			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
 			for (int i = 0; i < sl.Count; i++)
 			{
@@ -270,13 +270,14 @@ public class GoundBackItem : MonoBehaviour
 			}
 			sequence.OnComplete(() =>
 			{
-				SetChinderPosition();
-				GameManager.Instance.CalculateElimination(x, y);
+				//SetChinderPosition();
+				action!.Invoke();
 			});
 			sequence.Play();  // 播放序列
 		}
 		else
 		{
+			action!.Invoke();
 			//Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", x, y, count));
 		}
 	}
