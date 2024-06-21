@@ -288,8 +288,7 @@ public class GameManager : SingletonMono<GameManager>
 			}
 		}
 		Debug.Log("顶部相同颜色的坐标为：" + log);
-		List<GoundBackItem> groupedItems = ProcessCoordinates(coordinates);
-		return groupedItems;
+		return ProcessCoordinates(coordinates);
 	}
 
 	List<GoundBackItem> ProcessCoordinates(List<Vector2Int> coordinates)
@@ -303,7 +302,7 @@ public class GameManager : SingletonMono<GameManager>
 			if (!visited.Contains(coord))
 			{
 				List<Vector2Int> group = new List<Vector2Int>();
-				DFS(coord, coordinates, visited, group);
+				UnitSDF.DFS(coord, coordinates, visited, group);
 				if (group.Count > 1)
 				{
 					foreach (var position in group)
@@ -330,8 +329,9 @@ public class GameManager : SingletonMono<GameManager>
 			Debug.Log("——重新排序——");
 			log +="";
 			resultCoordinates = SortAndFilter(resultCoordinates);
-			Debug.Log("——重新排序后的数组长度为："+ resultCoordinates.Count);
+			if(resultCoordinates!=null) Debug.Log("——重新排序后的数组长度为："+ resultCoordinates.Count);
 		}
+		if (resultCoordinates == null) return result;
 		foreach (var item in resultCoordinates)
 		{
 			result.Add(GoundBackItemArray2D[item.x, item.y]);
@@ -343,76 +343,51 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// 筛选出独立的那些
-	/// </summary>
-	/// <param name="coord"></param>
-	/// <param name="coordinates"></param>
-	/// <param name="visited"></param>
-	/// <param name="group"></param>
-	void DFS(Vector2Int coord, List<Vector2Int> coordinates, HashSet<Vector2Int> visited, List<Vector2Int> group)
-	{
-		visited.Add(coord);
-		group.Add(coord);
-
-		foreach (var neighbor in GetAroundPos(coord.x, coord.y))
-		{
-			if (coordinates.Contains(neighbor) && !visited.Contains(neighbor))
-			{
-				DFS(neighbor, coordinates, visited, group);
-			}
-		}
-	}
-
-	/// <summary>
 	/// 将给定的数据按照指定的规则排序
 	/// </summary>
 	/// <param name="coordinates"></param>
 	/// <returns></returns>
 	public List<Vector2Int> SortAndFilter(List<Vector2Int> coordinates)
 	{
-		if (coordinates == null || coordinates.Count == 0)
-		{
-			return null;
-		}
-
+		if (coordinates == null || coordinates.Count == 0)return null;
 		List<Vector2Int> sortedList = new List<Vector2Int>();
 		HashSet<Vector2Int> remainingCoords = new HashSet<Vector2Int>(coordinates);
 		Stack<(Vector2Int current, List<Vector2Int> path)> stack = new Stack<(Vector2Int, List<Vector2Int>)>();
-
 		Vector2Int start = coordinates[0];
+		for (int i = 0; i < coordinates.Count; i++)
+		{
+			if (GetAroundPos(coordinates[i].x, coordinates[i].y).Count==1) {
+				start = coordinates[i];
+				break;
+			}
+		}
 		stack.Push((start, new List<Vector2Int> { start }));
 		remainingCoords.Remove(start);
 
 		while (stack.Count > 0)
 		{
 			var (current, path) = stack.Pop();
-
 			if (path.Count == coordinates.Count)
 			{
 				return path;
 			}
-
-			var around = GetAroundPos(current.x, current.y);
-			var nextSteps = around.Where(remainingCoords.Contains).ToList();
-
+			var around = GetAroundPos(current.x, current.y);// 获取当前坐标周围的坐标
+			var nextSteps = around.Where(remainingCoords.Contains).ToList();// 筛选出待访问的周围坐标
 			if (nextSteps.Count == 0 && path.Count < coordinates.Count)
 			{
 				continue;
 			}
-
-			foreach (var next in nextSteps)
+			foreach (var next in nextSteps)// 遍历所有可行的下一步
 			{
-				List<Vector2Int> newPath = new List<Vector2Int>(path) { next };
-				stack.Push((next, newPath));
-				remainingCoords.Remove(next);
+				List<Vector2Int> newPath = new List<Vector2Int>(path) { next };// 创建包含下一步的新路径
+				stack.Push((next, newPath));// 将新路径和坐标压入栈
+				remainingCoords.Remove(next); // 从待访问集合中移除当前坐标
 			}
-
 			if (nextSteps.Count == 0 && path.Count == coordinates.Count)
 			{
 				return path;
 			}
 		}
-
 		return null;
 	}
 
@@ -442,20 +417,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// <returns></returns>
 	public List<Vector2Int> GetAroundPos(int x, int y)
 	{
-		List<Vector2Int> vector2s;
-		if (!(x % 2 == 0))
-		{
-			vector2s = new List<Vector2Int>() {new Vector2Int(x-1,y),new Vector2Int(x-1, y-1),new Vector2Int(x, y-1),
-			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y-1) };
-		}
-		else
-		{
-			vector2s = new List<Vector2Int>() {
-			new Vector2Int(x-1,y),new Vector2Int(x-1, y+1),new Vector2Int(x, y-1),
-			new Vector2Int(x, y+1),new Vector2Int(x + 1, y),new Vector2Int(x + 1, y+1)};
-		}
-		List<Vector2Int> filteredVectors = vector2s.Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)).ToList();
-		return filteredVectors;
+		return UnitSDF.GetCreatorPos(x,y).Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)).ToList();
 	}
 
 
