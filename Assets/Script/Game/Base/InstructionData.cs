@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstructionData : MonoBehaviour
+public class InstructionData
 {
 	public Vector2Int StarVector2;
-	public Vector2Int EndVerctor2;
+	public Vector2Int EndVector2;
+	public InstructionData() {
+	}
 	public InstructionData(Vector2Int star, Vector2Int end) {
 		StarVector2=star;
-		EndVerctor2=end;
+		EndVector2=end;
 	}
 }

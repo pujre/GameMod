@@ -23,6 +23,7 @@ public class GameManager : SingletonMono<GameManager>
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
+	public List<InstructionData> FilterLinked = new List<InstructionData>();
 	private int NowLevel = 1;
 
 	#region 局部变量private
@@ -207,23 +208,27 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (GoundBackItemArray2D != null)
 		{
-			List<GoundBackItem> GoundBackItemList = GetGoundBackItems(x, y);
-			if (GoundBackItemList == null || GoundBackItemList.Count == 0 || !GoundBackItemList.Contains(GoundBackItemArray2D[x, y]))
+			FilterLinked.Clear();
+			List<Vector2Int> GoundBackItemList = GetGoundBackItems(x, y);
+			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
+			{
+				return;
+			}
+			ProcessCoordinates(GoundBackItemList);
+			if (FilterLinked == null || FilterLinked.Count == 0)
 			{
 				return;
 			}
 			void StartNextAnimation(int index)
 			{
-				if ((index + 1) >= GoundBackItemList.Count) { return; }
-				var currentItem = GoundBackItemList[index];
-				var ops = currentItem.RemoveSurfaces();
-				OperationPath.Add(currentItem.ItemPosition);
-				Debug.Log("添加了坐标数据：x:" + currentItem.ItemPosition.x + " Y:" + currentItem.ItemPosition.y);
-				GoundBackItemList[index + 1].AddSurfaces(ops, () =>
+				var ops = GoundBackItemArray2D[FilterLinked[index].StarVector2.x, FilterLinked[index].StarVector2.y].RemoveSurfaces();
+				OperationPath.Add(FilterLinked[index].StarVector2);
+				Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
+				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
-					if ((index + 2) >= GoundBackItemList.Count)
+					if ((index + 1)>= FilterLinked.Count)
 					{
-						GoundBackItemList[index + 1].RemoveTopColorObject(() =>
+						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
 						{
 							ChainCall();
 						});
@@ -265,16 +270,15 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// 获取当前坐标顶部的颜色及其整个盘的颜色做坐标集合
+	/// 获取当前坐标顶部的颜色及其整个盘的颜色做坐标集合然后筛选
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	public List<GoundBackItem> GetGoundBackItems(int x, int y)
+	public List<Vector2Int> GetGoundBackItems(int x, int y)
 	{
 		var topColor = GetGoundBackItem(x, y).GetTopColor();
 		List<Vector2Int> coordinates = new List<Vector2Int>();
-		Debug.Log(string.Format("等待处理的颜色为： Color:{0}", topColor.ToString()));
 		string log = "";
 		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
 		{
@@ -283,20 +287,11 @@ public class GameManager : SingletonMono<GameManager>
 				if (GoundBackItemArray2D[i, j].IsSurface() && GoundBackItemArray2D[i, j].GetTopColor() == topColor)
 				{
 					coordinates.Add(new Vector2Int(i, j));
-					log += string.Format("({0},{1})、", i, j);
 				}
 			}
 		}
-		Debug.Log("顶部相同颜色的坐标为：" + log);
-		return ProcessCoordinates(coordinates);
-	}
-
-	List<GoundBackItem> ProcessCoordinates(List<Vector2Int> coordinates)
-	{
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		List<Vector2Int> resultCoordinates = new List<Vector2Int>();
-		List<GoundBackItem> result = new List<GoundBackItem>();
-		string log = "";
 		foreach (var coord in coordinates)
 		{
 			if (!visited.Contains(coord))
@@ -313,32 +308,36 @@ public class GameManager : SingletonMono<GameManager>
 				}
 			}
 		}
+		Debug.Log("顶部相同颜色的坐标为：" + log);
+		return resultCoordinates;
+	}
+
+	void ProcessCoordinates(List<Vector2Int> coordinates)
+	{
 		bool needsResorting = false;
-		for (int i = 0; i < resultCoordinates.Count - 1; i++)
+		for (int i = 0; i < coordinates.Count - 1; i++)
 		{
-			if (!GetAroundPos(resultCoordinates[i].x, resultCoordinates[i].y).Contains(resultCoordinates[i + 1]))
+			if (!GetAroundPos(coordinates[i].x, coordinates[i].y).Contains(coordinates[i + 1]))
 			{
 				needsResorting = true;
 				break;
 			}
 		}
-
 		if (needsResorting)
 		{
-			Debug.Log("初步排序的数组为：" + log);
-			Debug.Log("——重新排序——");
-			log +="";
-			resultCoordinates = SortAndFilter(resultCoordinates);
-			if(resultCoordinates!=null) Debug.Log("——重新排序后的数组长度为："+ resultCoordinates.Count);
+			Debug.Log("——需要重新排序——");
+			FilterLinked = UnitSDF.FilterLinkedCoordinates(coordinates);
+			
 		}
-		if (resultCoordinates == null) return result;
-		foreach (var item in resultCoordinates)
-		{
-			result.Add(GoundBackItemArray2D[item.x, item.y]);
-			log += item + "、";
+		else {
+			FilterLinked.Clear();
+			for (int i = 0; i < coordinates.Count - 1; i++)
+			{
+				Debug.Log(string.Format("点{0}移动到点{1}", coordinates[i], coordinates[i + 1]));
+				FilterLinked.Add(new InstructionData(coordinates[i], coordinates[i + 1]));
+			}
 		}
-		Debug.Log("排序后的数组为：" + log);
-		return result;
+		
 	}
 
 
