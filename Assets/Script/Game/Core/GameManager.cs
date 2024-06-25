@@ -73,7 +73,7 @@ public class GameManager : SingletonMono<GameManager>
 			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 			{
 				newPosition = hitInfo.point;
-				newPosition.y = 10; //SelectedObject.transform.position.y; // 保持Y轴不变
+				newPosition.y = 3; //SelectedObject.transform.position.y; // 保持Y轴不变
 				SelectedObject.transform.position = newPosition;
 			}
 
@@ -327,7 +327,7 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			Debug.Log("——需要重新排序——");
 			FilterLinked = UnitSDF.FilterLinkedCoordinates(coordinates);
-			
+			Debug.Log("FilterLinked的长度为：" + FilterLinked.Count);
 		}
 		else {
 			FilterLinked.Clear();
@@ -416,7 +416,9 @@ public class GameManager : SingletonMono<GameManager>
 	/// <returns></returns>
 	public List<Vector2Int> GetAroundPos(int x, int y)
 	{
-		return UnitSDF.GetCreatorPos(x,y).Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)).ToList();
+		return UnitSDF.GetCreatorPos(x,y).Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0) 
+		&& y < GoundBackItemArray2D.GetLength(1)
+		).ToList();
 	}
 
 

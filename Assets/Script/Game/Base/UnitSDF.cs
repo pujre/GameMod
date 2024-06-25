@@ -47,92 +47,109 @@ public class UnitSDF : MonoBehaviour
 		}
 	}
 
-
-	public static bool RecursiveMerge(List<Vector2Int> coordinates, HashSet<Vector2Int> visited)
-	{
-		if (coordinates.Count == 0)
-		{
-			return true;
-		}
-
-		for (int i = 0; i < coordinates.Count; i++)
-		{
-			for (int j = i + 1; j < coordinates.Count; j++)
-			{
-				Vector2Int coord1 = coordinates[i];
-				Vector2Int coord2 = coordinates[j];
-				if (GetCreatorPos(coord1.x, coord1.y).Contains(coord2))
-				{
-					InstructionData instruction = new InstructionData(coord1, coord2);
-					GameManager.Instance.FilterLinked.Add(instruction);
-					// 创建新的坐标列表
-					List <Vector2Int> newCoordinates = new List<Vector2Int>(coordinates);
-					newCoordinates.Remove(coord1);
-
-					// 递归尝试合并剩余的点
-					if (RecursiveMerge(newCoordinates, visited))
-					{
-						return true;
-					}
-
-					// 回退
-					newCoordinates.Add(coord1);
-					GameManager.Instance.FilterLinked.Remove(instruction);
-				}
-			}
-		}
-
-		return false;
-	}
-
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
-		// 假设GameManager.Instance.GetAroundPos提供了获取周围点的方法
-		// 假设GameManager.Instance.IsWalkable提供了检测点是否可走的方法
-
-		List<InstructionData> instructions = new List<InstructionData>();
-		Dictionary<Vector2Int, Vector2Int> predecessors = new Dictionary<Vector2Int, Vector2Int>();
-
-		// 选择一个起始点，这里简化处理，直接使用第一个点
-		Vector2Int start = coordinates[0];
-
-		// 使用队列进行BFS
-		Queue<Vector2Int> queue = new Queue<Vector2Int>();
-		queue.Enqueue(start);
-		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-
-		while (queue.Count > 0)
+		List<InstructionData> instructionData = new List<InstructionData>();
+		// 查找起点
+		Vector2Int start = coordinates.FirstOrDefault(pos =>
 		{
-			Vector2Int current = queue.Dequeue();
-			if (!visited.Contains(current))
-			{
-				visited.Add(current);
-				List<Vector2Int> neighbors = GameManager.Instance.GetAroundPos(current.x, current.y).Where(pos => coordinates.Contains(pos) && !visited.Contains(pos)).ToList();
+			List<Vector2Int> neighbors = GameManager.Instance.GetAroundPos(pos.x, pos.y).Where(pos => coordinates.Contains(pos)).ToList();
+			Debug.Log(string.Format("当前检查的点的坐标为{0},{1}，当前该点周围的的数组长度为：{2}", pos.x, pos.y, neighbors.Count)); ;
+			return neighbors.Count == 1;
+		});
 
-				foreach (Vector2Int neighbor in neighbors)
+		// 用于记录访问过的节点和未访问的邻居
+		Dictionary<Vector2Int, InstDataCalculus> visitedNodes = new Dictionary<Vector2Int, InstDataCalculus>();
+		bool isOn=false;
+		int index = 0;
+		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+		Debug.Log("Sart的坐标为："+ start.x+","+start.y);
+		for (int j = 0; j < 100; j++)
+		{
+			List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y).Where(pos => coordinates.Contains(pos)).ToList(); // 获取当前坐标周围的坐标
+			Debug.Log(string.Format("around长度为：{0},Index为：{1},已访问过的节点数为：{2}，当前总节点数为：{3}",around.Count,index,visited.Count, coordinates.Count));
+			if (visited.Count == coordinates.Count-1)
+			{
+				if (visitedNodes.Count == 0)
 				{
-					predecessors[neighbor] = current; // 记录前驱节点
-					queue.Enqueue(neighbor);
+					Debug.Log("没有更多节点可以访问，结束,返回的路径长度为："+ instructionData.Count);
+					isOn = true;
+					break;
+				}
+
+				// 回溯：当前节点没有未访问的邻居，从记录中取回上一个节点
+				var lastEntry = visitedNodes.Last();
+				start = lastEntry.Key;
+				around = lastEntry.Value.VisitedNodes.Except(new List<Vector2Int> { start }).ToList();
+				int backtrackCount = index - lastEntry.Value.Index;
+                for (int i = 0; i < backtrackCount; i++)
+				{
+					visited.Remove(instructionData[instructionData.Count - 1].StarVector2);
+				}
+                instructionData.RemoveRange(instructionData.Count - backtrackCount, backtrackCount);
+				index -= backtrackCount;
+
+				Debug.Log("回溯了" + backtrackCount + "次");
+				continue;
+			}
+
+
+			if (around.Count == 1)
+			{
+				Vector2Int next = around[0];
+				instructionData.Add(new InstructionData(start, next));
+				visited.Add(next);
+				Debug.Log(string.Format("添加了一个InstructionData，start为：{0},end为：{1},", start, next));
+				start = next;
+				index++;
+				if (visitedNodes.ContainsKey(start)) {
+					visitedNodes.Remove(start);
+				}
+
+			}
+			else if (around.Count > 1)
+			{
+				if (GameManager.Instance.GetAroundPos(around[0].x, around[0].y).Where(pos => coordinates.Contains(pos)).ToList().Count==1) {
+					index++;
+					UpdateVisitedNodes(visitedNodes, start, index, around);
+					instructionData.Add(new InstructionData(around[0], start));
+					visited.Add(around[0]);
+				}
+				else {
+					index++;
+					// 记录当前节点及其未访问的邻居
+					UpdateVisitedNodes(visitedNodes, start, index, around);
+					Vector2Int next = around[0];
+					instructionData.Add(new InstructionData(start, next));
+					visited.Add(start);
+					start = next;
+					
 				}
 			}
-		}
-
-		// 重建路径
-		foreach (Vector2Int coordinate in coordinates)
-		{
-			Vector2Int pathTo = new Vector2Int(2, 1); // 假设所有点都移动到(2, 1)
-			Vector2Int current = coordinate;
-			while (predecessors.ContainsKey(current))
+			else
 			{
-				instructions.Add(new InstructionData(current, pathTo));
-				current = predecessors[current];
+				// 没有更多节点可以访问，结束
+				Debug.Log("没有更多节点可以访问，结束,返回的路径长度为：" + instructionData.Count);
+				isOn = true;
+				break;
 			}
 		}
 
-		return instructions;
+		return instructionData;
 	}
 
-
+	private static void UpdateVisitedNodes(Dictionary<Vector2Int, InstDataCalculus> visitedNodes, Vector2Int start, int index, List<Vector2Int> around)
+	{
+		if (!visitedNodes.ContainsKey(start))
+		{
+			visitedNodes[start] = new InstDataCalculus(index, around);
+		}
+		else
+		{
+			visitedNodes[start].Index = index;
+		}
+		visitedNodes[start].SetFoldNodes(around[0]);
+	}
 
 
 

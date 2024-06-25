@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using UnityEngine;
@@ -16,6 +18,42 @@ public class CellBase
 	public StackableItem Items;
 
 }
+
+class InstDataCalculus
+{
+	public int Index;
+	/// <summary>
+	/// 未访问过的点的集合
+	/// </summary>
+	public List<Vector2Int> VisitedNodes;
+	/// <summary>
+	/// 已经访问过的点的集合
+	/// </summary>
+	public List<Vector2Int> FoldNodes;
+
+	/// <summary>
+	/// 未访问过的点的集合
+	/// </summary>
+	/// <param name="index"></param>
+	/// <param name="visitedNodes"></param>
+	public InstDataCalculus(int index, List<Vector2Int> visitedNodes)
+	{
+		if(VisitedNodes==null) VisitedNodes=new List<Vector2Int>();
+		if (FoldNodes == null) FoldNodes = new List<Vector2Int>();
+		Index = index;
+		VisitedNodes = visitedNodes;
+		
+	}
+	/// <summary>
+	/// 把一个点加入已经访问的点,并且把他移除出未访问的点的集合
+	/// </summary>
+	/// <param name="fold"></param>
+	public void SetFoldNodes(Vector2Int fold) {
+		if(!FoldNodes.Contains(fold)){ FoldNodes.Add(fold); }
+		if (VisitedNodes.Contains(fold)) { VisitedNodes.Remove(fold); }
+	}
+
+};
 
 /// <summary>
 /// 一叠格子
