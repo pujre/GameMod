@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
 
 public class UnitSDF : MonoBehaviour
@@ -50,6 +51,7 @@ public class UnitSDF : MonoBehaviour
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
 		List<InstructionData> instructionData = new List<InstructionData>();
+		Debug.Log("____________________________________");
 		// 查找起点
 		Vector2Int start = coordinates.FirstOrDefault(pos =>
 		{
@@ -64,13 +66,13 @@ public class UnitSDF : MonoBehaviour
 		int index = 0;
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		Debug.Log("Sart的坐标为："+ start.x+","+start.y);
-		for (int j = 0; j < 100; j++)
+		while(!isOn)
 		{
-			List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y).Where(pos => coordinates.Contains(pos)).ToList(); // 获取当前坐标周围的坐标
-			Debug.Log(string.Format("around长度为：{0},Index为：{1},已访问过的节点数为：{2}，当前总节点数为：{3}",around.Count,index,visited.Count, coordinates.Count));
-			if (visited.Count == coordinates.Count-1)
+			List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y).Where(pos => coordinates.Contains(pos)&& !visited.Contains(pos)).ToList(); // 获取当前坐标周围的坐标
+			Debug.Log(string.Format("坐标为：{0},长度为：{1},Index为：{2},已访问过的数为：{3}，当前数为：{4}", start,around.Count,index,visited.Count, coordinates.Count));
+			if (around.Count == 0)
 			{
-				if (visitedNodes.Count == 0)
+				if (instructionData.Count == coordinates.Count - 1)
 				{
 					Debug.Log("没有更多节点可以访问，结束,返回的路径长度为："+ instructionData.Count);
 					isOn = true;
@@ -90,7 +92,7 @@ public class UnitSDF : MonoBehaviour
 				index -= backtrackCount;
 
 				Debug.Log("回溯了" + backtrackCount + "次");
-				continue;
+				//continue;
 			}
 
 
@@ -98,7 +100,7 @@ public class UnitSDF : MonoBehaviour
 			{
 				Vector2Int next = around[0];
 				instructionData.Add(new InstructionData(start, next));
-				visited.Add(next);
+				visited.Add(start);
 				Debug.Log(string.Format("添加了一个InstructionData，start为：{0},end为：{1},", start, next));
 				start = next;
 				index++;
@@ -113,6 +115,7 @@ public class UnitSDF : MonoBehaviour
 					index++;
 					UpdateVisitedNodes(visitedNodes, start, index, around);
 					instructionData.Add(new InstructionData(around[0], start));
+					Debug.Log(string.Format("添加了一个InstructionData，start为：{0},end为：{1},", around[0], start));
 					visited.Add(around[0]);
 				}
 				else {
@@ -121,9 +124,9 @@ public class UnitSDF : MonoBehaviour
 					UpdateVisitedNodes(visitedNodes, start, index, around);
 					Vector2Int next = around[0];
 					instructionData.Add(new InstructionData(start, next));
+					Debug.Log(string.Format("添加了一个InstructionData，start为：{0},end为：{1},", start, next));
 					visited.Add(start);
 					start = next;
-					
 				}
 			}
 			else

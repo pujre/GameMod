@@ -251,11 +251,12 @@ public class GameManager : SingletonMono<GameManager>
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
 		{
 			var po = OperationPath[i];
-			Debug.Log(OperationPath.Count+"开始连锁数据----x:" + po.x+"y:"+ po.y);
+			Debug.Log(OperationPath.Count + "开始连锁数据----x:" + po.x + "y:" + po.y);
 			OperationPath.Remove(po);
 			if (GoundBackItemArray2D[po.x, po.y].GetComponent<GoundBackItem>().IsSurface())
 			{
-				if (OperationPath.Count>0) {
+				if (OperationPath.Count > 0)
+				{
 					Debug.Log(OperationPath.Count + "余下的坐标的位置为 X:" + OperationPath[OperationPath.Count - 1].x + "Y:" + OperationPath[OperationPath.Count - 1].y);
 				}
 				CalculateElimination(po.x, po.y);
@@ -289,6 +290,9 @@ public class GameManager : SingletonMono<GameManager>
 					coordinates.Add(new Vector2Int(i, j));
 				}
 			}
+		}
+		if (!coordinates.Contains(new Vector2Int(x,y))) {
+			return null;
 		}
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		List<Vector2Int> resultCoordinates = new List<Vector2Int>();
