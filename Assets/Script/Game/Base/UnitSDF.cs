@@ -1,13 +1,6 @@
-using DG.Tweening;
-using Mono.Reflection;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public class UnitSDF : MonoBehaviour
 {
@@ -48,6 +41,11 @@ public class UnitSDF : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 深度搜索
+	/// </summary>
+	/// <param name="coordinates"></param>
+	/// <returns></returns>
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
 		List<InstructionData> instructionData = new List<InstructionData>();
@@ -154,39 +152,4 @@ public class UnitSDF : MonoBehaviour
 		visitedNodes[start].SetFoldNodes(around[0]);
 	}
 
-
-
-
-
-
-
-
-	//public static bool FilterLinkedCoordinates(Vector2Int start,List<Vector2Int> coordinates)
-	//{
-	//	if (coordinates == null || coordinates.Count == 0) return false;
-	//	if(start==null) start = coordinates.Where(pos =>
-	//	{
-	//		List<Vector2Int> neighbors = GameManager.Instance.GetAroundPos(pos.x, pos.y);
-	//		return neighbors.Count == 1;
-	//	}).FirstOrDefault();
-
-	//       for (int i = 0; i < coordinates.Count; i++)
-	//       {
-	//		List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y);// 获取当前坐标周围的坐标
-	//		if (around.Count == 1)
-	//		{
-
-	//			start = around[0];
-	//		}
-	//		else if (around.Count > 1)
-	//		{
-	//			//判断当前节点是否已经被记录
-	//			//否 记录下当前的around所有节点，然后开始尝试第一个节点
-	//			//是，尝试当前记录节点的剩余节点并将该节点移出记录信息List<Vector2Int>，如果当前节点的剩余为未尝试节点数为0（List<Vector2Int>=0），那么删除当前节点，及节点信息下的List<Vector2Int> 
-	//			//然后往上一个记录了信息的节点回溯，如果没有节点信息了，那么输出false
-
-	//		}
-	//	} 
-	//	return false;
-	//}
 }
