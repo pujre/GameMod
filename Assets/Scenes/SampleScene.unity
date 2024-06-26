@@ -2625,7 +2625,7 @@ MonoBehaviour:
   DefaultORHightMaterial:
   - {fileID: 2100000, guid: 17411c03558c52545a974a8f22c5ec32, type: 2}
   - {fileID: 2100000, guid: 5298433dfaa321e48b33929abb87368b, type: 2}
-  OnlastObj: {x: 0, y: 0}
+  OperationPath: []
 --- !u!114 &924926689
 MonoBehaviour:
   m_ObjectHideFlags: 0

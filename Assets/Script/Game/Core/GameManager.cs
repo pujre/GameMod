@@ -89,10 +89,12 @@ public class GameManager : SingletonMono<GameManager>
 					if (lastHighlightedObject != null)
 					{
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
+						lastHighlightedObject.transform.GetComponent<GoundBackItem>().SetvolumetricLine(false);
 					}
 
 					lastHighlightedObject = hit.transform;
 					lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
+					lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
 					foundBottom = true;
 					break; // 找到目标对象后退出循环
 				}
@@ -103,6 +105,8 @@ public class GameManager : SingletonMono<GameManager>
 				if (lastHighlightedObject != null)
 				{
 					lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
+					lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+
 					lastHighlightedObject = null;
 				}
 			}
@@ -122,6 +126,8 @@ public class GameManager : SingletonMono<GameManager>
 			if (lastHighlightedObject != null)
 			{
 				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
+				lastHighlightedObject.transform.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+
 				obj.transform.position = lastHighlightedObject.transform.position + new Vector3(0, 1.2f, 0);
 				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 				si.QueMoveEnd();

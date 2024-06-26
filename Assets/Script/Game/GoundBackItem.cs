@@ -1,17 +1,16 @@
 using DG.Tweening;
-using DG.Tweening.Plugins.Core.PathCore;
 using System;
 using System.Collections.Generic;
-using TMPro;
+using System.Reflection;
 using UnityEngine;
-using static Unity.VisualScripting.StickyNote;
+using VolumetricLines;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
 	public bool IsLock = false;//true表示锁上，需要解锁
 	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
-
+	public VolumetricLineStripBehavior volumetricLine;
 	public float GoundBack_Y;
 	public float Assign_Y;
 	/// <summary>
@@ -25,9 +24,10 @@ public class GoundBackItem : MonoBehaviour
 		GoundBack_Y = 1.9f;
 		Assign_Y = 0.65f;
 		SurfacesList = new List<Surface>();
+		//volumetricLineList.gameObject.SetActive(false);
 		//DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
-	
+
 
 	public void LockOrUnLockTheItem(bool isOn){
 		IsLock=isOn;
@@ -41,7 +41,12 @@ public class GoundBackItem : MonoBehaviour
 	{
 		ItemPosition = new Vector2Int(x, y);
 		if (gameObject) gameObject.name = name;
+		volumetricLine = transform.Find("LineStrip-LightSaber").GetComponent<VolumetricLineStripBehavior>();
+		volumetricLine.gameObject.SetActive(false);
+	}
 
+	public void SetvolumetricLine(bool isOn) {
+		volumetricLine.gameObject.SetActive(isOn);
 	}
 
 	public bool IsAddSurface() {
@@ -239,7 +244,7 @@ public class GoundBackItem : MonoBehaviour
 	public void RemoveTopColorObject(Action action=null)
 	{
 		int count = GetTopColorNumber();
-		if (count >= 10&& GetNowColorNumber()==1)
+		if (count >= 10/*&& GetNowColorNumber()==1*/)
 		{
 			List<Surface> sl = RemoveSurfaces();
 			Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
@@ -271,6 +276,9 @@ public class GoundBackItem : MonoBehaviour
 			sequence.OnComplete(() =>
 			{
 				//SetChinderPosition();
+				if (IsSurface()) {
+					GameManager.Instance.OperationPath.Add(ItemPosition);
+				}
 				action!.Invoke();
 			});
 			sequence.Play();  // 播放序列
