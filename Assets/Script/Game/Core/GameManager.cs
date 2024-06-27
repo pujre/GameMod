@@ -217,11 +217,13 @@ public class GameManager : SingletonMono<GameManager>
 			List<Vector2Int> GoundBackItemList = GetGoundBackItems(x, y);
 			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
 			{
+				ChainCall();
 				return;
 			}
 			ProcessCoordinates(GoundBackItemList);
 			if (FilterLinked == null || FilterLinked.Count == 0)
 			{
+				ChainCall();
 				return;
 			}
 			void StartNextAnimation(int index)
