@@ -28,6 +28,7 @@ public class HomePanel : PanelBase
 		switch (but.name)
 		{
 			case "PalyBtn":
+				transform.gameObject.SetActive(false);
 				UIManager.Instance.SetUiPanelAction("GamePanel", true);
 				GameManager.Instance.LoadLevel(1);
 				GameManager.Instance.ScelfJob();
