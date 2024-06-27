@@ -36,6 +36,10 @@ public class PausePanel : PanelBase
 		toggles.FirstOrDefault(t => t.gameObject.name == "ShakeToggle").isOn = DataManager.Instance.GetData(OnDataKey.Shake_On) == 0 ? true : false;
 		toggles.FirstOrDefault(t => t.gameObject.name == "MusicToggle").isOn = DataManager.Instance.GetData(OnDataKey.Music_On) == 0 ? true : false;
 		toggles.FirstOrDefault(t => t.gameObject.name == "SoundToggle").isOn = DataManager.Instance.GetData(OnDataKey.Sound_On) == 0 ? true : false;
+		for (int i = 0; i < toggles.Length; i++)
+		{
+			OnValueChang(toggles[i].gameObject, toggles[i].isOn);
+		}
 	}
 
 
@@ -58,7 +62,8 @@ public class PausePanel : PanelBase
 
 	void OnValueChang(GameObject toggle, bool isOn)
 	{
-		Debug.Log(string.Format("点击了Toggle {0}，值为：{1}", toggle.name, isOn));
+		toggle.transform.Find("Checkmark").GetComponent<Image>().enabled=isOn;
+		toggle.transform.Find("Background").GetComponent<Image>().enabled = !isOn;
 		switch (toggle.name)
 		{
 			case "MusicToggle":
@@ -70,6 +75,7 @@ public class PausePanel : PanelBase
 				else {
 					AudioManager.Instance.StopBGM();
 				}
+				
 				break;
 			case "ShakeToggle":
 				DataManager.Instance.SetData(OnDataKey.Shake_On, isOn ? 0 : 1);
