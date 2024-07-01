@@ -165,6 +165,10 @@ public class GameManager : SingletonMono<GameManager>
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
 	}
 
+	public void LoadNextLevel() {
+		LoadLevel(NowLevel+1);
+	}
+
 	public void LoadLevel(int level)
 	{
 		NowLevel = level;
@@ -176,6 +180,7 @@ public class GameManager : SingletonMono<GameManager>
 		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
+		DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameStar.ToString());
 	}
 
 

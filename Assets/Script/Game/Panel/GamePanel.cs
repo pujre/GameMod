@@ -16,6 +16,7 @@ public class GamePanel : PanelBase
 		DelegateManager.Instance.AddEvent(OnEventKey.OnApplyProp.ToString(), DelegateCallback);
 		DelegateManager.Instance.AddEvent(OnEventKey.OnBonusEvent.ToString(), Score);
 		DelegateManager.Instance.AddEvent(OnEventKey.OnLoadGameLevel.ToString(), LoadGameLevel);
+		DelegateManager.Instance.AddEvent(OnEventKey.OnGameStar.ToString(), OnGameStar);
 	}
 
 	private void Start()
@@ -65,6 +66,12 @@ public class GamePanel : PanelBase
 		AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
 	}
 
+
+	private void OnGameStar(object[] args) {
+		NowScore = 0;
+		ScoreFractionalBar.fillAmount = 0;
+	}
+
 	private int GetPropValue(int itemId)
 	{
 		GameManager.Instance.PropNumber.TryGetValue(itemId.ToString(), out int value);
@@ -85,7 +92,8 @@ public class GamePanel : PanelBase
 
 			if (NowScore >= TagerScore)
 			{
-				DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameOverWin.ToString());
+				UIManager.Instance.SetUiPanelAction("OverPanel",true);
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameOverWin.ToString(),true);
 			}
 		}
 	}

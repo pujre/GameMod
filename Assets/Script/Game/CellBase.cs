@@ -91,8 +91,8 @@ public enum ItemColorType
 /// </summary>
 public enum OnEventKey
 {
-	OngameStar,//
 	OnLoadGameLevel,//加载游戏关卡
+	OnGameStar,//
 	OnStop,//
 	OnGameOverWin,//游戏结束胜利
 	OnGameOverLose,//游戏结束失败
