@@ -6,15 +6,12 @@ using UnityEngine.UI;
 
 public class OverPanel : PanelBase
 {
-	private GameObject Win;
-	private GameObject Lose;
+	public GameObject Win;
+	public GameObject Lose;
 
 	private void Awake()
 	{
-		Win = transform.Find("Win").gameObject;
-		Lose = transform.Find("Lose").gameObject;
-		DelegateManager.Instance.AddEvent(OnEventKey.OnBonusEvent.ToString(), Over);
-
+		DelegateManager.Instance.AddEvent(OnEventKey.OnGameOverWin.ToString(), Over);
 	}
 	// Start is called before the first frame update
 	void Start()
