@@ -15,6 +15,7 @@ public class GameManager : SingletonMono<GameManager>
 	public List<Vector2Int> OperationPath=new List<Vector2Int>();
 
 	private Camera Cam;
+	public bool IsTouchInput = true;
 	private bool IsDragging = false;
 	private GameObject SelectedObject;
 
@@ -50,7 +51,11 @@ public class GameManager : SingletonMono<GameManager>
 
 	void Update()
 	{
-		if (!IsDragging && SelectedObject == null && Input.GetMouseButtonDown(0))
+        if (IsTouchInput)
+        {
+            
+        
+        if (!IsDragging && SelectedObject == null && Input.GetMouseButtonDown(0))
 		{
 			ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit))
@@ -114,6 +119,7 @@ public class GameManager : SingletonMono<GameManager>
 			IsDragging = false;
 			SnapToGrid(SelectedObject);
 		}
+		}
 	}
 
 	private void SnapToGrid(GameObject obj)
@@ -132,7 +138,7 @@ public class GameManager : SingletonMono<GameManager>
 				lj.AddSurfacesList(si.Surfaces);
 				AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
 				si.Surfaces.Clear();
-				OperationPath.Clear();
+				//OperationPath.Clear();
 				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
 				for (int i = 0; i < gamePanel.SelectedList.Count; i++)
@@ -250,13 +256,14 @@ public class GameManager : SingletonMono<GameManager>
 				});
 
 			}
+			IsTouchInput = false;
 			StartNextAnimation(0);
 		}
 	}
 
 
 	void ChainCall() {
-		//Debug.Log("开始连锁数据");
+		Debug.Log("开始连锁数据");
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
 		{
 			var po = OperationPath[i];
@@ -271,6 +278,10 @@ public class GameManager : SingletonMono<GameManager>
 				CalculateElimination(po.x, po.y);
 				break;
 			}
+		}
+		if (OperationPath.Count == 0)
+		{
+			IsTouchInput = true;
 		}
 	}
 
@@ -487,6 +498,21 @@ public class GameManager : SingletonMono<GameManager>
 				GoundBackItemArray2D[x, z] = goundBackItem;
 			}
 			isOn = !isOn;
+		}
+	}
+
+	/// <summary>
+	/// 加载level Prefab
+	/// </summary>
+	public void LoadGenerateBoxMatrix() {
+		GameObject levelObj=Resources.Load<GameObject>("LevelPrefab/"+NowLevel.ToString());
+		levelObj.transform.SetParent(ItemParent.transform);
+		for (int i = 0; i < levelObj.transform.childCount; i++) {
+			GoundBackItem goundBackItem = levelObj.transform.GetChild(i).GetComponent<GoundBackItem>();
+			if (goundBackItem != null)
+			{
+				GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
+			}
 		}
 	}
 
