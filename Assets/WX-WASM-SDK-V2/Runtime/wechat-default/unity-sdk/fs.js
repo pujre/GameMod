@@ -1,6 +1,7 @@
 import response from './response';
 import moduleHelper from './module-helper';
 import { cacheArrayBuffer, formatJsonStr, formatResponse } from './utils';
+import { fileInfoHandler, fileInfoType, responseWrapper } from './file-info';
 function runMethod(method, option, callbackId, isString = false) {
     try {
         const fs = wx.getFileSystemManager();
@@ -24,32 +25,32 @@ function runMethod(method, option, callbackId, isString = false) {
                     cacheArrayBuffer(callbackId, res.arrayBuffer);
                     returnRes = JSON.stringify({
                         bytesRead: res.bytesRead,
-                        arrayBufferLength: res.arrayBuffer.byteLength,
+                        arrayBufferLength: res.arrayBuffer?.byteLength ?? 0,
                     });
                 }
                 else if (method === 'readCompressedFile') {
                     cacheArrayBuffer(callbackId, res.data);
                     returnRes = JSON.stringify({
-                        arrayBufferLength: res.data.byteLength,
+                        arrayBufferLength: res.data?.byteLength ?? 0,
                     });
                 }
                 else if (method === 'readFile') {
                     if (config.encoding) {
                         returnRes = JSON.stringify({
-                            stringData: res.data,
+                            stringData: res.data || '',
                         });
                     }
                     else {
                         cacheArrayBuffer(callbackId, res.data);
                         returnRes = JSON.stringify({
-                            arrayBufferLength: res.data.byteLength,
+                            arrayBufferLength: res.data?.byteLength ?? 0,
                         });
                     }
                 }
                 else {
                     returnRes = JSON.stringify(res);
                 }
-                
+                // console.log(`fs.${method} success:`, res);
                 moduleHelper.send('FileSystemManagerCallback', JSON.stringify({
                     callbackId, type: 'success', res: returnRes, method: isString ? `${method}_string` : method,
                 }));
@@ -82,6 +83,7 @@ export default {
             const fs = wx.getFileSystemManager();
             
             fs.writeFileSync(filePath, data, encoding);
+            fileInfoHandler.addFileInfo(filePath, data);
         }
         catch (e) {
             console.error(e);
@@ -139,6 +141,7 @@ export default {
         try {
             const fs = wx.getFileSystemManager();
             fs.unlinkSync(filePath);
+            fileInfoHandler.removeFileInfo(filePath);
             return 'unlink:ok';
         }
         catch (e) {
@@ -153,7 +156,7 @@ export default {
         const fs = wx.getFileSystemManager();
         fs.unlink({
             filePath,
-            ...response.handleText(s, f, c),
+            ...responseWrapper(response.handleText(s, f, c), { filePath, type: fileInfoType.remove }),
         });
     },
     WXWriteFile(filePath, data, encoding, s, f, c) {
@@ -162,7 +165,7 @@ export default {
             filePath,
             data: data.buffer,
             encoding,
-            ...response.handleTextLongBack(s, f, c),
+            ...responseWrapper(response.handleTextLongBack(s, f, c), { filePath, data: data.buffer, type: fileInfoType.add }),
         });
     },
     WXWriteStringFile(filePath, data, encoding, s, f, c) {
@@ -171,7 +174,7 @@ export default {
             filePath,
             data,
             encoding,
-            ...response.handleTextLongBack(s, f, c),
+            ...responseWrapper(response.handleTextLongBack(s, f, c), { filePath, data, type: fileInfoType.add }),
         });
     },
     WXAppendFile(filePath, data, encoding, s, f, c) {
@@ -196,6 +199,7 @@ export default {
         const fs = wx.getFileSystemManager();
         try {
             fs.writeFileSync(filePath, data.buffer, encoding);
+            fileInfoHandler.addFileInfo(filePath, data.buffer);
         }
         catch (e) {
             console.error(e);
@@ -373,7 +377,14 @@ export default {
     },
     WX_FileSystemManagerReaddirSync(dirPath) {
         const fs = wx.getFileSystemManager();
-        return JSON.stringify(fs.readdirSync(dirPath));
+        try {
+            
+            return JSON.stringify(fs.readdirSync(dirPath) || []);
+        }
+        catch (e) {
+            console.error(e);
+            return '[]';
+        }
     },
     WX_FileSystemManagerReadCompressedFileSync(option, callbackId) {
         const fs = wx.getFileSystemManager();
@@ -400,7 +411,7 @@ export default {
         cacheArrayBuffer(callbackId, res.arrayBuffer);
         return JSON.stringify({
             bytesRead: res.bytesRead,
-            arrayBufferLength: res.arrayBuffer.byteLength,
+            arrayBufferLength: res.arrayBuffer?.byteLength ?? 0,
         });
     },
     WX_FileSystemManagerFstatSync(option) {
