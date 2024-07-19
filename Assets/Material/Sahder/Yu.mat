@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Surface 2
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: Yu
+  m_Shader: {fileID: 4800000, guid: 96043e1171a15da46a96fb283f76a28f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -62,27 +62,27 @@ Material:
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
-    - _CheckerSize: 1
+    - _CheckerSize: 0.47
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0
+    - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GradientTime: 5
+    - _GradientTime: 2.33
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RainbowTime: 8.59
+    - _RainbowTime: 2.92
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0.564044, a: 1}
-    - _Color1: {r: 0.15640306, g: 0, b: 1, a: 1}
-    - _Color2: {r: 1, g: 0.16858917, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1: {r: 0, g: 0.3681695, b: 0.9528302, a: 1}
+    - _Color2: {r: 1, g: 0, b: 0.056383133, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

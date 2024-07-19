@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 using VolumetricLines;
@@ -10,6 +11,7 @@ public class GoundBackItem : MonoBehaviour
 {
 	public bool IsLock = false;//true表示锁上，需要解锁
 	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
+	public GameObject NumberText;
 	public VolumetricLineStripBehavior volumetricLine;
 	public float GoundBack_Y;
 	public float Assign_Y;
@@ -66,6 +68,16 @@ public class GoundBackItem : MonoBehaviour
         for (int i = 0; i < SurfacesList.Count; i++)
         {
 			SurfacesList[i].transform.localPosition = new Vector3(0,GoundBack_Y+ (i * Assign_Y), 0);
+		}
+	}
+
+	/// <summary>
+	/// 显示最顶层的数字
+	/// </summary>
+	public void DisplayNumbers(bool isSet) {
+		NumberText.SetActive(isSet);
+		if (isSet) {
+			NumberText.transform.localPosition= new Vector3(0, GoundBack_Y + (SurfacesList.Count * Assign_Y), 0);
 		}
 	}
 
