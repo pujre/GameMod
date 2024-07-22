@@ -5,37 +5,52 @@ using UnityEngine;
 public class SuTest : MonoBehaviour
 {
 	public Material targetMaterial;
-	[Header("Shader Parameters")]
-	public Color targetColor1 = Color.white;
-	public Color targetColor2 = Color.black;
-	public float rainbowTime = 5f;
-	public float gradientTime = 5f;
-	public float checkerSize = 1f;
+	public Color targetColor;
+	public float duration = 2.0f;
 
+	private Color initialColor;
 	private float elapsedTime = 0f;
+	private bool isTransitioning = false;
+
 	void Start()
-    {
+	{
 		if (targetMaterial == null)
 		{
-			Debug.LogError("Please assign a material with the custom shader.");
+			Debug.LogError("Please assign a material with the standard shader.");
+			enabled = false;
+			return;
 		}
-		else
+
+		// Get the initial color of the material
+		initialColor = targetMaterial.color;
+	}
+
+	void Update()
+	{
+		if (isTransitioning)
 		{
-			// Initialize shader properties
-			targetMaterial.SetColor("_Color1", targetColor1);
-			targetMaterial.SetColor("_Color2", targetColor2);
-			targetMaterial.SetFloat("_RainbowTime", rainbowTime);
-			targetMaterial.SetFloat("_GradientTime", gradientTime);
-			targetMaterial.SetFloat("_CheckerSize", checkerSize);
+			elapsedTime += Time.deltaTime;
+			float t = Mathf.Clamp01(elapsedTime / duration);
+
+			// Interpolate between the initial color and the target color
+			targetMaterial.color = Color.Lerp(initialColor, targetColor, t);
+
+			// Stop transitioning when the duration is reached
+			if (t >= 1.0f)
+			{
+				isTransitioning = false;
+			}
 		}
 	}
 
-    void Update()
-    {
-		if (targetMaterial != null)
+	// Call this method to start the color transition
+	public void StartColorTransition()
+	{
+		if (!isTransitioning)
 		{
-			elapsedTime += Time.deltaTime;
-			targetMaterial.SetFloat("_Time", elapsedTime);
+			elapsedTime = 0f;
+			initialColor = targetMaterial.color;
+			isTransitioning = true;
 		}
 	}
 }

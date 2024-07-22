@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Surface : MonoBehaviour
@@ -14,5 +12,9 @@ public class Surface : MonoBehaviour
 	public ItemColorType GetColorType()
 	{
 		return SurfaceColor;
+	}
+
+	public void SetColorType(ItemColorType colorType) {
+		SurfaceColor = colorType;
 	}
 }

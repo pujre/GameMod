@@ -12,7 +12,7 @@ public class GameManager : SingletonMono<GameManager>
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
-	public List<Vector2Int> OperationPath=new List<Vector2Int>();
+	public List<Vector2Int> OperationPath = new List<Vector2Int>();
 
 	private Camera Cam;
 	public bool IsTouchInput = true;
@@ -51,74 +51,72 @@ public class GameManager : SingletonMono<GameManager>
 
 	void Update()
 	{
-        if (IsTouchInput)
-        {
-            
-        
-        if (!IsDragging && SelectedObject == null && Input.GetMouseButtonDown(0))
+		if (IsTouchInput)
 		{
-			ray = Cam.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out hit))
+			if (!IsDragging && SelectedObject == null && Input.GetMouseButtonDown(0))
 			{
-				if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove)
+				ray = Cam.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast(ray, out hit))
 				{
-					SelectedObject = hit.transform.gameObject;
-					IsDragging = true;
+					if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove)
+					{
+						SelectedObject = hit.transform.gameObject;
+						IsDragging = true;
+					}
 				}
 			}
-		}
 
-		if (IsDragging && SelectedObject != null)
-		{
-			ray = Cam.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
+			if (IsDragging && SelectedObject != null)
 			{
-				newPosition = hitInfo.point;
-				newPosition.y = 3; //SelectedObject.transform.position.y; // 保持Y轴不变
-				SelectedObject.transform.position = newPosition;
-			}
+				ray = Cam.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
+				{
+					newPosition = hitInfo.point;
+					newPosition.y = 3; //SelectedObject.transform.position.y; // 保持Y轴不变
+					SelectedObject.transform.position = newPosition;
+				}
 
-			// 使用 RaycastAll 检测所有碰撞
-			RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
-			foundBottom = false;
+				// 使用 RaycastAll 检测所有碰撞
+				RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
+				foundBottom = false;
 
-			foreach (RaycastHit hit in hits)
-			{
-				if (hit.transform.gameObject.tag == "bottom" &&
-					hit.transform.GetComponent<GoundBackItem>() &&
-					hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
+				foreach (RaycastHit hit in hits)
+				{
+					if (hit.transform.gameObject.tag == "bottom" &&
+						hit.transform.GetComponent<GoundBackItem>() &&
+						hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
+					{
+						if (lastHighlightedObject != null)
+						{
+							lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
+							lastHighlightedObject.transform.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+						}
+
+						lastHighlightedObject = hit.transform;
+						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
+						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
+						foundBottom = true;
+						break; // 找到目标对象后退出循环
+					}
+				}
+				// 当离开各自区域得时候判定
+				if (!foundBottom)
 				{
 					if (lastHighlightedObject != null)
 					{
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-						lastHighlightedObject.transform.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+
+						lastHighlightedObject = null;
 					}
-
-					lastHighlightedObject = hit.transform;
-					lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
-					lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
-					foundBottom = true;
-					break; // 找到目标对象后退出循环
 				}
 			}
-			// 当离开各自区域得时候判定
-			if (!foundBottom)
+
+			if (Input.GetMouseButtonUp(0) && IsDragging)
 			{
-				if (lastHighlightedObject != null)
-				{
-					lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-					lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
-
-					lastHighlightedObject = null;
-				}
+				IsDragging = false;
+				SnapToGrid(SelectedObject);
 			}
-		}
-
-		if (Input.GetMouseButtonUp(0) && IsDragging)
-		{
-			IsDragging = false;
-			SnapToGrid(SelectedObject);
-		}
 		}
 	}
 
@@ -171,8 +169,9 @@ public class GameManager : SingletonMono<GameManager>
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
 	}
 
-	public void LoadNextLevel() {
-		LoadLevel(NowLevel+1);
+	public void LoadNextLevel()
+	{
+		LoadLevel(NowLevel + 1);
 	}
 
 	public void LoadLevel(int level)
@@ -241,7 +240,7 @@ public class GameManager : SingletonMono<GameManager>
 				//Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
-					if ((index + 1)>= FilterLinked.Count)
+					if ((index + 1) >= FilterLinked.Count)
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
 						{
@@ -262,7 +261,8 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 
-	void ChainCall() {
+	void ChainCall()
+	{
 		Debug.Log("开始连锁数据");
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
 		{
@@ -311,7 +311,8 @@ public class GameManager : SingletonMono<GameManager>
 				}
 			}
 		}
-		if (!coordinates.Contains(new Vector2Int(x,y))) {
+		if (!coordinates.Contains(new Vector2Int(x, y)))
+		{
 			return null;
 		}
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
@@ -353,7 +354,8 @@ public class GameManager : SingletonMono<GameManager>
 			FilterLinked = UnitSDF.FilterLinkedCoordinates(coordinates);
 			Debug.Log("FilterLinked的长度为：" + FilterLinked.Count);
 		}
-		else {
+		else
+		{
 			FilterLinked.Clear();
 			for (int i = 0; i < coordinates.Count - 1; i++)
 			{
@@ -361,7 +363,7 @@ public class GameManager : SingletonMono<GameManager>
 				FilterLinked.Add(new InstructionData(coordinates[i], coordinates[i + 1]));
 			}
 		}
-		
+
 	}
 
 
@@ -372,14 +374,15 @@ public class GameManager : SingletonMono<GameManager>
 	/// <returns></returns>
 	public List<Vector2Int> SortAndFilter(List<Vector2Int> coordinates)
 	{
-		if (coordinates == null || coordinates.Count == 0)return null;
+		if (coordinates == null || coordinates.Count == 0) return null;
 		List<Vector2Int> sortedList = new List<Vector2Int>();
 		HashSet<Vector2Int> remainingCoords = new HashSet<Vector2Int>(coordinates);
 		Stack<(Vector2Int current, List<Vector2Int> path)> stack = new Stack<(Vector2Int, List<Vector2Int>)>();
 		Vector2Int start = coordinates[0];
 		for (int i = 0; i < coordinates.Count; i++)
 		{
-			if (GetAroundPos(coordinates[i].x, coordinates[i].y).Count==1) {
+			if (GetAroundPos(coordinates[i].x, coordinates[i].y).Count == 1)
+			{
 				start = coordinates[i];
 				break;
 			}
@@ -440,7 +443,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// <returns></returns>
 	public List<Vector2Int> GetAroundPos(int x, int y)
 	{
-		return UnitSDF.GetCreatorPos(x,y).Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0) 
+		return UnitSDF.GetCreatorPos(x, y).Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0)
 		&& y < GoundBackItemArray2D.GetLength(1)
 		).ToList();
 	}
@@ -504,10 +507,12 @@ public class GameManager : SingletonMono<GameManager>
 	/// <summary>
 	/// 加载level Prefab
 	/// </summary>
-	public void LoadGenerateBoxMatrix() {
-		GameObject levelObj=Resources.Load<GameObject>("LevelPrefab/"+NowLevel.ToString());
+	public void LoadGenerateBoxMatrix()
+	{
+		GameObject levelObj = Resources.Load<GameObject>("LevelPrefab/" + NowLevel.ToString());
 		levelObj.transform.SetParent(ItemParent.transform);
-		for (int i = 0; i < levelObj.transform.childCount; i++) {
+		for (int i = 0; i < levelObj.transform.childCount; i++)
+		{
 			GoundBackItem goundBackItem = levelObj.transform.GetChild(i).GetComponent<GoundBackItem>();
 			if (goundBackItem != null)
 			{

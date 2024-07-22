@@ -139,6 +139,13 @@ public class UnitSDF : MonoBehaviour
 		return instructionData;
 	}
 
+	/// <summary>
+	/// 记录当前节点及其未访问的邻居
+	/// </summary>
+	/// <param name="visitedNodes"></param>
+	/// <param name="start"></param>
+	/// <param name="index"></param>
+	/// <param name="around"></param>
 	private static void UpdateVisitedNodes(Dictionary<Vector2Int, InstDataCalculus> visitedNodes, Vector2Int start, int index, List<Vector2Int> around)
 	{
 		if (!visitedNodes.ContainsKey(start))

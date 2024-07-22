@@ -1,9 +1,8 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 using VolumetricLines;
 
 [System.Serializable]
@@ -61,6 +60,37 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 指定时间内将所有物体颜色设置为指定颜色
+	/// </summary>
+	/// <param name="targetColor"></param>
+	/// <param name="duration"></param>
+	/// <param name="colorType"></param>
+	public void SetAllColor(Color targetColor,float duration,ItemColorType colorType) {
+		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
+		for (int i = 0; i < SurfacesList.Count; i++)
+		{
+			var target = SurfacesList[i];
+			var targetMaterial = target.gameObject.GetComponent<Renderer>().material;
+			float delay = 0.03f * i;
+			sequence.Insert(delay,
+				targetMaterial.DOColor(targetColor, duration)
+					.SetEase(Ease.Linear)
+					.OnStart(() => {
+						target.SetColorType(colorType);
+					})
+					.OnComplete(() => {
+						
+					})
+			);
+		}
+		sequence.OnComplete(() =>
+		{
+			
+		});
+		sequence.Play();  // 播放序列
+	}
+
+	/// <summary>
 	/// 从新布局位置
 	/// </summary>
 	public void SetChinderPosition() {
@@ -79,6 +109,7 @@ public class GoundBackItem : MonoBehaviour
 		if (isSet) {
 			NumberText.transform.localPosition= new Vector3(0, GoundBack_Y + (SurfacesList.Count * Assign_Y), 0);
 		}
+		NumberText.GetComponent<Text>().text = GetTopColorNumber().ToString();
 	}
 
 	public List<Vector3> GetEndListVector3(int x) { 
