@@ -46,14 +46,26 @@ public class GoundBackItem : MonoBehaviour
 		volumetricLine.gameObject.SetActive(false);
 	}
 
+	/// <summary>
+	/// 设置特效的开启和关闭
+	/// </summary>
+	/// <param name="isOn"></param>
 	public void SetvolumetricLine(bool isOn) {
 		volumetricLine.gameObject.SetActive(isOn);
 	}
 
+	/// <summary>
+	/// 当前堆上没有物品且没有被锁
+	/// </summary>
+	/// <returns></returns>
 	public bool IsAddSurface() {
 		return SurfacesList.Count == 0&&!IsLock ? true:false;
 	}
 
+	/// <summary>
+	/// 当前堆上有物品
+	/// </summary>
+	/// <returns></returns>
 	public bool IsSurface()
 	{
 		return SurfacesList.Count > 0;
@@ -70,7 +82,7 @@ public class GoundBackItem : MonoBehaviour
 		for (int i = 0; i < SurfacesList.Count; i++)
 		{
 			var target = SurfacesList[i];
-			var targetMaterial = target.gameObject.GetComponent<Renderer>().material;
+			var targetMaterial = target.gameObject.GetComponent<MeshRenderer>().material;
 			float delay = 0.03f * i;
 			sequence.Insert(delay,
 				targetMaterial.DOColor(targetColor, duration)

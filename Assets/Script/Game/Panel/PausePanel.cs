@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PausePanel : PanelBase
 {
 	private Toggle[] toggles;
+	public Sprite[] images;
 	private void Awake()
 	{
 		DelegateManager.Instance.AddEvent(OnEventKey.OnStop.ToString(), DelegateCallback);
@@ -62,8 +63,10 @@ public class PausePanel : PanelBase
 
 	void OnValueChang(GameObject toggle, bool isOn)
 	{
-		toggle.transform.Find("Checkmark").GetComponent<Image>().enabled=isOn;
-		toggle.transform.Find("Background").GetComponent<Image>().enabled = !isOn;
+		//toggle.transform.Find("Checkmark").GetComponent<Image>().enabled=isOn;
+		//toggle.transform.Find("Background").GetComponent<Image>().enabled = !isOn;
+		toggle.transform.Find("Checkmark").GetComponent<Image>().sprite = images[isOn ? 0 : 1];
+		toggle.transform.Find("Background").GetComponent<Image>().sprite = images[isOn ? 2 : 3];
 		switch (toggle.name)
 		{
 			case "MusicToggle":
@@ -75,7 +78,6 @@ public class PausePanel : PanelBase
 				else {
 					AudioManager.Instance.StopBGM();
 				}
-				
 				break;
 			case "ShakeToggle":
 				DataManager.Instance.SetData(OnDataKey.Shake_On, isOn ? 0 : 1);

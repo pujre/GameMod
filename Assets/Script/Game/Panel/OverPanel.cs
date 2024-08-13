@@ -51,6 +51,8 @@ public class OverPanel : PanelBase
 				break;
 			case "ADBtn":
 				break;
+			case "LoseRe":
+				break;
 		}
 		AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
 	}

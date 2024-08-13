@@ -33,6 +33,8 @@ public class TopPanel : PanelBase
 			case "IconBtn":
 				Debug.Log("金币界面灯待加入");
 				break;
+			case "StoreBtn":
+				break;
 		}
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 
