@@ -48,7 +48,7 @@ public class EditorSettings : MonoBehaviour
 	}
 
 	public void GenerateBoxMatrix(){
-		GameManager.Instance.GenerateBoxMatrix(mapSize.x, mapSize.y);
+		//GameManager.Instance.GenerateBoxMatrix(mapSize.x, mapSize.y);
 	}
 
 	public void RemoveBoxMatrix() {

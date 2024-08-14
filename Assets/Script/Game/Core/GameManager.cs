@@ -24,7 +24,7 @@ public class GameManager : SingletonMono<GameManager>
 	public LevelDataRoot LevelDataRoot;
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
-	private int NowLevel = 1;
+	private int NowLevel = 2;
 
 	#region 局部变量private
 	private RaycastHit hit;
@@ -167,6 +167,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
+		Debug.Log("加载关卡成功：");
 	}
 
 	public void LoadNextLevel()
@@ -177,12 +178,13 @@ public class GameManager : SingletonMono<GameManager>
 	public void LoadLevel(int level)
 	{
 		NowLevel = level;
-		LevelData levedata = LevelDataRoot.GetLevelData(level);
-		GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
+		//LevelData levedata = LevelDataRoot.GetLevelData(level);
+		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
+		LoadGenerateBoxMatrix();
 		PropNumber.Clear();
-		PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
-		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
-		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
+		//PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
+		//PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
+		//PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameStar.ToString());
@@ -305,7 +307,7 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
 			{
-				if (GoundBackItemArray2D[i, j].IsSurface() && GoundBackItemArray2D[i, j].GetTopColor() == topColor)
+				if (GoundBackItemArray2D[i, j] != null&& GoundBackItemArray2D[i, j].IsSurface() && GoundBackItemArray2D[i, j].GetTopColor() == topColor)
 				{
 					coordinates.Add(new Vector2Int(i, j));
 				}
@@ -444,7 +446,7 @@ public class GameManager : SingletonMono<GameManager>
 	public List<Vector2Int> GetAroundPos(int x, int y)
 	{
 		return UnitSDF.GetCreatorPos(x, y).Where(v => v.x >= 0 && v.y >= 0 && x < GoundBackItemArray2D.GetLength(0)
-		&& y < GoundBackItemArray2D.GetLength(1)
+		&& y < GoundBackItemArray2D.GetLength(1)&& GoundBackItemArray2D[v.x,v.y]!=null
 		).ToList();
 	}
 
@@ -457,7 +459,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// <returns></returns>
 	public GoundBackItem GetGoundBackItem(int x, int y)
 	{
-		if (x >= 0 && y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1))
+		if (x >= 0 && y >= 0 && x < GoundBackItemArray2D.GetLength(0) && y < GoundBackItemArray2D.GetLength(1)&& GoundBackItemArray2D[x,y]!=null)
 		{
 			var item = GoundBackItemArray2D[x, y];
 			return item;
@@ -474,49 +476,59 @@ public class GameManager : SingletonMono<GameManager>
 	/// </summary>
 	/// <param name="width"></param>
 	/// <param name="height"></param>
-	public void GenerateBoxMatrix(int width, int height)
-	{
-		RemoveBoxMatrix();
-		GoundBackItemArray2D = new GoundBackItem[width, height];
-		bool isOn = true;
-		for (int x = 0; x < width; x++)
-		{
-			for (int z = 0; z < height; z++)
-			{
-				Vector3 position = new Vector3(
-					StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
-					StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
-				GameObject block = PoolManager.Instance.CreateGameObject("bottoms", ItemParent);
-				block.transform.localRotation = Quaternion.Euler(0, 0, 0);
-				block.transform.localPosition = position;
-				block.transform.localPosition += ItemParent.transform.position;
-				block.transform.SetParent(ItemParent.transform);
-				GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
-				goundBackItem.SetData(x, z, $"{x},{z}");
-				if (GetNowLevelData().IsLock(x, z))
-				{
-					Debug.Log(string.Format("设置lock，x：{0}，y：{1}", x, z));
-					goundBackItem.LockOrUnLockTheItem(true);
-				}
-				GoundBackItemArray2D[x, z] = goundBackItem;
-			}
-			isOn = !isOn;
-		}
-	}
+	//public void GenerateBoxMatrix(int width, int height)
+	//{
+	//	RemoveBoxMatrix();
+	//	GoundBackItemArray2D = new GoundBackItem[width, height];
+	//	bool isOn = true;
+	//	for (int x = 0; x < width; x++)
+	//	{
+	//		for (int z = 0; z < height; z++)
+	//		{
+	//			Vector3 position = new Vector3(
+	//				StartPosition.x + (x == 0 ? 0 : x * BlockSize.x) + BlockSizeDeviation.x, 0,
+	//				StartPosition.z + (isOn ? z * BlockSize.z + BlockSizeDeviation.z : z * BlockSize.z));
+	//			GameObject block = PoolManager.Instance.CreateGameObject("bottoms", ItemParent);
+	//			block.transform.localRotation = Quaternion.Euler(0, 0, 0);
+	//			block.transform.localPosition = position;
+	//			block.transform.localPosition += ItemParent.transform.position;
+	//			block.transform.SetParent(ItemParent.transform);
+	//			GoundBackItem goundBackItem = block.AddComponent<GoundBackItem>();
+	//			goundBackItem.SetData(x, z, $"{x},{z}");
+	//			if (GetNowLevelData().IsLock(x, z))
+	//			{
+	//				Debug.Log(string.Format("设置lock，x：{0}，y：{1}", x, z));
+	//				goundBackItem.LockOrUnLockTheItem(true);
+	//			}
+	//			GoundBackItemArray2D[x, z] = goundBackItem;
+	//		}
+	//		isOn = !isOn;
+	//	}
+	//}
 
 	/// <summary>
 	/// 加载level Prefab
 	/// </summary>
-	public void LoadGenerateBoxMatrix()
+	private void LoadGenerateBoxMatrix()
 	{
-		GameObject levelObj = Resources.Load<GameObject>("LevelPrefab/" + NowLevel.ToString());
-		levelObj.transform.SetParent(ItemParent.transform);
-		for (int i = 0; i < levelObj.transform.childCount; i++)
+		GameObject PrefabObj = Resources.Load<GameObject>("LevelPrefab/Lv" + NowLevel.ToString());
+		if (PrefabObj == null)
 		{
-			GoundBackItem goundBackItem = levelObj.transform.GetChild(i).GetComponent<GoundBackItem>();
-			if (goundBackItem != null)
+			Debug.Log("未能加载到该关卡数据，加载的关卡为："+ NowLevel.ToString());
+			return;
+		}
+		else {
+			GameObject levelObj = Instantiate(PrefabObj);
+			levelObj.transform.SetParent(ItemParent.transform);
+			GoundBackItemArray2D = null;
+			GoundBackItemArray2D = new GoundBackItem[levelObj.transform.childCount, levelObj.transform.childCount];
+			for (int i = 0; i < levelObj.transform.childCount; i++)
 			{
-				GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
+				GoundBackItem goundBackItem = levelObj.transform.GetChild(i).GetComponent<GoundBackItem>();
+				if (goundBackItem != null)
+				{
+					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
+				}
 			}
 		}
 	}
