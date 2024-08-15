@@ -168,6 +168,7 @@ public class GameManager : SingletonMono<GameManager>
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
 		Debug.Log("加载关卡成功：");
+		GameManager.Instance.LoadLevel(3);
 	}
 
 	public void LoadNextLevel()
@@ -178,13 +179,13 @@ public class GameManager : SingletonMono<GameManager>
 	public void LoadLevel(int level)
 	{
 		NowLevel = level;
-		//LevelData levedata = LevelDataRoot.GetLevelData(level);
+		LevelData levedata = LevelDataRoot.GetLevelData(level);
 		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
 		LoadGenerateBoxMatrix();
 		PropNumber.Clear();
-		//PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
-		//PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
-		//PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
+		PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
+		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
+		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameStar.ToString());
@@ -289,7 +290,22 @@ public class GameManager : SingletonMono<GameManager>
 
 	#endregion
 
+	public void UserProp(int propId) {
+		switch (propId)
+		{
+			case 1:
 
+				break;
+			case 2:
+
+				break;
+			case 3:
+
+				break;
+			default:
+				break;
+		}
+	}
 
 
 	/// <summary>

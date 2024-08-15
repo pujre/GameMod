@@ -15,6 +15,7 @@ public class HomePanel : PanelBase
 			Button button = buts[i];
 			button.onClick.AddListener(() => { OnClickEvent(button.gameObject); });
 		}
+		
 	}
 
     // Update is called once per frame
@@ -30,7 +31,6 @@ public class HomePanel : PanelBase
 			case "PalyBtn":
 				transform.gameObject.SetActive(false);
 				UIManager.Instance.SetUiPanelAction("GamePanel", true);
-				GameManager.Instance.LoadLevel(2);
 				GameManager.Instance.ScelfJob();
 				GameManager.Instance.ScelfJob();
 				GameManager.Instance.ScelfJob();

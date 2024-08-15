@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -10,7 +11,8 @@ public class GamePanel : PanelBase
 	public List<Selected> SelectedList = new List<Selected>();
 	public int NowScore = 0;
 	public int TagerScore = 0;
-
+	private Tween currentTween;
+	private RectTransform buttonRectTransform;
 	private void Awake()
 	{
 		DelegateManager.Instance.AddEvent(OnEventKey.OnApplyProp.ToString(), DelegateCallback);
@@ -33,7 +35,11 @@ public class GamePanel : PanelBase
 		int value = 0;
 		var levelData = GameManager.Instance.GetNowLevelData();
 		var propName = "";
-
+		if (currentTween != null && currentTween.IsActive())
+		{
+			currentTween.Kill(); // 停止当前的动画
+			buttonRectTransform.localScale = Vector3.one; // 重置缩放
+		}
 		switch (button.name)
 		{
 			case "Prop_1Btn":
@@ -57,6 +63,7 @@ public class GamePanel : PanelBase
 		if (value > 0)
 		{
 			DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
+			BtnAnim(button.transform.Find("Prop").gameObject);
 		}
 		else
 		{
@@ -66,6 +73,15 @@ public class GamePanel : PanelBase
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 	}
 
+
+	public void BtnAnim(GameObject button) {
+		buttonRectTransform = button.GetComponent<RectTransform>();
+		currentTween = buttonRectTransform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.1f)  // 放大到1.2倍，持续时间0.1秒
+		.OnComplete(() =>
+		{
+			buttonRectTransform.DOScale(Vector3.one, 0.1f);  // 缩小回原来的大小，持续时间0.1秒
+		});
+	}
 
 	private void OnGameStar(object[] args) {
 		NowScore = 0;
@@ -107,7 +123,7 @@ public class GamePanel : PanelBase
 
 	private void UpdatePropNumber()
 	{
-		var nowLevelData = GameManager.Instance.GetNowLevelData();
+		LevelData nowLevelData = GameManager.Instance.GetNowLevelData();
 
 		if (nowLevelData == null)
 		{
@@ -128,7 +144,7 @@ public class GamePanel : PanelBase
 		}
 		else
 		{
-			Debug.LogError($"在键 {itemId} 的PropNumber中找不到条目");
+			Debug.Log($"在键 {itemId} 的PropNumber中找不到条目");
 		}
 	}
 
