@@ -83,7 +83,7 @@ public enum ItemColorType
 	Blue,
 	Yello,
 	Organge,
-
+	StarAll,
 }
 
 /// <summary>

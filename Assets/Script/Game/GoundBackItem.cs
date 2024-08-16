@@ -30,12 +30,12 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 
-	public void LockOrUnLockTheItem(bool isOn){
-		IsLock=isOn;
+	public void LockOrUnLockTheItem(bool isOn) {
+		IsLock = isOn;
 	}
 
 	public GoundBackItem(int x, int y, string name) {
-		SetData(x,y,name);
+		SetData(x, y, name);
 	}
 
 	public void SetData(int x, int y, string name)
@@ -59,7 +59,7 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	/// <returns></returns>
 	public bool IsAddSurface() {
-		return SurfacesList.Count == 0&&!IsLock ? true:false;
+		return SurfacesList.Count == 0 && !IsLock ? true : false;
 	}
 
 	/// <summary>
@@ -77,7 +77,7 @@ public class GoundBackItem : MonoBehaviour
 	/// <param name="targetColor"></param>
 	/// <param name="duration"></param>
 	/// <param name="colorType"></param>
-	public void SetAllColor(Color targetColor,float duration,ItemColorType colorType) {
+	public void SetAllColor(Color targetColor, float duration, ItemColorType colorType) {
 		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
 		for (int i = 0; i < SurfacesList.Count; i++)
 		{
@@ -91,13 +91,13 @@ public class GoundBackItem : MonoBehaviour
 						target.SetColorType(colorType);
 					})
 					.OnComplete(() => {
-						
+
 					})
 			);
 		}
 		sequence.OnComplete(() =>
 		{
-			
+
 		});
 		sequence.Play();  // 播放序列
 	}
@@ -107,9 +107,9 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	public void SetChinderPosition() {
 		if (SurfacesList == null) return;
-        for (int i = 0; i < SurfacesList.Count; i++)
-        {
-			SurfacesList[i].transform.localPosition = new Vector3(0,GoundBack_Y+ (i * Assign_Y), 0);
+		for (int i = 0; i < SurfacesList.Count; i++)
+		{
+			SurfacesList[i].transform.localPosition = new Vector3(0, GoundBack_Y + (i * Assign_Y), 0);
 		}
 	}
 
@@ -119,14 +119,14 @@ public class GoundBackItem : MonoBehaviour
 	public void DisplayNumbers(bool isSet) {
 		NumberText.SetActive(isSet);
 		if (isSet) {
-			NumberText.transform.localPosition= new Vector3(0, GoundBack_Y + (SurfacesList.Count * Assign_Y), 0);
+			NumberText.transform.localPosition = new Vector3(0, GoundBack_Y + (SurfacesList.Count * Assign_Y), 0);
 		}
 		NumberText.GetComponent<Text>().text = GetTopColorNumber().ToString();
 	}
 
-	public List<Vector3> GetEndListVector3(int x) { 
+	public List<Vector3> GetEndListVector3(int x) {
 		List<Vector3> vectors = new List<Vector3>();
-		Vector3 startVectpr3 = SurfacesList[SurfacesList.Count-1].transform.position;
+		Vector3 startVectpr3 = SurfacesList[SurfacesList.Count - 1].transform.position;
 		for (int i = 0; i < x; i++)
 		{
 			vectors.Add(new Vector3(startVectpr3.x, startVectpr3.y + (i * Assign_Y), startVectpr3.z));
@@ -150,15 +150,15 @@ public class GoundBackItem : MonoBehaviour
 	/// <returns></returns>
 	public int GetNowColorNumber() {
 		List<string> ColorType = new List<string>();
-        for (int i = 0; i < SurfacesList.Count; i++)
-        {
-            string colorTypeName = SurfacesList[i].GetColorType().ToString();
-            if (!ColorType.Contains(colorTypeName)) {
-                ColorType.Add(colorTypeName);
-            }
-        }
-        return ColorType.Count;
-    }
+		for (int i = 0; i < SurfacesList.Count; i++)
+		{
+			string colorTypeName = SurfacesList[i].GetColorType().ToString();
+			if (!ColorType.Contains(colorTypeName)) {
+				ColorType.Add(colorTypeName);
+			}
+		}
+		return ColorType.Count;
+	}
 
 	/// <summary>
 	/// 获取当前顶部同颜色的节点数
@@ -167,20 +167,20 @@ public class GoundBackItem : MonoBehaviour
 	public int GetTopColorNumber()
 	{
 		if (SurfacesList == null || SurfacesList.Count == 0) return 0;
-		string colorTypeName = SurfacesList[SurfacesList.Count-1].GetColorType().ToString();
+		string colorTypeName = SurfacesList[SurfacesList.Count - 1].GetColorType().ToString();
 		int colorNumber = 0;
-        for (int i = SurfacesList.Count - 1; i >= 0; i--)
-        {
+		for (int i = SurfacesList.Count - 1; i >= 0; i--)
+		{
 			if (colorTypeName == SurfacesList[i].GetColorType().ToString())
 			{
-				colorNumber++; 
+				colorNumber++;
 			}
 			else {
 				break;
 			}
-        }
+		}
 		return colorNumber;
-    }
+	}
 
 	/// <summary>
 	/// 从当前的Surface里面从0开始移除指定颜色的surface，并返回移除的surface数组
@@ -188,23 +188,23 @@ public class GoundBackItem : MonoBehaviour
 	/// <param name="itemColor"></param>
 	/// <returns></returns>
 	public List<Surface> RemoveSurfaces() {
-		List<Surface> surfaces= new List<Surface>();
+		List<Surface> surfaces = new List<Surface>();
 		ItemColorType itemColor = SurfacesList[SurfacesList.Count - 1].GetColorType();
-		for (int i = SurfacesList.Count-1; i >=0 ; i--)
-        {
-            if (SurfacesList[i].GetColorType() == itemColor)
-            {
-                surfaces.Add(SurfacesList[i]);
+		for (int i = SurfacesList.Count - 1; i >= 0; i--)
+		{
+			if (SurfacesList[i].GetColorType() == itemColor)
+			{
+				surfaces.Add(SurfacesList[i]);
 			}
-            else {
-                break;
-            }
-        }
+			else {
+				break;
+			}
+		}
 		for (int j = 0; j < surfaces.Count; j++)
 		{
 			SurfacesList.Remove(surfaces[j]);
 		}
-        return surfaces;
+		return surfaces;
 	}
 
 
@@ -212,7 +212,7 @@ public class GoundBackItem : MonoBehaviour
 	{
 		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
 		List<Vector3> o3s = GetEndListVector3(listsurface.Count);
-		Vector3 direction = (listsurface[listsurface.Count-1].transform.position - o3s[o3s.Count-1]).normalized;
+		Vector3 direction = (listsurface[listsurface.Count - 1].transform.position - o3s[o3s.Count - 1]).normalized;
 		for (int i = 0; i < listsurface.Count; i++)
 		{
 			var obj = listsurface[i];
@@ -225,7 +225,7 @@ public class GoundBackItem : MonoBehaviour
 			// 创建一个表示沿着法向量旋转180度的四元数
 			Quaternion rotation = Quaternion.AngleAxis(180, normal);
 			sequence.Insert(delay,
-				obj.transform.DOPath(path,0.5f, PathType.CatmullRom)
+				obj.transform.DOPath(path, 0.5f, PathType.CatmullRom)
 					.SetEase(Ease.Linear)
 					.OnStart(() => {
 						AudioManager.Instance.PlaySFX("Flip（翻转叠加时）");
@@ -250,8 +250,8 @@ public class GoundBackItem : MonoBehaviour
 	/// 获取当前顶端的surface颜色
 	/// </summary>
 	/// <returns></returns>
-	public ItemColorType GetTopColor(){
-		return SurfacesList[SurfacesList.Count-1].GetColorType();
+	public ItemColorType GetTopColor() {
+		return SurfacesList[SurfacesList.Count - 1].GetColorType();
 	}
 
 
@@ -291,6 +291,14 @@ public class GoundBackItem : MonoBehaviour
 		}
 		else {
 			return -1;
+		}
+	}
+
+	public void TopTranslateColor(int x){
+		int u = SurfacesList.Count - x<=0?0 : SurfacesList.Count - x;
+		for (int i = SurfacesList.Count; i < u; i--)
+		{
+			SurfacesList[i].TranslateColore();
 		}
 	}
 	/// <summary>
@@ -343,6 +351,39 @@ public class GoundBackItem : MonoBehaviour
 			action!.Invoke();
 			//Debug.Log(string.Format("坐标 {0},{1}未满足条件，当前数为{2}", x, y, count));
 		}
+	}
+
+	/// <summary>
+	/// 移除所有物体
+	/// </summary>
+	public void RemoveObject(Action action = null) {
+		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
+		for (int i = 0; i < SurfacesList.Count; i++)
+		{
+			var obj = SurfacesList[i];
+			Vector3 ka = obj.transform.localPosition + new Vector3(0, 30, 0);
+			// 创建一个子序列来同时进行移动和缩放的变化
+			Sequence subSequence = DOTween.Sequence();
+			subSequence.Join(obj.transform.DOLocalMove(ka, 0.05f).SetEase(Ease.Linear));
+			subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.05f).SetEase(Ease.Linear));
+
+			// 在子序列完成时执行回调
+			subSequence.OnComplete(() =>
+			{
+				PoolManager.Instance.DestoryByRecycle(obj.gameObject, false);
+				obj.transform.localScale = Vector3.one;
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnBonusEvent.ToString(), 1);
+			});
+
+			// 将子序列添加到主序列中
+			sequence.Append(subSequence);
+			sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
+		}
+		sequence.OnComplete(() =>
+		{
+			action!.Invoke();
+		});
+		sequence.Play();  // 播放序列
 	}
 }
 

@@ -24,8 +24,8 @@ public class GameManager : SingletonMono<GameManager>
 	public LevelDataRoot LevelDataRoot;
 	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
-	private int NowLevel = 2;
-
+	private int NowLevel = 1;
+	private LevelData LevelData;
 	#region 局部变量private
 	private RaycastHit hit;
 	private Ray ray;
@@ -160,15 +160,19 @@ public class GameManager : SingletonMono<GameManager>
 
 	public LevelData GetNowLevelData()
 	{
-		return LevelDataRoot.GetLevelData(NowLevel);
+		if (LevelData == null || LevelData.Level != NowLevel)
+		{
+			LevelData = LevelDataRoot.GetLevelData(NowLevel);
+		}		
+		return LevelData;
 	}
 
 	private void LoadlevelData()
 	{
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
-		Debug.Log("加载关卡成功：");
-		GameManager.Instance.LoadLevel(3);
+		Debug.Log("加载关卡数据成功：");
+		LoadLevel(3);
 	}
 
 	public void LoadNextLevel()
@@ -290,20 +294,49 @@ public class GameManager : SingletonMono<GameManager>
 
 	#endregion
 
-	public void UserProp(int propId) {
-		switch (propId)
+	/// <summary>
+	/// 使用道具
+	/// </summary>
+	/// <param name="propId"></param>
+	public void UserProp(int propId)
+	{
+		List<GoundBackItem> backItems = new List<GoundBackItem>();
+		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
 		{
-			case 1:
-
-				break;
-			case 2:
-
-				break;
-			case 3:
-
-				break;
-			default:
-				break;
+			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
+			{
+				if (GoundBackItemArray2D[i, j] != null && GoundBackItemArray2D[i, j].SurfacesList.Count > 0)
+				{
+					backItems.Add(GoundBackItemArray2D[i, j]);
+				}
+			}
+		}
+		if (backItems.Count > 0)
+		{
+			switch (propId)
+			{
+				case 1:
+					LevelData.Item_1Number--;
+					backItems[UnityEngine.Random.Range(0, backItems.Count)].RemoveObject();
+					break;
+				case 2:
+					LevelData.Item_2Number--;
+					backItems[UnityEngine.Random.Range(0, backItems.Count)].TopTranslateColor(1);
+					Debug.Log("最顶部的那个变成星星");
+					break;
+				case 3:
+					if (backItems.Count >= 2)
+					{
+						LevelData.Item_3Number--;
+						GoundBackItem goundBackItem_1 = backItems[UnityEngine.Random.Range(0, backItems.Count)];
+						backItems.Remove(goundBackItem_1);
+						GoundBackItem goundBackItem_2 = backItems[UnityEngine.Random.Range(0, backItems.Count)];
+						Debug.Log("动画怎么设计尼");
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -527,6 +560,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// </summary>
 	private void LoadGenerateBoxMatrix()
 	{
+		RemoveBoxMatrix();
 		GameObject PrefabObj = Resources.Load<GameObject>("LevelPrefab/Lv" + NowLevel.ToString());
 		if (PrefabObj == null)
 		{
