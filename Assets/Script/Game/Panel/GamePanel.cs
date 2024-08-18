@@ -35,6 +35,7 @@ public class GamePanel : PanelBase
 		int value = 0;
 		var levelData = GameManager.Instance.GetNowLevelData();
 		var propName = "";
+		int propId= 0;
 		if (currentTween != null && currentTween.IsActive())
 		{
 			currentTween.Kill(); // 停止当前的动画
@@ -44,14 +45,17 @@ public class GamePanel : PanelBase
 		{
 			case "Prop_1Btn":
 				propName = "Prop_1";
+				propId = levelData.Item_1ID;
 				value = GetPropValue(levelData.Item_1ID);
 				break;
 			case "Prop_2Btn":
 				propName = "Prop_2";
+				propId = levelData.Item_2ID;
 				value = GetPropValue(levelData.Item_2ID);
 				break;
 			case "Prop_3Btn":
 				propName = "Prop_3";
+				propId = levelData.Item_3ID;
 				value = GetPropValue(levelData.Item_3ID);
 				break;
 			case "StopBtn":
@@ -62,6 +66,7 @@ public class GamePanel : PanelBase
 
 		if (value > 0)
 		{
+			GameManager.Instance.UserProp(propId);
 			DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
 			BtnAnim(button.transform.Find("Prop").gameObject);
 		}

@@ -356,34 +356,23 @@ public class GoundBackItem : MonoBehaviour
 	/// <summary>
 	/// 移除所有物体
 	/// </summary>
-	public void RemoveObject(Action action = null) {
-		Sequence sequence = DOTween.Sequence();  // 创建一个DoTween序列
-		for (int i = 0; i < SurfacesList.Count; i++)
+	public void RemoveObject(Action action = null)
+	{
+		foreach (var obj in SurfacesList)
 		{
-			var obj = SurfacesList[i];
-			Vector3 ka = obj.transform.localPosition + new Vector3(0, 30, 0);
-			// 创建一个子序列来同时进行移动和缩放的变化
-			Sequence subSequence = DOTween.Sequence();
-			subSequence.Join(obj.transform.DOLocalMove(ka, 0.05f).SetEase(Ease.Linear));
-			subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.05f).SetEase(Ease.Linear));
-
-			// 在子序列完成时执行回调
-			subSequence.OnComplete(() =>
+			Vector3 ka = obj.transform.localPosition + new Vector3(0, 100, 0);
+			// 创建并播放子序列
+			Sequence jonSequence = DOTween.Sequence();
+			jonSequence.Join(obj.transform.DOLocalMove(ka, 0.2f).SetEase(Ease.Linear));
+			jonSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.2f).SetEase(Ease.Linear));
+			jonSequence.OnComplete(() =>
 			{
 				PoolManager.Instance.DestoryByRecycle(obj.gameObject, false);
 				obj.transform.localScale = Vector3.one;
-				DelegateManager.Instance.TriggerEvent(OnEventKey.OnBonusEvent.ToString(), 1);
 			});
-
-			// 将子序列添加到主序列中
-			sequence.Append(subSequence);
-			sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
+			jonSequence.AppendInterval(0.1f);
+			jonSequence.Play(); // 立即播放每个子序列
 		}
-		sequence.OnComplete(() =>
-		{
-			action!.Invoke();
-		});
-		sequence.Play();  // 播放序列
 	}
 }
 
