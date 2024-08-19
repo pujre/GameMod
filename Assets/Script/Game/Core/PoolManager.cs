@@ -193,7 +193,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	public  void DestoryByRecycle(GameObject gameObject, bool isSetInactive = true)
 	{
 		if (!gameObject) return;
-		if (gameObject.name == "surface") gameObject.name = "surfaceItem";
+		//if (gameObject.name == "surface") gameObject.name = "surfaceItem";
 		string key = gameObject.name.Replace("(Clone)", "");
 		if (!recyclePools.ContainsKey(key)) recyclePools.Add(key, new Dictionary<int, GameObject>());
 
@@ -210,11 +210,14 @@ public class PoolManager : SingletonMono<PoolManager>
 		gameObject.name = key;
 		PoolObject obj = gameObject.GetComponent<PoolObject>();
 		if (obj) obj.OnRecycle();
-
+		//if (!createPools.ContainsKey(key)) {
+		//	createPools[key].Add
+		//}
 		if (createPools.ContainsKey(key) && createPools[key].ContainsKey(gameObject.GetInstanceID()))
 		{
 			createPools[key].Remove(gameObject.GetInstanceID());
 		}
+		
 		else Debug.LogError("对象池不存在GameObject：" + gameObject + " 不能回收！");
 	}
 
