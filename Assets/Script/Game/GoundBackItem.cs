@@ -171,7 +171,7 @@ public class GoundBackItem : MonoBehaviour
 		int colorNumber = 0;
 		for (int i = SurfacesList.Count - 1; i >= 0; i--)
 		{
-			if (colorTypeName == SurfacesList[i].GetColorType().ToString())
+			if (colorTypeName == SurfacesList[i].GetColorType().ToString() || SurfacesList[i].GetColorType()==ItemColorType.StarAll)
 			{
 				colorNumber++;
 			}
@@ -295,10 +295,19 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	public void TopTranslateColor(int x){
-		int u = SurfacesList.Count - x<=0?0 : SurfacesList.Count - x;
-		for (int i = SurfacesList.Count; i < u; i--)
+		int startIndex = Mathf.Max(SurfacesList.Count - x, 0);
+		for (int i = SurfacesList.Count-1; i >= startIndex; i--)
 		{
-			SurfacesList[i].TranslateColore();
+			//Debug.Log(string.Format("X:{0},Y:{1},开始变色：i={2}", ItemPosition.x, ItemPosition.y,i));
+			if (i >= startIndex)
+			{
+				SurfacesList[i].TranslateColore(Color.white, () => {
+					GameManager.Instance.CalculateElimination(ItemPosition.x, ItemPosition.y);
+				});
+			}
+			else {
+				SurfacesList[i].TranslateColore(Color.white);
+			}
 		}
 	}
 	/// <summary>
@@ -323,7 +332,7 @@ public class GoundBackItem : MonoBehaviour
 				});
 				subSequence.Join(obj.transform.DOLocalMove(ka, 0.05f).SetEase(Ease.Linear));
 				subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.05f).SetEase(Ease.Linear));
-
+				//subSequence.Insert()
 				// 在子序列完成时执行回调
 				subSequence.OnComplete(() =>
 				{
@@ -358,21 +367,30 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	public void RemoveObject(Action action = null)
 	{
-		foreach (var obj in SurfacesList)
+		Sequence sequence = DOTween.Sequence();
+		//for (int i = SurfacesList.Count-1; i>=0; i--)
+		for (int i = 0; i < SurfacesList.Count; i++)
 		{
-			Vector3 ka = obj.transform.localPosition + new Vector3(0, 100, 0);
+			GameObject obj = SurfacesList[i].gameObject;
+			Vector3 ka = obj.transform.localPosition + new Vector3(0, 50, 0);
 			// 创建并播放子序列
-			Sequence jonSequence = DOTween.Sequence();
-			jonSequence.Join(obj.transform.DOLocalMove(ka, 0.2f).SetEase(Ease.Linear));
-			jonSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.2f).SetEase(Ease.Linear));
-			jonSequence.OnComplete(() =>
+			Tween scaleTween = obj.transform.DOScale(new Vector3(0.01f, 0.01f, 0.01f),0.5f).SetEase(Ease.Linear);
+			Tween moveTween  = obj.transform.DOLocalMove(ka, 0.5f).SetEase(Ease.Linear);
+
+			sequence.Insert(0.08f * (SurfacesList.Count - 1 - i), scaleTween);
+			sequence.Insert(0.08f * (SurfacesList.Count - 1 - i), moveTween);
+			moveTween.OnComplete(() =>
 			{
-				PoolManager.Instance.DestoryByRecycle(obj.gameObject, false);
+				PoolManager.Instance.DestoryByRecycle(obj.gameObject);
 				obj.transform.localScale = Vector3.one;
 			});
-			jonSequence.AppendInterval(0.1f);
-			jonSequence.Play(); // 立即播放每个子序列
 		}
+		sequence.OnComplete(() =>
+		{
+			SurfacesList.Clear();
+		});
+		sequence.Play(); // 立即播放每个子序列
+
 	}
 }
 

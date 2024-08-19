@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG;
 using DG.Tweening;
 
 public class SuTest : MonoBehaviour
@@ -22,15 +19,11 @@ public class SuTest : MonoBehaviour
 
 
 	public void StartColorDOTransition(Color targetColor) {
-		targetMaterial.DOColor(targetColor, duration)
-					.SetEase(Ease.Linear)
-					.OnStart(() =>
-					{
-
-					})
-					.OnComplete(() =>
-					{
-
-					});
+		if (targetMaterial != null && targetMaterial.name.Contains("Instance") == false)
+		{
+			targetMaterial = new Material(targetMaterial);
+			GetComponent<Renderer>().material = targetMaterial;
+		}
+		targetMaterial.DOColor(targetColor, duration);
 	}
 }

@@ -66,15 +66,14 @@ public class GamePanel : PanelBase
 
 		if (value > 0)
 		{
+			BtnAnim(button.transform.Find("Prop").gameObject);
 			GameManager.Instance.UserProp(propId);
 			DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
-			BtnAnim(button.transform.Find("Prop").gameObject);
 		}
 		else
 		{
-			Debug.Log("暂无该道具");
+			UIManager.Instance.SetUiPanelAction("RewardPanel", true);
 		}
-
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 	}
 

@@ -193,7 +193,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	public  void DestoryByRecycle(GameObject gameObject, bool isSetInactive = true)
 	{
 		if (!gameObject) return;
-
+		if (gameObject.name == "surface") gameObject.name = "surfaceItem";
 		string key = gameObject.name.Replace("(Clone)", "");
 		if (!recyclePools.ContainsKey(key)) recyclePools.Add(key, new Dictionary<int, GameObject>());
 
