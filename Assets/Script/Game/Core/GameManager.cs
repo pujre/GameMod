@@ -318,6 +318,7 @@ public class GameManager : SingletonMono<GameManager>
 				case 1:
 					LevelData.Item_1Number--;
 					backItems[UnityEngine.Random.Range(0, backItems.Count)].RemoveObject();
+					UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(true);
 					break;
 				case 2:
 					LevelData.Item_2Number--;

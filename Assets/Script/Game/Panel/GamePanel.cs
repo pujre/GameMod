@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -6,7 +7,8 @@ using UnityEngine.UI;
 
 public class GamePanel : PanelBase
 {
-	public Text Prop_1Text, Prop_2Text, Prop_3Text;
+	public GameObject Promp;
+	public Text Prop_1Text, Prop_2Text, Prop_3Text, PromptText, PrompTitleText;
 	public Image ScoreFractionalBar;
 	public List<Selected> SelectedList = new List<Selected>();
 	public int NowScore = 0;
@@ -62,11 +64,15 @@ public class GamePanel : PanelBase
 				UIManager.Instance.SetUiPanelAction("PausePanel", true);
 				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
 				break;
+			case "PrompX":
+				Promp.SetActive(false);
+				break;
 		}
 
 		if (value > 0)
 		{
 			BtnAnim(button.transform.Find("Prop").gameObject);
+			SetUIAction(false);
 			GameManager.Instance.UserProp(propId);
 			DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
 		}
@@ -85,6 +91,19 @@ public class GamePanel : PanelBase
 		{
 			buttonRectTransform.DOScale(Vector3.one, 0.1f);  // 缩小回原来的大小，持续时间0.1秒
 		});
+	}
+
+	/// <summary>
+	/// 设置UI的展示与消失
+	/// </summary>
+	public void SetUIAction(bool action,Action callBack=null)
+	{
+		transform.Find("Prop_1Btn").gameObject.SetActive(action);
+		transform.Find("Prop_2Btn").gameObject.SetActive(action);
+		transform.Find("Prop_3Btn").gameObject.SetActive(action);
+		Promp.SetActive(action);
+
+		callBack!.Invoke();
 	}
 
 	private void OnGameStar(object[] args) {
