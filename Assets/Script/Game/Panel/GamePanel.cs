@@ -35,8 +35,8 @@ public class GamePanel : PanelBase
 	private void OnClickEvent(GameObject button)
 	{
 		int value = 0;
-		var levelData = GameManager.Instance.GetNowLevelData();
-		var propName = "";
+		LevelData levelData = GameManager.Instance.GetNowLevelData();
+		string propName = "";
 		int propId= 0;
 		if (currentTween != null && currentTween.IsActive())
 		{
@@ -72,13 +72,14 @@ public class GamePanel : PanelBase
 		if (value > 0)
 		{
 			BtnAnim(button.transform.Find("Prop").gameObject);
-			SetUIAction(false);
+			SetUIAction(false, propName);
 			GameManager.Instance.UserProp(propId);
 			DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
 		}
 		else
 		{
 			UIManager.Instance.SetUiPanelAction("RewardPanel", true);
+			UIManager.Instance.GetPanel("RewardPanel").GetComponent<RewardPanel>().ShowObtain(propId-1);
 		}
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 	}
@@ -96,14 +97,39 @@ public class GamePanel : PanelBase
 	/// <summary>
 	/// 设置UI的展示与消失
 	/// </summary>
-	public void SetUIAction(bool action,Action callBack=null)
+	public void SetUIAction(bool action,string propName)
 	{
 		transform.Find("Prop_1Btn").gameObject.SetActive(action);
 		transform.Find("Prop_2Btn").gameObject.SetActive(action);
 		transform.Find("Prop_3Btn").gameObject.SetActive(action);
-		Promp.SetActive(action);
-
-		callBack!.Invoke();
+		Promp.transform.Find("1").gameObject.SetActive(false);
+		Promp.transform.Find("3").gameObject.SetActive(false);
+		Promp.transform.Find("2").gameObject.SetActive(false);
+		if (!action)
+		{
+			Promp.SetActive(true);
+			switch (propName)
+			{
+				case "Prop_1":
+					Promp.transform.Find("1").gameObject.SetActive(true);
+					PrompTitleText.text = "锤子";
+					PromptText.text = "破坏整组大饼";
+					break;
+				case "Prop_2":
+					Promp.transform.Find("2").gameObject.SetActive(true);
+					PrompTitleText.text = "转换";
+					PromptText.text = "将大饼颜色修改为万能的";
+					break;
+				case "Prop_3":
+					Promp.transform.Find("3").gameObject.SetActive(true);
+					PrompTitleText.text = "互换";
+					PromptText.text = "将两组大饼互换";
+					break;
+			}
+		}
+		else {
+			Promp.SetActive(false);
+		}
 	}
 
 	private void OnGameStar(object[] args) {

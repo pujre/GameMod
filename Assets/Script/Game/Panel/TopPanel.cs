@@ -29,7 +29,8 @@ public class TopPanel : PanelBase
 		{
 			case "SettingBtn":
 				UIManager.Instance.SetUiPanelAction("PausePanel", true);
-				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString()); break;
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString()); 
+				break;
 			case "IconBtn":
 				Debug.Log("金币界面灯待加入");
 				break;

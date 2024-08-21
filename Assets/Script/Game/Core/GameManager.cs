@@ -53,9 +53,9 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (IsTouchInput)
 		{
+			ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (!IsDragging && SelectedObject == null && Input.GetMouseButtonDown(0))
 			{
-				ray = Cam.ScreenPointToRay(Input.mousePosition);
 				if (Physics.Raycast(ray, out hit))
 				{
 					if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove)
@@ -68,7 +68,6 @@ public class GameManager : SingletonMono<GameManager>
 
 			if (IsDragging && SelectedObject != null)
 			{
-				ray = Cam.ScreenPointToRay(Input.mousePosition);
 				if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 				{
 					newPosition = hitInfo.point;
@@ -317,77 +316,20 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				case 1:
 					LevelData.Item_1Number--;
-					backItems[UnityEngine.Random.Range(0, backItems.Count)].RemoveObject();
-					UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(true);
+					//backItems[UnityEngine.Random.Range(0, backItems.Count)].RemoveObject();
+					//UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false,"");
 					break;
 				case 2:
 					LevelData.Item_2Number--;
-					backItems[UnityEngine.Random.Range(0, backItems.Count)].TopTranslateColor(1);
+					//backItems[UnityEngine.Random.Range(0, backItems.Count)].TopTranslateColor(1);
+					//UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false, "");
 					//Debug.Log("最顶部的那个变成星星");
 					break;
 				case 3:
 					if (backItems.Count >= 2)
 					{
-						LevelData.Item_3Number--;
-						Vector3 pOffset = new Vector3(5,15, 0);
-						float delayBetweenObjects = 0.1f;
-						float animationDuration = 0.5f;
-						GoundBackItem goundBackItem_1 = backItems[UnityEngine.Random.Range(0, backItems.Count)];
-						backItems.Remove(goundBackItem_1);
-						GoundBackItem goundBackItem_2 = backItems[UnityEngine.Random.Range(0, backItems.Count)];
-						// 创建两个队列来存放动画
-						Sequence sequenceA = DOTween.Sequence();
-						Sequence sequenceB = DOTween.Sequence();
-
-						int countA = goundBackItem_1.SurfacesList.Count;
-						int countB = goundBackItem_2.SurfacesList.Count;
-
-						// 从下到上的动画部分（从P点移动到目标点）
-						for (int i = countA - 1; i >= 0; i--)
-						{
-							GameObject objA = goundBackItem_1.SurfacesList[i].gameObject;
-							Vector3 p1 = (objA.transform.position + goundBackItem_2.SurfacesList[i % countB].transform.position) / 2 + pOffset;
-
-
-							sequenceA.Append(objA.transform.DOPath(new Vector3[] { objA.transform.position, p1 }, animationDuration / 2, PathType.CatmullRom)
-								.SetEase(Ease.InOutQuad));
-						}
-
-						for (int i = countB - 1; i >= 0; i--)
-						{
-							GameObject objB = goundBackItem_2.SurfacesList[i].gameObject;
-							GameObject targetA = goundBackItem_1.SurfacesList[i % countA].gameObject;
-
-							sequenceB.Append(objB.transform.DOPath(new Vector3[] { objB.transform.position, targetA.transform.position }, animationDuration / 2, PathType.CatmullRom)
-								.SetEase(Ease.InOutQuad));
-						}
-
-						// 从上到下的动画部分（移动到P点）
-						for (int i = 0; i < countA; i++)
-						{
-							GameObject objA = goundBackItem_1.SurfacesList[i].gameObject;
-							GameObject targetB = goundBackItem_2.SurfacesList[i % countB].gameObject;
-
-							sequenceA.Append(objA.transform.DOPath(new Vector3[] { objA.transform.position, targetB.transform.position}, animationDuration / 2, PathType.CatmullRom)
-								.SetEase(Ease.InOutQuad))
-								.SetDelay(i * delayBetweenObjects);
-						}
-
-						for (int i = 0; i < countB; i++)
-						{
-							GameObject objB = goundBackItem_2.SurfacesList[i].gameObject;
-							Vector3 p2 = (objB.transform.position + goundBackItem_1.SurfacesList[i % countA].transform.position) / 2 + new Vector3(-pOffset.x, pOffset.y, pOffset.z);
-
-							sequenceB.Append(objB.transform.DOPath(new Vector3[] { objB.transform.position, p2 }, animationDuration / 2, PathType.CatmullRom)
-								.SetEase(Ease.InOutQuad))
-								.SetDelay(i * delayBetweenObjects);
-						}
-
-					
-
-						// 播放动画
-						sequenceA.Play();
-						sequenceB.Play();
+						//UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false, "");
+						//LevelData.Item_3Number--;
 					}
 					break;
 				default:
