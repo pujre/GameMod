@@ -25,7 +25,7 @@ public class GamePanel : PanelBase
 
 	private void Start()
 	{
-		foreach (var button in GetComponentsInChildren<Button>())
+		foreach (var button in GetComponentsInChildren<Button>(true))
 		{
 			button.onClick.AddListener(() => OnClickEvent(button.gameObject));
 		}
@@ -34,52 +34,64 @@ public class GamePanel : PanelBase
 
 	private void OnClickEvent(GameObject button)
 	{
-		int value = 0;
-		LevelData levelData = GameManager.Instance.GetNowLevelData();
-		string propName = "";
-		int propId= 0;
-		if (currentTween != null && currentTween.IsActive())
+		if (button.name.Contains("Prop"))
 		{
-			currentTween.Kill(); // 停止当前的动画
-			buttonRectTransform.localScale = Vector3.one; // 重置缩放
-		}
-		switch (button.name)
-		{
-			case "Prop_1Btn":
-				propName = "Prop_1";
-				propId = levelData.Item_1ID;
-				value = GetPropValue(levelData.Item_1ID);
-				break;
-			case "Prop_2Btn":
-				propName = "Prop_2";
-				propId = levelData.Item_2ID;
-				value = GetPropValue(levelData.Item_2ID);
-				break;
-			case "Prop_3Btn":
-				propName = "Prop_3";
-				propId = levelData.Item_3ID;
-				value = GetPropValue(levelData.Item_3ID);
-				break;
-			case "StopBtn":
-				UIManager.Instance.SetUiPanelAction("PausePanel", true);
-				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
-				break;
-			case "PrompX":
-				Promp.SetActive(false);
-				break;
-		}
-
-		if (value > 0)
-		{
-			BtnAnim(button.transform.Find("Prop").gameObject);
-			SetUIAction(false, propName);
-			GameManager.Instance.UserProp(propId);
-			DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
+			int value = 0;
+			LevelData levelData = GameManager.Instance.GetNowLevelData();
+			string propName = "";
+			int propId = 0;
+			if (currentTween != null && currentTween.IsActive())
+			{
+				currentTween.Kill(); // 停止当前的动画
+				buttonRectTransform.localScale = Vector3.one; // 重置缩放
+			}
+			switch (button.name)
+			{
+				case "Prop_1Btn":
+					propName = "Prop_1";
+					propId = levelData.Item_1ID;
+					value = GetPropValue(levelData.Item_1ID);
+					break;
+				case "Prop_2Btn":
+					propName = "Prop_2";
+					propId = levelData.Item_2ID;
+					value = GetPropValue(levelData.Item_2ID);
+					break;
+				case "Prop_3Btn":
+					propName = "Prop_3";
+					propId = levelData.Item_3ID;
+					value = GetPropValue(levelData.Item_3ID);
+					break;
+			}
+			if (value > 0)
+			{
+				BtnAnim(button.transform.Find("Prop").gameObject);
+				SetUIAction(false, propName);
+				GameManager.Instance.SetUserProp(propId);
+				DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), propName);
+			}
+			else
+			{
+				UIManager.Instance.SetUiPanelAction("RewardPanel", true);
+				UIManager.Instance.GetPanel("RewardPanel").GetComponent<RewardPanel>().ShowObtain(propId - 1);
+			}
 		}
 		else
 		{
-			UIManager.Instance.SetUiPanelAction("RewardPanel", true);
-			UIManager.Instance.GetPanel("RewardPanel").GetComponent<RewardPanel>().ShowObtain(propId-1);
+			switch (button.name)
+			{
+				case "StopBtn":
+					UIManager.Instance.SetUiPanelAction("PausePanel", true);
+					DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
+					break;
+				case "PrompX":
+					Debug.Log("关闭");
+					Promp.SetActive(false);
+					SetUIAction(false,"");
+					GameManager.Instance.CloneUserProp();
+					break;
+			}
+
 		}
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 	}
@@ -102,9 +114,9 @@ public class GamePanel : PanelBase
 		transform.Find("Prop_1Btn").gameObject.SetActive(action);
 		transform.Find("Prop_2Btn").gameObject.SetActive(action);
 		transform.Find("Prop_3Btn").gameObject.SetActive(action);
-		Promp.transform.Find("1").gameObject.SetActive(false);
-		Promp.transform.Find("3").gameObject.SetActive(false);
-		Promp.transform.Find("2").gameObject.SetActive(false);
+		Promp.transform.Find("1").gameObject.SetActive(!action);
+		Promp.transform.Find("3").gameObject.SetActive(!action);
+		Promp.transform.Find("2").gameObject.SetActive(!action);
 		if (!action)
 		{
 			Promp.SetActive(true);

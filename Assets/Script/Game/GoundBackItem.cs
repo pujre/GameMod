@@ -72,6 +72,33 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 预交换
+	/// </summary>
+	public void PropPreExchange(Transform preEx) {
+		if (preEx != null)
+		{
+			for (int i = 0; i < SurfacesList.Count; i++)
+			{
+				SurfacesList[i].transform.localPosition = new Vector3(preEx.position.x, SurfacesList[i].transform.localPosition.y, preEx.position.z);
+			}
+		}
+		else {
+			for (int i = 0; i < SurfacesList.Count; i++)
+			{
+				SurfacesList[i].transform.localPosition = new Vector3(0, SurfacesList[i].transform.localPosition.y, 0);
+			}
+		}
+	}
+
+	public void PropPositionChange(GoundBackItem goundBackItem) {
+		var Surface = goundBackItem.SurfacesList;
+		goundBackItem.SurfacesList = SurfacesList;
+		SurfacesList = Surface;
+		goundBackItem.SetChinderPosition();
+		SetChinderPosition();
+	}
+
+	/// <summary>
 	/// 指定时间内将所有物体颜色设置为指定颜色
 	/// </summary>
 	/// <param name="targetColor"></param>
@@ -109,6 +136,7 @@ public class GoundBackItem : MonoBehaviour
 		if (SurfacesList == null) return;
 		for (int i = 0; i < SurfacesList.Count; i++)
 		{
+			SurfacesList[i].transform.parent = transform;
 			SurfacesList[i].transform.localPosition = new Vector3(0, GoundBack_Y + (i * Assign_Y), 0);
 		}
 	}

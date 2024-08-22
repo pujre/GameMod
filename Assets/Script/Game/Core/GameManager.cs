@@ -26,6 +26,10 @@ public class GameManager : SingletonMono<GameManager>
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
 	private int NowLevel = 1;
 	private LevelData LevelData;
+
+	private bool IsProp=false;
+	private int IsPropAppUserID;
+	private Transform PropTranform;
 	#region 局部变量private
 	private RaycastHit hit;
 	private Ray ray;
@@ -63,6 +67,31 @@ public class GameManager : SingletonMono<GameManager>
 						SelectedObject = hit.transform.gameObject;
 						IsDragging = true;
 					}
+					if (IsProp&& hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsSurface()) {
+						switch (IsPropAppUserID)
+						{
+							case 1:
+								SelectedObject = hit.transform.gameObject;
+								UserProp(1);
+								break;
+							case 2:
+								SelectedObject = hit.transform.gameObject;
+								UserProp(2);
+								break;
+							case 3:
+								GameObject game = new GameObject("OM");
+								game.transform.SetParent(hit.transform.transform.parent);
+								game.transform.position = hit.transform.transform.position;
+								var list = hit.transform.GetComponent<GoundBackItem>().SurfacesList;
+								for (int i = 0; i < list.Count; i++)
+								{
+									list[i].transform.SetParent(game.transform);
+								}
+								SelectedObject = game;
+								IsDragging = true;
+								break;
+						}
+					}
 				}
 			}
 
@@ -81,7 +110,7 @@ public class GameManager : SingletonMono<GameManager>
 
 				foreach (RaycastHit hit in hits)
 				{
-					if (hit.transform.gameObject.tag == "bottom" &&
+					if (hit.transform.gameObject.tag == "bottom" &&!IsProp&&
 						hit.transform.GetComponent<GoundBackItem>() &&
 						hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
 					{
@@ -97,6 +126,14 @@ public class GameManager : SingletonMono<GameManager>
 						foundBottom = true;
 						break; // 找到目标对象后退出循环
 					}
+					if (hit.transform.gameObject.tag == "bottom" && IsProp &&
+						hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsSurface()) {
+						if (PropTranform!=null) {
+							PropTranform.GetComponent<GoundBackItem>().PropPreExchange(null);
+						}
+						PropTranform = hit.transform;
+						break; // 找到目标对象后退出循环
+					}
 				}
 				// 当离开各自区域得时候判定
 				if (!foundBottom)
@@ -105,16 +142,24 @@ public class GameManager : SingletonMono<GameManager>
 					{
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
-
 						lastHighlightedObject = null;
 					}
+				}
+				if (PropTranform!=null) {
+					PropTranform.GetComponent<GoundBackItem>().PropPreExchange(SelectedObject.transform);
 				}
 			}
 
 			if (Input.GetMouseButtonUp(0) && IsDragging)
 			{
 				IsDragging = false;
-				SnapToGrid(SelectedObject);
+				if (IsProp)
+				{
+					UserProp(3);
+				}
+				else {
+					SnapToGrid(SelectedObject);
+				}
 			}
 		}
 	}
@@ -292,6 +337,17 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 	#endregion
+	public void SetUserProp(int propId) {
+		IsProp = true;
+		IsPropAppUserID = propId;
+	}
+
+	public void CloneUserProp()
+	{
+		IsProp = false;
+		IsPropAppUserID = 0;
+	}
+
 
 	/// <summary>
 	/// 使用道具
@@ -299,43 +355,31 @@ public class GameManager : SingletonMono<GameManager>
 	/// <param name="propId"></param>
 	public void UserProp(int propId)
 	{
-		List<GoundBackItem> backItems = new List<GoundBackItem>();
-		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
+		switch (propId)
 		{
-			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
-			{
-				if (GoundBackItemArray2D[i, j] != null && GoundBackItemArray2D[i, j].SurfacesList.Count > 0)
-				{
-					backItems.Add(GoundBackItemArray2D[i, j]);
-				}
-			}
+			case 1:
+				LevelData.Item_1Number--;
+				SelectedObject.GetComponent<GoundBackItem>().RemoveObject();
+				SelectedObject = null;				
+				break;
+			case 2:
+				LevelData.Item_2Number--;
+				SelectedObject.GetComponent<GoundBackItem>().TopTranslateColor(1);
+				SelectedObject = null;
+				//Debug.Log("最顶部的那个变成星星");
+				break;
+			case 3:
+				LevelData.Item_3Number--;
+				PropTranform.GetComponent<GoundBackItem>().PropPositionChange(SelectedObject.transform.parent.GetComponent<GoundBackItem>());
+				SelectedObject = null;
+				break;
+			default:
+				break;
 		}
-		if (backItems.Count > 0)
-		{
-			switch (propId)
-			{
-				case 1:
-					LevelData.Item_1Number--;
-					//backItems[UnityEngine.Random.Range(0, backItems.Count)].RemoveObject();
-					//UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false,"");
-					break;
-				case 2:
-					LevelData.Item_2Number--;
-					//backItems[UnityEngine.Random.Range(0, backItems.Count)].TopTranslateColor(1);
-					//UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false, "");
-					//Debug.Log("最顶部的那个变成星星");
-					break;
-				case 3:
-					if (backItems.Count >= 2)
-					{
-						//UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false, "");
-						//LevelData.Item_3Number--;
-					}
-					break;
-				default:
-					break;
-			}
-		}
+		UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false, "");
+		IsProp = false;
+		IsPropAppUserID = 0;
+		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(),"");
 	}
 
 
