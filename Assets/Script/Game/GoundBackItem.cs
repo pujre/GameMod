@@ -142,14 +142,14 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 显示最顶层的数字
+	/// 显示最顶层的数字,或者设置数字
 	/// </summary>
-	public void DisplayNumbers(bool isSet) {
+	public void DisplayNumbers(bool isSet,string str="") {
 		NumberText.SetActive(isSet);
 		if (isSet) {
 			NumberText.transform.localPosition = new Vector3(0, GoundBack_Y + (SurfacesList.Count * Assign_Y), 0);
 		}
-		NumberText.GetComponent<Text>().text = GetTopColorNumber().ToString();
+		NumberText.GetComponent<TextMesh>().text =string.IsNullOrEmpty(str)?GetTopColorNumber().ToString():str;
 	}
 
 	public List<Vector3> GetEndListVector3(int x) {

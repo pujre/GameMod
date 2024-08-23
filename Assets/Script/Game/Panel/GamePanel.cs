@@ -14,6 +14,7 @@ public class GamePanel : PanelBase
 	public int NowScore = 0;
 	public int TagerScore = 0;
 	private Tween currentTween;
+	public List<GameObject> PropBtnList=new List<GameObject>();
 	private RectTransform buttonRectTransform;
 	private void Awake()
 	{
@@ -28,6 +29,9 @@ public class GamePanel : PanelBase
 		foreach (var button in GetComponentsInChildren<Button>(true))
 		{
 			button.onClick.AddListener(() => OnClickEvent(button.gameObject));
+			if (button.gameObject.name.Contains("Prop_")) {
+				PropBtnList.Add(button.gameObject);
+			}
 		}
 		UpdatePropNumber();
 	}
@@ -86,7 +90,7 @@ public class GamePanel : PanelBase
 					break;
 				case "PrompX":
 					Debug.Log("¹Ø±Õ");
-					Promp.SetActive(false);
+					Promp.SetActive(true);
 					SetUIAction(false,"");
 					GameManager.Instance.CloneUserProp();
 					break;
@@ -111,9 +115,10 @@ public class GamePanel : PanelBase
 	/// </summary>
 	public void SetUIAction(bool action,string propName)
 	{
-		transform.Find("Prop_1Btn").gameObject.SetActive(action);
-		transform.Find("Prop_2Btn").gameObject.SetActive(action);
-		transform.Find("Prop_3Btn").gameObject.SetActive(action);
+		for (int i = 0; i < PropBtnList.Count; i++)
+		{
+			PropBtnList[i].SetActive(action);
+		}
 		Promp.transform.Find("1").gameObject.SetActive(!action);
 		Promp.transform.Find("3").gameObject.SetActive(!action);
 		Promp.transform.Find("2").gameObject.SetActive(!action);

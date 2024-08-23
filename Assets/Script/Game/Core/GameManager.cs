@@ -62,7 +62,7 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				if (Physics.Raycast(ray, out hit))
 				{
-					if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove)
+					if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove&& !IsProp)
 					{
 						SelectedObject = hit.transform.gameObject;
 						IsDragging = true;
@@ -79,15 +79,7 @@ public class GameManager : SingletonMono<GameManager>
 								UserProp(2);
 								break;
 							case 3:
-								GameObject game = new GameObject("OM");
-								game.transform.SetParent(hit.transform.transform.parent);
-								game.transform.position = hit.transform.transform.position;
-								var list = hit.transform.GetComponent<GoundBackItem>().SurfacesList;
-								for (int i = 0; i < list.Count; i++)
-								{
-									list[i].transform.SetParent(game.transform);
-								}
-								SelectedObject = game;
+								
 								IsDragging = true;
 								break;
 						}
@@ -155,7 +147,13 @@ public class GameManager : SingletonMono<GameManager>
 				IsDragging = false;
 				if (IsProp)
 				{
-					UserProp(3);
+					if (PropTranform != null) {
+						UserProp(3);
+					}
+					else { 
+					
+					}
+					
 				}
 				else {
 					SnapToGrid(SelectedObject);
@@ -376,7 +374,7 @@ public class GameManager : SingletonMono<GameManager>
 			default:
 				break;
 		}
-		UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(false, "");
+		UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(true, "");
 		IsProp = false;
 		IsPropAppUserID = 0;
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(),"");
@@ -604,6 +602,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		RemoveBoxMatrix();
 		GameObject PrefabObj = Resources.Load<GameObject>("LevelPrefab/Lv" + NowLevel.ToString());
+		GameObject bottomtext= Resources.Load<GameObject>("Prefab/bottomText");
 		if (PrefabObj == null)
 		{
 			Debug.Log("未能加载到该关卡数据，加载的关卡为："+ NowLevel.ToString());
@@ -620,6 +619,9 @@ public class GameManager : SingletonMono<GameManager>
 				if (goundBackItem != null)
 				{
 					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
+					GameObject oth= Instantiate(bottomtext,Vector3.zero,Quaternion.identity, goundBackItem.transform);
+					goundBackItem.NumberText = oth;
+					goundBackItem.DisplayNumbers(true);
 				}
 			}
 		}
