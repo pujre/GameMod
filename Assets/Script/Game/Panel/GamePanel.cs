@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -195,7 +196,7 @@ public class GamePanel : PanelBase
 			Debug.LogError("GetNowLevelData returned null");
 			return;
 		}
-		Debug.Log("___"+);
+		Debug.Log("___"+ JsonConvert.SerializeObject(nowLevelData));
 		UpdatePropText(nowLevelData.Item_1ID, Prop_1Text);
 		UpdatePropText(nowLevelData.Item_2ID, Prop_2Text);
 		UpdatePropText(nowLevelData.Item_3ID, Prop_3Text);
