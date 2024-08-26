@@ -89,9 +89,8 @@ public class GamePanel : PanelBase
 					DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString());
 					break;
 				case "PrompX":
-					Debug.Log("¹Ø±Õ");
-					Promp.SetActive(true);
-					SetUIAction(false,"");
+					Promp.SetActive(false);
+					SetUIAction(true,"");
 					GameManager.Instance.CloneUserProp();
 					break;
 			}
@@ -196,7 +195,7 @@ public class GamePanel : PanelBase
 			Debug.LogError("GetNowLevelData returned null");
 			return;
 		}
-
+		Debug.Log("___"+);
 		UpdatePropText(nowLevelData.Item_1ID, Prop_1Text);
 		UpdatePropText(nowLevelData.Item_2ID, Prop_2Text);
 		UpdatePropText(nowLevelData.Item_3ID, Prop_3Text);

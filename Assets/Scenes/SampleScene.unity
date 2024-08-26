@@ -7095,6 +7095,7 @@ MonoBehaviour:
   - {fileID: 2066829843}
   NowScore: 0
   TagerScore: 0
+  PropBtnList: []
 --- !u!1 &1311534784
 GameObject:
   m_ObjectHideFlags: 0

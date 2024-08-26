@@ -1,8 +1,8 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using VolumetricLines;
 
 [System.Serializable]
@@ -19,7 +19,7 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	public Vector2Int ItemPosition;
 	public List<Surface> SurfacesList = new List<Surface>();
-
+	public TextMeshPro NumberTextMesh = null;
 	private void Awake()
 	{
 		GoundBack_Y = 1.9f;
@@ -74,21 +74,21 @@ public class GoundBackItem : MonoBehaviour
 	/// <summary>
 	/// Ô¤½»»»
 	/// </summary>
-	public void PropPreExchange(Transform preEx) {
-		if (preEx != null)
-		{
-			for (int i = 0; i < SurfacesList.Count; i++)
-			{
-				SurfacesList[i].transform.localPosition = new Vector3(preEx.position.x, SurfacesList[i].transform.localPosition.y, preEx.position.z);
-			}
-		}
-		else {
-			for (int i = 0; i < SurfacesList.Count; i++)
-			{
-				SurfacesList[i].transform.localPosition = new Vector3(0, SurfacesList[i].transform.localPosition.y, 0);
-			}
-		}
-	}
+	//public void PropPreExchange(Transform preEx) {
+	//	if (preEx != null)
+	//	{
+	//		for (int i = 0; i < SurfacesList.Count; i++)
+	//		{
+	//			SurfacesList[i].transform.localPosition = new Vector3(preEx.position.x, SurfacesList[i].transform.localPosition.y, preEx.position.z);
+	//		}
+	//	}
+	//	else {
+	//		for (int i = 0; i < SurfacesList.Count; i++)
+	//		{
+	//			SurfacesList[i].transform.localPosition = new Vector3(0, SurfacesList[i].transform.localPosition.y, 0);
+	//		}
+	//	}
+	//}
 
 	public void PropPositionChange(GoundBackItem goundBackItem) {
 		var Surface = goundBackItem.SurfacesList;
@@ -96,6 +96,7 @@ public class GoundBackItem : MonoBehaviour
 		SurfacesList = Surface;
 		goundBackItem.SetChinderPosition();
 		SetChinderPosition();
+		DisplayNumbers(true);
 	}
 
 	/// <summary>
@@ -148,8 +149,13 @@ public class GoundBackItem : MonoBehaviour
 		NumberText.SetActive(isSet);
 		if (isSet) {
 			NumberText.transform.localPosition = new Vector3(0, GoundBack_Y + (SurfacesList.Count * Assign_Y), 0);
+			int colorNumber = GetTopColorNumber();
+			if (NumberTextMesh == null)
+			{
+				NumberTextMesh = NumberText.GetComponent<TextMeshPro>();
+			}
+			NumberTextMesh.text = string.IsNullOrEmpty(str) ? colorNumber == 0 ? "" : colorNumber.ToString() : str;
 		}
-		NumberText.GetComponent<TextMesh>().text =string.IsNullOrEmpty(str)?GetTopColorNumber().ToString():str;
 	}
 
 	public List<Vector3> GetEndListVector3(int x) {
@@ -270,6 +276,7 @@ public class GoundBackItem : MonoBehaviour
 		{
 			//SetChinderPosition();
 			action?.Invoke();
+			DisplayNumbers(true);
 		});
 		sequence.Play();  // ²¥·ÅÐòÁÐ
 	}
@@ -396,6 +403,7 @@ public class GoundBackItem : MonoBehaviour
 	public void RemoveObject(Action action = null)
 	{
 		Sequence sequence = DOTween.Sequence();
+		DisplayNumbers(false);
 		//for (int i = SurfacesList.Count-1; i>=0; i--)
 		for (int i = 0; i < SurfacesList.Count; i++)
 		{

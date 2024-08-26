@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using TMPro;
 
 public class SurfaceItem : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class SurfaceItem : MonoBehaviour
 
 	public void QurStart(Vector3 pos)
 	{
+		GameObject bottomtext = Resources.Load<GameObject>("Prefab/bottomText");
+		GameObject oth = Instantiate(bottomtext, Vector3.zero, Quaternion.Euler(90, 0, 0), transform);
+		oth.transform.localPosition = new Vector3(0,(Surfaces.Count * Assign_Y), 0);
+		oth.GetComponent<TextMeshPro>().text = GetTopColorNumber().ToString();
 		QreVector3 = pos;
 		MoveToPosition(pos, () => IsOnMove = true);
 	}
@@ -30,6 +35,27 @@ public class SurfaceItem : MonoBehaviour
 	{
 		transform.DOMove(pos, 0.3f).OnComplete(onComplete);
 	}
+
+
+	public int GetTopColorNumber()
+	{
+		if (Surfaces == null || Surfaces.Count == 0) return 0;
+		string colorTypeName = Surfaces[Surfaces.Count - 1].GetColorType().ToString();
+		int colorNumber = 0;
+		for (int i = Surfaces.Count - 1; i >= 0; i--)
+		{
+			if (colorTypeName == Surfaces[i].GetColorType().ToString() || Surfaces[i].GetColorType() == ItemColorType.StarAll)
+			{
+				colorNumber++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return colorNumber;
+	}
+
 
 	/// <summary>
 	/// 生成指定颜色数的随机surface
