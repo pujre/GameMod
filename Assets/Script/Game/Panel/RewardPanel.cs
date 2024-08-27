@@ -40,7 +40,7 @@ public class RewardPanel : PanelBase
 				transform.gameObject.SetActive(false);
 				break;
 			case "ObtainPropsBtn":
-				
+				Debug.Log("观看广告后获取");
 				break;
 		}
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");

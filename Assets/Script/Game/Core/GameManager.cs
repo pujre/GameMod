@@ -22,7 +22,6 @@ public class GameManager : SingletonMono<GameManager>
 
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
-	public Dictionary<string, int> PropNumber = new Dictionary<string, int>();
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
 	private int NowLevel = 1;
 	private LevelData LevelData;
@@ -42,7 +41,6 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		base.Awake();
 		Cam = Camera.main; // 获取主摄像机
-		PropNumber = new Dictionary<string, int>();
 		ResPath.Init();
 	}
 
@@ -201,8 +199,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
-		Debug.Log("加载关卡数据成功：");
-		LoadLevel(3);
+		LoadLevel(1);
 	}
 
 	public void LoadNextLevel()
@@ -216,10 +213,6 @@ public class GameManager : SingletonMono<GameManager>
 		LevelData levedata = LevelDataRoot.GetLevelData(level);
 		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
 		LoadGenerateBoxMatrix();
-		PropNumber.Clear();
-		PropNumber.Add(levedata.Item_1ID.ToString(), levedata.Item_1Number);
-		PropNumber.Add(levedata.Item_2ID.ToString(), levedata.Item_2Number);
-		PropNumber.Add(levedata.Item_3ID.ToString(), levedata.Item_3Number);
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameStar.ToString());
@@ -335,6 +328,10 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		IsProp = false;
 		IsPropAppUserID = 0;
+		if (PropTranform_1) {
+			PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true);
+			PropTranform_1 = null;
+		}
 	}
 
 

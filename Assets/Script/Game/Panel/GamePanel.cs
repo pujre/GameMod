@@ -55,17 +55,17 @@ public class GamePanel : PanelBase
 				case "Prop_1Btn":
 					propName = "Prop_1";
 					propId = levelData.Item_1ID;
-					value = GetPropValue(levelData.Item_1ID);
+					value = GameManager.Instance.GetNowLevelData().Item_1Number;
 					break;
 				case "Prop_2Btn":
 					propName = "Prop_2";
 					propId = levelData.Item_2ID;
-					value = GetPropValue(levelData.Item_2ID);
+					value = GameManager.Instance.GetNowLevelData().Item_2Number;
 					break;
 				case "Prop_3Btn":
 					propName = "Prop_3";
 					propId = levelData.Item_3ID;
-					value = GetPropValue(levelData.Item_3ID);
+					value = GameManager.Instance.GetNowLevelData().Item_3Number;
 					break;
 			}
 			if (value > 0)
@@ -154,11 +154,6 @@ public class GamePanel : PanelBase
 		ScoreFractionalBar.fillAmount = 0;
 	}
 
-	private int GetPropValue(int itemId)
-	{
-		GameManager.Instance.PropNumber.TryGetValue(itemId.ToString(), out int value);
-		return value;
-	}
 
 	private void DelegateCallback(object[] args)
 	{
@@ -171,7 +166,6 @@ public class GamePanel : PanelBase
 		{
 			NowScore += score;
 			ScoreFractionalBar.fillAmount = (float)NowScore / TagerScore;
-
 			if (NowScore >= TagerScore)
 			{
 				UIManager.Instance.SetUiPanelAction("OverPanel",true);
@@ -190,28 +184,19 @@ public class GamePanel : PanelBase
 	private void UpdatePropNumber()
 	{
 		LevelData nowLevelData = GameManager.Instance.GetNowLevelData();
-
 		if (nowLevelData == null)
 		{
 			Debug.LogError("GetNowLevelData returned null");
 			return;
 		}
-		Debug.Log("___"+ JsonConvert.SerializeObject(nowLevelData));
-		UpdatePropText(nowLevelData.Item_1ID, Prop_1Text);
-		UpdatePropText(nowLevelData.Item_2ID, Prop_2Text);
-		UpdatePropText(nowLevelData.Item_3ID, Prop_3Text);
+		UpdatePropText();
 	}
 
-	private void UpdatePropText(int itemId, Text propText)
+	private void UpdatePropText()
 	{
-		if (GameManager.Instance.PropNumber.TryGetValue(itemId.ToString(), out int value))
-		{
-			propText.text = value.ToString();
-		}
-		else
-		{
-			Debug.Log($"在键 {itemId} 的PropNumber中找不到条目");
-		}
+		Prop_1Text.text = GameManager.Instance.GetNowLevelData().Item_1Number.ToString();
+		Prop_2Text.text = GameManager.Instance.GetNowLevelData().Item_2Number.ToString();
+		Prop_3Text.text = GameManager.Instance.GetNowLevelData().Item_3Number.ToString();
 	}
 
 	// 实现基类的抽象方法
