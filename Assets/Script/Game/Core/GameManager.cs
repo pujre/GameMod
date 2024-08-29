@@ -273,6 +273,9 @@ public class GameManager : SingletonMono<GameManager>
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
 					linkedItem.DisplayNumbers(true);
+					if (index == FilterLinked.Count) {
+						Debug.Log("结束");
+					}else
 					if ((index + 1) >= FilterLinked.Count)
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
@@ -439,7 +442,7 @@ public class GameManager : SingletonMono<GameManager>
 			FilterLinked.Clear();
 			for (int i = 0; i < coordinates.Count - 1; i++)
 			{
-				Debug.Log(string.Format("点{0}移动到点{1}", coordinates[i], coordinates[i + 1]));
+				//Debug.Log(string.Format("点{0}移动到点{1}", coordinates[i], coordinates[i + 1]));
 				FilterLinked.Add(new InstructionData(coordinates[i], coordinates[i + 1]));
 			}
 		}

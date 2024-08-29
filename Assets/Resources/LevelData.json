@@ -29,9 +29,9 @@
 			"magnitude": 0.0,
 			"sqrMagnitude": 0
 		}],
-		"ClearanceScore": 100,
-		"ColourNum": 3,
-		"MaxNum": 5,
+		"ClearanceScore": 20,
+		"ColourNum": 2,
+		"MaxNum": 2,
 		"Item_1ID": 1,
 		"Item_1Number": 1,
 		"Describe_1": "",
