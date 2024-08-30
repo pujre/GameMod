@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: MiniGameConfig
   m_EditorClassIdentifier: 
   ProjectConf:
-    projectName: 
-    Appid: 
-    CDN: 
+    projectName: "\u7FFB\u5927\u997C"
+    Appid: wxd72736da9eea39eb
+    CDN: https://h5-1258069360.cos.ap-guangzhou.myqcloud.com/MiniGameWechatTest
     assetLoadType: 0
-    compressDataPackage: 0
+    compressDataPackage: 1
     VideoUrl: 
-    DST: 
+    DST: E:/UnityProject/GameMod/WeChatMiniGame
     StreamCDN: 
     bundleHashLength: 32
     bundlePathIdentifier: StreamingAssets;

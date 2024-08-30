@@ -60,11 +60,16 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				if (Physics.Raycast(ray, out hit))
 				{
-					if (hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove && !IsProp)
+					if (!IsProp&&hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove )
 					{
 						SelectedObject = hit.transform.gameObject;
 						IsDragging = true;
-					} else
+					} else if (!IsProp&&hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsLock) {
+						Debug.Log("看广告后解锁");
+						hit.transform.GetComponent<GoundBackItem>().IsLock = false;
+						hit.transform.GetComponent<GoundBackItem>().DisplayNumbers(true,"");
+					}
+					else
 					if (IsProp && hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsSurface()) {
 						switch (IsPropAppUserID)
 						{
@@ -199,7 +204,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
 		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
-		LoadLevel(1);
+		LoadLevel(3);
 	}
 
 	public void LoadNextLevel()
@@ -613,7 +618,13 @@ public class GameManager : SingletonMono<GameManager>
 					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
 					GameObject oth= Instantiate(bottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
 					goundBackItem.NumberText = oth;
-					goundBackItem.DisplayNumbers(true,goundBackItem.IsLock?"解锁":"");
+					if (goundBackItem.IsLock) {
+						GameObject spriteRendererPrefab = Resources.Load<GameObject>("Prefab/Lock");
+						GameObject spriteRenderer = Instantiate(spriteRendererPrefab,new Vector3(0,1.4f,1), Quaternion.Euler(90, 0, 0), goundBackItem.transform);
+						goundBackItem.SpriteRendener = spriteRenderer;
+						spriteRenderer.transform.localPosition = new Vector3(0,1.4f,1);
+					}
+					goundBackItem.DisplayNumbers(true, goundBackItem.IsLock ? "解锁" : "");
 				}
 			}
 		}

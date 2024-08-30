@@ -16,10 +16,11 @@ public class OverPanel : PanelBase
 	// Start is called before the first frame update
 	void Start()
 	{
-		var buts = transform.GetComponentsInChildren<Button>();
+		var buts = transform.GetComponentsInChildren<Button>(true);
 		for (int i = 0; i < buts.Length; i++)
 		{
 			Button button = buts[i];
+			Debug.Log("按钮名字为："+ button.gameObject.name);
 			button.onClick.AddListener(() => { OnClickEvent(button.gameObject);});
 		}
 	}
@@ -46,6 +47,7 @@ public class OverPanel : PanelBase
 			case "XBtn":
 			case "GoundBack":
 			case "ContinueBtn"://继续游戏
+				Debug.Log("继续游戏");
 				gameObject.SetActive(false);
 				GameManager.Instance.LoadNextLevel();
 				break;

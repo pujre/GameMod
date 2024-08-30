@@ -20,6 +20,7 @@ public class GoundBackItem : MonoBehaviour
 	public Vector2Int ItemPosition;
 	public List<Surface> SurfacesList = new List<Surface>();
 	public TextMeshPro NumberTextMesh = null;
+	public GameObject SpriteRendener;
 	private void Awake()
 	{
 		GoundBack_Y = 1.9f;
@@ -155,6 +156,16 @@ public class GoundBackItem : MonoBehaviour
 				NumberTextMesh = NumberText.GetComponent<TextMeshPro>();
 			}
 			NumberTextMesh.text = string.IsNullOrEmpty(str) ? colorNumber == 0 ? "" : colorNumber.ToString() : str;
+			if (str.Contains("½âËø"))
+			{
+				NumberText.transform.localPosition = new Vector3(0, 1.35f, -1.7f);
+				NumberTextMesh.fontSize = 13;
+				if(SpriteRendener) SpriteRendener.SetActive(true);
+			}
+			else {
+				NumberTextMesh.fontSize = 25;
+				if (SpriteRendener) SpriteRendener.SetActive(false);
+			}
 		}
 	}
 
