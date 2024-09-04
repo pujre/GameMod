@@ -163,7 +163,7 @@ public class GamePanel : PanelBase
 	private void Score(object[] args)
 	{
 		if (args.Length >= 1 && args[0] is int score)
-		{
+		{ 
 			NowScore += score;
 			ScoreFractionalBar.fillAmount = (float)NowScore / TagerScore;
 			if (NowScore >= TagerScore)

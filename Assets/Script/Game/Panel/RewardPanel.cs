@@ -8,7 +8,7 @@ public class RewardPanel : PanelBase
 	public Image TietleImage;
 	public Sprite[] SpritesList;
 	public string[] TietleList;
-	private int TypeIndex;
+	public int TypeIndex;
     void Start()
     {
 		var buts = transform.GetComponentsInChildren<Button>();
@@ -40,7 +40,25 @@ public class RewardPanel : PanelBase
 				transform.gameObject.SetActive(false);
 				break;
 			case "ObtainPropsBtn":
-				Debug.Log("观看广告后获取");
+				Debug.Log("获取道具，道具id为："+ TypeIndex);
+				ADManager.Instance.ShowAD(ADType.Video, (isOn) => {
+					switch (TypeIndex)
+					{
+						case 0:
+							GameManager.Instance.GetNowLevelData().Item_1Number++;
+							break;
+						case 1:
+							GameManager.Instance.GetNowLevelData().Item_2Number++;
+							break;
+						case 2:
+							GameManager.Instance.GetNowLevelData().Item_3Number++;
+							break;
+						default:
+							break;
+					}
+					DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
+					transform.gameObject.SetActive(false);
+				});
 				break;
 		}
 		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");

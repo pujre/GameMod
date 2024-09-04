@@ -1,5 +1,3 @@
-using DG.Tweening;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,9 +63,16 @@ public class GameManager : SingletonMono<GameManager>
 						SelectedObject = hit.transform.gameObject;
 						IsDragging = true;
 					} else if (!IsProp&&hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsLock) {
-						Debug.Log("看广告后解锁");
-						hit.transform.GetComponent<GoundBackItem>().IsLock = false;
-						hit.transform.GetComponent<GoundBackItem>().DisplayNumbers(true,"");
+						ADManager.Instance.ShowAD(ADType.Video, (isOn)=>{
+							if (isOn)
+							{
+								hit.transform.GetComponent<GoundBackItem>().IsLock = false;
+								hit.transform.GetComponent<GoundBackItem>().DisplayNumbers(true, "");
+							}
+							else { 
+
+							}
+						});
 					}
 					else
 					if (IsProp && hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsSurface()) {
@@ -87,6 +92,7 @@ public class GameManager : SingletonMono<GameManager>
 									PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "换");
 								} else if (PropTranform_1 != null && PropTranform_1 != hit.transform.gameObject) {
 									hit.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
+									SelectedObject = PropTranform_1;
 									UserProp(3);
 								}
 								break;
@@ -203,8 +209,8 @@ public class GameManager : SingletonMono<GameManager>
 	private void LoadlevelData()
 	{
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
-		LevelDataRoot = JsonConvert.DeserializeObject<LevelDataRoot>(levelDataJson.text);
-		LoadLevel(3);
+		LevelDataRoot = LitJson.JsonMapper.ToObject<LevelDataRoot>(levelDataJson.text);
+		LoadLevel(1);
 	}
 
 	public void LoadNextLevel()
@@ -278,9 +284,6 @@ public class GameManager : SingletonMono<GameManager>
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
 					linkedItem.DisplayNumbers(true);
-					if (index == FilterLinked.Count) {
-						Debug.Log("结束");
-					}else
 					if ((index + 1) >= FilterLinked.Count)
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
@@ -354,18 +357,21 @@ public class GameManager : SingletonMono<GameManager>
 			case 1:
 				LevelData.Item_1Number--;
 				SelectedObject.GetComponent<GoundBackItem>().RemoveObject();
+				CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
 				SelectedObject = null;				
 				break;
 			case 2:
 				LevelData.Item_2Number--;
 				SelectedObject.GetComponent<GoundBackItem>().TopTranslateColor(1);
+				CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
 				SelectedObject = null;
 				//Debug.Log("最顶部的那个变成星星");
 				break;
 			case 3:
 				LevelData.Item_3Number--;
-				SelectedObject = null;
 				PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true);
+				CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
+				SelectedObject = null;
 				PropTranform_1 = null;
 				break;
 			default:
@@ -556,7 +562,9 @@ public class GameManager : SingletonMono<GameManager>
 		}
 	}
 
+	#region Old Scrpit
 
+	#endregion
 	/// <summary>
 	/// 新建一个指定大小的空的地图网格
 	/// </summary>

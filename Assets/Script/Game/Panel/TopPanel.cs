@@ -32,7 +32,7 @@ public class TopPanel : PanelBase
 				DelegateManager.Instance.TriggerEvent(OnEventKey.OnStop.ToString()); 
 				break;
 			case "IconBtn":
-				Debug.Log("金币界面灯待加入");
+				Debug.Log("金币界面等待加入");
 				break;
 			case "StoreBtn":
 				break;

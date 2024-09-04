@@ -139,6 +139,10 @@ public class LevelDataRoot
 	/// <returns></returns>
 	public LevelData GetLevelData(int level)
 	{
+		if (LevelDatas==null|| LevelDatas.Count==0) {
+			Debug.Log(string.Format("获取指定{0}关卡数据为空", level));
+			return null;
+		}
 		foreach (LevelData item in LevelDatas)
 		{
 			if (item.Level == level)
@@ -154,11 +158,6 @@ public class LevelDataRoot
 public class LevelData
 {
 	public int Level;
-	//地图大小
-	public Vector2Int ChapterSize;
-	//锁住了哪些格子
-	public List<Vector2Int> GridLock;
-	public List<Vector2Int> ChapterDefault;
 	public int ClearanceScore;
 	public int ColourNum;
 	public int MaxNum;
@@ -198,19 +197,9 @@ public class LevelData
 	/// </summary>
 	public string Describe_3;
 	public LevelData() {
-		GridLock = new List<Vector2Int>();
-		ChapterDefault = new List<Vector2Int>();
+		
 	}
 
-	public bool IsLock(int x,int y) {
-		if(GridLock==null) { return false; }
-        for (int i = 0; i < GridLock.Count; i++)
-        {
-			if (GridLock[i].x==x&& GridLock[i].y==y) {
-				return true;
-			}
-        }
-        return false;
-	}
+	
 }
 

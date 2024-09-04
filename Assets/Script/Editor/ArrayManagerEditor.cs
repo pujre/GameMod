@@ -55,9 +55,6 @@ public class ArrayManagerEditor : Editor
 			LevelData levelData = new LevelData
 			{
 				Level = 1,
-				ChapterSize = new Vector2Int(5, 5),
-				GridLock = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 0) },
-				ChapterDefault = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 0) },
 				ClearanceScore = 100,
 				ColourNum = 3,
 				MaxNum = 5,

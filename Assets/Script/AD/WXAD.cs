@@ -39,6 +39,7 @@ public class WXAD : IAdManager
 				CreateRewardedVideoAd();
 				break;
 			case ADType.Interstitial:
+				CreatorInterstitialAd();
 				break;
 			case ADType.Custom:
 				break;
@@ -158,6 +159,9 @@ public class WXAD : IAdManager
 	}
 
 
+	/// <summary>
+	/// 创建插屏广告
+	/// </summary>
 	private void CreatorInterstitialAd() {
 		InterstitialAd = WX.CreateInterstitialAd(new WXCreateInterstitialAdParam {
 			adUnitId= InterstitialAdUnit,
