@@ -34,6 +34,9 @@ public class TopPanel : PanelBase
 			case "IconBtn":
 				Debug.Log("金币界面等待加入");
 				break;
+			case "PSBtn":
+				Debug.Log("钻石界面等待加入");
+				break;
 			case "StoreBtn":
 				break;
 		}

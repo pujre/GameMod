@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectConf:
     projectName: "\u7FFB\u5927\u997C"
-    Appid: wxd72736da9eea39eb
+    Appid: wx1dc8de9dd8aa1712
     CDN: https://h5-1258069360.cos.ap-guangzhou.myqcloud.com/MiniGameWechatTest
     assetLoadType: 0
     compressDataPackage: 1

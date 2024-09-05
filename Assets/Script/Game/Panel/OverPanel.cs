@@ -42,12 +42,12 @@ public class OverPanel : PanelBase
 
 	void OnClickEvent(GameObject but)
 	{
+		Debug.Log("点击了按钮："+ but.name);
 		switch (but.name)
 		{
 			case "XBtn":
 			case "GoundBack":
 			case "ContinueBtn"://继续游戏
-				Debug.Log("继续游戏");
 				gameObject.SetActive(false);
 				GameManager.Instance.LoadNextLevel();
 				break;

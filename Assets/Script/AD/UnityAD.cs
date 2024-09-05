@@ -2,6 +2,9 @@ using System;
 
 public class UnityAD : IAdManager
 {
+	public void InitAD() {
+	}
+
 	public void CreateAD(ADType adType)
 	{
 	}
@@ -13,11 +16,6 @@ public class UnityAD : IAdManager
 
 	public void HideAD(ADType adType)
 	{
-	}
-
-	public void InitAD()
-	{
-		
 	}
 
 	public void ShowAD(ADType adType, Action<bool> callBack = null)

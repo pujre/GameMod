@@ -12,6 +12,7 @@ public interface IAdManager
 
 public enum ADTarger
 {
+	Unity,
 	Douyin,
 	WX,
 	QQ,

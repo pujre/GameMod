@@ -8,23 +8,23 @@ public class ADManager : SingletonMono<ADManager>
 	private IAdManager Ad;
 	protected new void Awake()
 	{
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
 		Ad = new UnityAD();
-#else
-		switch (ADTargerSystem)
-		{
-			case ADTarger.Douyin:
-				break;
-			case ADTarger.WX:
-				Ad = new WXAD();
-				break;
-			case ADTarger.QQ:
-				break;
-			default:
-				break;
-		}
+//#else
+		//switch (ADTargerSystem)
+		//{
+		//	case ADTarger.Douyin:
+		//		break;
+		//	case ADTarger.WX:
+		//		Ad = new WXAD();
+		//		break;
+		//	case ADTarger.QQ:
+		//		break;
+		//	default:
+		//		break;
+		//}
 		Ad.InitAD();
-#endif
+//#endif
 	}
 	public void CreateAD(ADType adType) {
 		Ad.CreateAD(adType);
