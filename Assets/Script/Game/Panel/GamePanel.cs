@@ -1,8 +1,7 @@
 using DG.Tweening;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +9,7 @@ public class GamePanel : PanelBase
 {
 	public GameObject Promp;
 	public Text Prop_1Text, Prop_2Text, Prop_3Text, PromptText, PrompTitleText;
+	public TextMeshProUGUI LevelText,LevelTargel;
 	public Image ScoreFractionalBar;
 	public List<Selected> SelectedList = new List<Selected>();
 	public int NowScore = 0;
