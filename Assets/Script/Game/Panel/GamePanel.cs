@@ -9,7 +9,7 @@ public class GamePanel : PanelBase
 {
 	public GameObject Promp;
 	public Text Prop_1Text, Prop_2Text, Prop_3Text, PromptText, PrompTitleText;
-	public TextMeshProUGUI LevelText,LevelTargel;
+	public TextMeshProUGUI LevelText, LevelTager;
 	public Image ScoreFractionalBar;
 	public List<Selected> SelectedList = new List<Selected>();
 	public int NowScore = 0;
@@ -165,6 +165,7 @@ public class GamePanel : PanelBase
 		if (args.Length >= 1 && args[0] is int score)
 		{ 
 			NowScore += score;
+			LevelTager.text =string.Format("{0}/{1}", NowScore.ToString(), TagerScore.ToString());
 			ScoreFractionalBar.fillAmount = (float)NowScore / TagerScore;
 			if (NowScore >= TagerScore)
 			{
@@ -178,7 +179,9 @@ public class GamePanel : PanelBase
 	{
 		ScoreFractionalBar.fillAmount = 0;
 		NowScore = 0;
+		LevelText.text = string.Format("ตฺ{0}นุ", GameManager.Instance.NowLevel);
 		TagerScore = GameManager.Instance.GetNowLevelData().ClearanceScore;
+		LevelTager.text = string.Format("{0}/{1}", NowScore.ToString(), TagerScore.ToString());
 	}
 
 	private void UpdatePropNumber()

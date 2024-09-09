@@ -21,7 +21,7 @@ public class GameManager : SingletonMono<GameManager>
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
-	private int NowLevel = 1;
+	public int NowLevel = 1;
 	private LevelData LevelData;
 
 	private bool IsProp=false;
@@ -234,7 +234,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem", GameObject.Find("Game/Panel"));
 		obj.transform.localRotation = Quaternion.identity;
-		obj.transform.localPosition = new Vector3(80, 1, -10);
+		obj.transform.localPosition = new Vector3(80, 1, -18);
 		GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
 		for (int i = 0; i < gamePanel.SelectedList.Count; i++)
 		{
