@@ -58,49 +58,7 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				if (Physics.Raycast(ray, out hit))
 				{
-					if (!IsProp&&hit.transform.GetComponent<SurfaceItem>() && hit.transform.GetComponent<SurfaceItem>().IsOnMove )
-					{
-						SelectedObject = hit.transform.gameObject;
-						IsDragging = true;
-					} else if (!IsProp&&hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsLock) {
-						ADManager.Instance.ShowAD(ADType.Video, (isOn)=>{
-							if (isOn)
-							{
-								hit.transform.GetComponent<GoundBackItem>().IsLock = false;
-								hit.transform.GetComponent<GoundBackItem>().DisplayNumbers(true, "");
-							}
-							else { 
-
-							}
-						});
-					}
-					else
-					if (IsProp && hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsSurface()) {
-						switch (IsPropAppUserID)
-						{
-							case 1:
-								SelectedObject = hit.transform.gameObject;
-								UserProp(1);
-								break;
-							case 2:
-								SelectedObject = hit.transform.gameObject;
-								UserProp(2);
-								break;
-							case 3:
-								if (PropTranform_1 == null) {
-									PropTranform_1 = hit.transform.gameObject;
-									PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "换");
-								} else if (PropTranform_1 != null && PropTranform_1 != hit.transform.gameObject) {
-									hit.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
-									SelectedObject = PropTranform_1;
-									UserProp(3);
-								}
-								break;
-						}
-					} else
-					if (hit.transform.GetComponent<GoundBackItem>() && hit.transform.GetComponent<GoundBackItem>().IsLock) {
-
-					}
+					HandleClick(hit.transform.gameObject);
 				}
 			}
 
@@ -119,7 +77,7 @@ public class GameManager : SingletonMono<GameManager>
 
 				foreach (RaycastHit hit in hits)
 				{
-					if (hit.transform.gameObject.tag == "bottom" &&!IsProp&&
+					if (hit.transform.gameObject.tag == "bottom" && !IsProp &&
 						hit.transform.GetComponent<GoundBackItem>() &&
 						hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
 					{
@@ -134,6 +92,17 @@ public class GameManager : SingletonMono<GameManager>
 						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
 						foundBottom = true;
 						break; // 找到目标对象后退出循环
+					} else if (hit.transform.gameObject.tag == "bottom" && !IsProp&& hit.transform.gameObject.name == "Staging")
+					{
+						if (lastHighlightedObject != null)
+						{
+							lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
+						}
+
+						lastHighlightedObject = hit.transform;
+						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
+						foundBottom = true;
+						break; // 找到目标对象后退出循环
 					}
 					
 				}
@@ -143,7 +112,7 @@ public class GameManager : SingletonMono<GameManager>
 					if (lastHighlightedObject != null)
 					{
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+						if(lastHighlightedObject.GetComponent<GoundBackItem>()) lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
 						lastHighlightedObject = null;
 					}
 				}
@@ -153,41 +122,113 @@ public class GameManager : SingletonMono<GameManager>
 			if (Input.GetMouseButtonUp(0) && IsDragging)
 			{
 				IsDragging = false;
-				SnapToGrid(SelectedObject);
-				
+				SnapToGrid(SelectedObject, lastHighlightedObject!=null&&lastHighlightedObject.name == "Staging"?false:true);
 			}
 		}
 	}
 
-	private void SnapToGrid(GameObject obj)
+
+	/// <summary>
+	/// 点击逻辑
+	/// </summary>
+	/// <param name="obj"></param>
+	/// <returns></returns>
+	private void HandleClick(GameObject obj) {
+		if (!IsProp && obj.transform.GetComponent<SurfaceItem>() && obj.transform.GetComponent<SurfaceItem>().IsOnMove)
+		{
+			SelectedObject = obj.transform.gameObject;
+			IsDragging = true;
+		}
+		//else if (!IsProp && obj.name == "Staging")
+		//{
+
+		//}
+		else if (!IsProp && obj.transform.GetComponent<GoundBackItem>() && obj.transform.GetComponent<GoundBackItem>().IsLock)
+		{
+			ADManager.Instance.ShowAD(ADType.Video, (isOn) =>
+			{
+				if (isOn)
+				{
+					obj.transform.GetComponent<GoundBackItem>().IsLock = false;
+					obj.transform.GetComponent<GoundBackItem>().DisplayNumbers(true, "");
+				}
+				else
+				{
+
+				}
+			});
+		}
+		else
+		if (IsProp && obj.transform.GetComponent<GoundBackItem>() && obj.transform.GetComponent<GoundBackItem>().IsSurface())
+		{
+			switch (IsPropAppUserID)
+			{
+				case 1:
+					SelectedObject = obj.transform.gameObject;
+					UserProp(1);
+					break;
+				case 2:
+					SelectedObject = obj.transform.gameObject;
+					UserProp(2);
+					break;
+				case 3:
+					if (PropTranform_1 == null)
+					{
+						PropTranform_1 = obj.transform.gameObject;
+						PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "换");
+					}
+					else if (PropTranform_1 != null && PropTranform_1 != obj.transform.gameObject)
+					{
+						obj.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
+						SelectedObject = PropTranform_1;
+						UserProp(3);
+					}
+					break;
+			}
+		}
+		else
+		if (obj.transform.GetComponent<GoundBackItem>() && obj.transform.GetComponent<GoundBackItem>().IsLock)
+		{
+
+		}
+	}
+
+	private void SnapToGrid(GameObject obj,bool isOn)
 	{
 		if (obj != null)
 		{
 			if (lastHighlightedObject != null)
 			{
 				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
-				GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
-				lj.SetvolumetricLine(false);
 				obj.transform.position = lastHighlightedObject.transform.position + new Vector3(0, 1.2f, 0);
-				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
-				si.QueMoveEnd();
-				lj.AddSurfacesList(si.Surfaces);
-				AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
-				si.Surfaces.Clear();
-				lj.DisplayNumbers(true);
-				//OperationPath.Clear();
-				CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
-				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
-				for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+				if (isOn)
 				{
-					if (gamePanel.SelectedList[i].SelfGameMove == SelectedObject)
-					{
-						gamePanel.SelectedList[i].SelfGameMove = null;
+					GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
+					if (lj) {
+						lj.SetvolumetricLine(false);
+						SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
+						si.QueMoveEnd();
+						lj.AddSurfacesList(si.Surfaces);
+						AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
+						si.Surfaces.Clear();
+						lj.DisplayNumbers(true);
+						//OperationPath.Clear();
+						CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 					}
+					GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
+					for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+					{
+						if (gamePanel.SelectedList[i].SelfGameMove == SelectedObject)
+						{
+							gamePanel.SelectedList[i].SelfGameMove = null;
+						}
+					}
+					ScelfJob();
+					Destroy(obj);
 				}
-				ScelfJob();
+				else { 
+				}
 				SelectedObject = null;
-				Destroy(obj);
 			}
 			else
 			{
