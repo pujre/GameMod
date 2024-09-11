@@ -92,7 +92,7 @@ public class GameManager : SingletonMono<GameManager>
 						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
 						foundBottom = true;
 						break; // 找到目标对象后退出循环
-					} else if (hit.transform.gameObject.tag == "bottom" && !IsProp&& hit.transform.gameObject.name == "Staging")
+					} else if (hit.transform.gameObject.tag == "bottom" && !IsProp&& hit.transform.gameObject.name == "Staging"&& hit.transform.GetComponent<Staging>()&&hit.transform.GetComponent<Staging>().IsStaging())
 					{
 						if (lastHighlightedObject != null)
 						{
@@ -122,7 +122,7 @@ public class GameManager : SingletonMono<GameManager>
 			if (Input.GetMouseButtonUp(0) && IsDragging)
 			{
 				IsDragging = false;
-				SnapToGrid(SelectedObject, lastHighlightedObject!=null&&lastHighlightedObject.name == "Staging"?false:true);
+				SnapToGrid(SelectedObject, ((lastHighlightedObject!=null&&lastHighlightedObject.name == "Staging")|| lastHighlightedObject==null) ?false:true);
 			}
 		}
 	}
@@ -195,18 +195,19 @@ public class GameManager : SingletonMono<GameManager>
 
 	private void SnapToGrid(GameObject obj,bool isOn)
 	{
+		Debug.Log("___"+obj.name+"   "+isOn);
 		if (obj != null)
 		{
 			if (lastHighlightedObject != null)
 			{
 				lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 				obj.transform.position = lastHighlightedObject.transform.position + new Vector3(0, 1.2f, 0);
+				SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 				if (isOn)
 				{
 					GoundBackItem lj = lastHighlightedObject.GetComponent<GoundBackItem>();
 					if (lj) {
 						lj.SetvolumetricLine(false);
-						SurfaceItem si = obj.transform.GetComponent<SurfaceItem>();
 						si.QueMoveEnd();
 						lj.AddSurfacesList(si.Surfaces);
 						AudioManager.Instance.PlaySFX("Put（放下堆叠物）");
@@ -226,7 +227,12 @@ public class GameManager : SingletonMono<GameManager>
 					ScelfJob();
 					Destroy(obj);
 				}
-				else { 
+				else {
+					Staging staging = lastHighlightedObject.GetComponent<Staging>();
+					if (staging) {
+						staging.AddAndRemoveStaging(null);
+						si.ChangeInitialPosition(lastHighlightedObject.position);
+					}
 				}
 				SelectedObject = null;
 			}

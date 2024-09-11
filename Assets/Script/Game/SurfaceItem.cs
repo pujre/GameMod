@@ -21,6 +21,14 @@ public class SurfaceItem : MonoBehaviour
 		MoveToPosition(pos, () => IsOnMove = true);
 	}
 
+	/// <summary>
+	/// 改变松手后回复的位置
+	/// </summary>
+	/// <param name="pos"></param>
+	public void ChangeInitialPosition(Vector3 pos) {
+		QreVector3 = pos;
+	}
+
 	public void QueMoveCancel()
 	{
 		MoveToPosition(QreVector3, () => IsOnMove = true);
