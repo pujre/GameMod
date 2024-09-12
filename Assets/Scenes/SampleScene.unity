@@ -2033,7 +2033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &456114037
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11651,7 +11651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97eb26d3377ee6e48842e69783839009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StagingFace: {fileID: 0}
+  SurfaceItem: {fileID: 0}
 --- !u!33 &6248702754693981070
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -11672,7 +11672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97eb26d3377ee6e48842e69783839009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StagingFace: {fileID: 0}
+  SurfaceItem: {fileID: 0}
 --- !u!33 &6248702755111597136
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -11693,7 +11693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97eb26d3377ee6e48842e69783839009, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StagingFace: {fileID: 0}
+  SurfaceItem: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

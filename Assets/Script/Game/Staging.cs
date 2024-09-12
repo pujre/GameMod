@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Staging : MonoBehaviour
 {
-	public GameObject StagingFace;
+	public GameObject SurfaceItem;
 
 	public bool IsStaging()
 	{
-		if (StagingFace)
+		if (SurfaceItem)
 		{
 			return false;
 		}else
@@ -16,7 +14,8 @@ public class Staging : MonoBehaviour
 			return true;
 		}
 	}
-	public void AddAndRemoveStaging(GameObject stagingFace=null){
-		StagingFace = stagingFace;
+	public void AddAndRemoveStaging(GameObject surfaceItem = null){
+		SurfaceItem = surfaceItem;
+		transform.GetComponent<MeshCollider>().enabled = surfaceItem == null ? true :false;
 	}
 }

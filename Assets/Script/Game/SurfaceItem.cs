@@ -9,6 +9,7 @@ public class SurfaceItem : MonoBehaviour
 	public bool IsOnMove = false; // 是否允许拖动
 	public Vector3 QreVector3; // 初始坐标
 	private float Assign_Y = 0.65f;
+	private Staging Staging;
 	public List<Surface> Surfaces = new List<Surface>();
 
 	public void QurStart(Vector3 pos)
@@ -37,6 +38,17 @@ public class SurfaceItem : MonoBehaviour
 	public void QueMoveEnd()
 	{
 		IsOnMove = false;
+		if (Staging) {
+			Staging.AddAndRemoveStaging(null);
+			Staging = null;
+		}
+	}
+
+	public void AddStaging(Staging staging) {
+		if (Staging) {
+			Staging.AddAndRemoveStaging(null);
+		}
+		Staging = staging;
 	}
 
 	private void MoveToPosition(Vector3 pos, TweenCallback onComplete)

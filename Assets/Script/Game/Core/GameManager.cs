@@ -168,10 +168,9 @@ public class GameManager : SingletonMono<GameManager>
 					UserProp(1);
 					break;
 				case 2:
-					SelectedObject = obj.transform.gameObject;
-					UserProp(2);
-					break;
-				case 3:
+					//SelectedObject = obj.transform.gameObject;
+					//UserProp(2);
+
 					if (PropTranform_1 == null)
 					{
 						PropTranform_1 = obj.transform.gameObject;
@@ -184,6 +183,9 @@ public class GameManager : SingletonMono<GameManager>
 						UserProp(3);
 					}
 					break;
+				case 3:
+					
+					break;
 			}
 		}
 		else
@@ -195,7 +197,6 @@ public class GameManager : SingletonMono<GameManager>
 
 	private void SnapToGrid(GameObject obj,bool isOn)
 	{
-		Debug.Log("___"+obj.name+"   "+isOn);
 		if (obj != null)
 		{
 			if (lastHighlightedObject != null)
@@ -216,7 +217,20 @@ public class GameManager : SingletonMono<GameManager>
 						//OperationPath.Clear();
 						CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 					}
-					GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
+					
+					ScelfJob();
+					Destroy(obj);
+				}
+				else {
+					Staging staging = lastHighlightedObject.GetComponent<Staging>();
+					if (staging) {
+						si.ChangeInitialPosition(lastHighlightedObject.position + new Vector3(0, 1.2f, 0));
+						si.AddStaging(staging);
+						staging.AddAndRemoveStaging(obj);
+					}
+                }
+
+				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
 					for (int i = 0; i < gamePanel.SelectedList.Count; i++)
 					{
 						if (gamePanel.SelectedList[i].SelfGameMove == SelectedObject)
@@ -224,16 +238,6 @@ public class GameManager : SingletonMono<GameManager>
 							gamePanel.SelectedList[i].SelfGameMove = null;
 						}
 					}
-					ScelfJob();
-					Destroy(obj);
-				}
-				else {
-					Staging staging = lastHighlightedObject.GetComponent<Staging>();
-					if (staging) {
-						staging.AddAndRemoveStaging(null);
-						si.ChangeInitialPosition(lastHighlightedObject.position);
-					}
-				}
 				SelectedObject = null;
 			}
 			else
@@ -268,7 +272,7 @@ public class GameManager : SingletonMono<GameManager>
 	public void LoadLevel(int level)
 	{
 		NowLevel = level;
-		LevelData levedata = LevelDataRoot.GetLevelData(level);
+		LevelData = LevelDataRoot.GetLevelData(level);
 		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
 		LoadGenerateBoxMatrix();
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
@@ -277,24 +281,39 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 
-	public void ScelfJob()
+	public void ScelfJob(int x=1)
 	{
-		GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem", GameObject.Find("Game/Panel"));
-		obj.transform.localRotation = Quaternion.identity;
-		obj.transform.localPosition = new Vector3(80, 1, -18);
 		GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
-		for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+		int number = gamePanel.GetSelectedNum();
+		//if (x>(3-number)){
+		//	for (int l = 0; l < x-(3-number); l++)
+		//	{
+		//		if (gamePanel.SelectedList[l].SelfGameMove != null)
+		//		{
+		//			Destroy(gamePanel.SelectedList[l].SelfGameMove);
+		//			//gamePanel.SelectedList[l].SelfGameMove = null;
+		//			break;
+		//		}
+		//	}
+		//}
+		for (int j = 0; j < x; j++)
 		{
-			if (gamePanel.SelectedList[i].SelfGameMove == null)
+			GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem", GameObject.Find("Game/Panel"));
+			obj.transform.localRotation = Quaternion.identity;
+			obj.transform.localPosition = new Vector3(80, 1, -18);
+			for (int i = 0; i < gamePanel.SelectedList.Count; i++)
 			{
-				gamePanel.SelectedList[i].SelfGameMove = obj;
-				obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
-				obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);
-				AudioManager.Instance.PlaySFX("Hu（出现三个新的堆叠物）");
-				break;
+				if (gamePanel.SelectedList[i].SelfGameMove == null)
+				{
+					gamePanel.SelectedList[i].SelfGameMove = obj;
+					obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
+					obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);
+					AudioManager.Instance.PlaySFX("Hu（出现三个新的堆叠物）");
+					break;
+				}
 			}
 		}
-
+		
 	}
 
 
@@ -408,10 +427,10 @@ public class GameManager : SingletonMono<GameManager>
 				SelectedObject = null;				
 				break;
 			case 2:
-				LevelData.Item_2Number--;
-				SelectedObject.GetComponent<GoundBackItem>().TopTranslateColor(1);
-				CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
-				SelectedObject = null;
+				//LevelData.Item_2Number--;
+				//SelectedObject.GetComponent<GoundBackItem>().TopTranslateColor(1);
+				//CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
+				//SelectedObject = null;
 				//Debug.Log("最顶部的那个变成星星");
 				break;
 			case 3:
@@ -611,7 +630,7 @@ public class GameManager : SingletonMono<GameManager>
 
 	#region Old Scrpit
 
-	#endregion
+
 	/// <summary>
 	/// 新建一个指定大小的空的地图网格
 	/// </summary>
@@ -646,6 +665,7 @@ public class GameManager : SingletonMono<GameManager>
 	//		isOn = !isOn;
 	//	}
 	//}
+	#endregion
 
 	/// <summary>
 	/// 加载level Prefab

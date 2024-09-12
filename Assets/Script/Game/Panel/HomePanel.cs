@@ -31,9 +31,7 @@ public class HomePanel : PanelBase
 			case "PalyBtn":
 				transform.gameObject.SetActive(false);
 				UIManager.Instance.SetUiPanelAction("GamePanel", true);
-				GameManager.Instance.ScelfJob();
-				GameManager.Instance.ScelfJob();
-				GameManager.Instance.ScelfJob();
+				GameManager.Instance.ScelfJob(3);
 				break;
 			case "":
 				

@@ -25,6 +25,17 @@ public class GamePanel : PanelBase
 		DelegateManager.Instance.AddEvent(OnEventKey.OnGameStar.ToString(), OnGameStar);
 	}
 
+	public int GetSelectedNum() {
+		int number = 0;
+		for (int i = 0; i < SelectedList.Count; i++)
+		{
+			if (SelectedList[i].SelfGameMove!=null) {
+				number++;
+			}
+		}
+		return number;
+	}
+
 	private void Start()
 	{
 		foreach (var button in GetComponentsInChildren<Button>(true))
@@ -66,9 +77,16 @@ public class GamePanel : PanelBase
 					propName = "Prop_3";
 					propId = levelData.Item_3ID;
 					value = GameManager.Instance.GetNowLevelData().Item_3Number;
+					if (value>0) {
+						GameManager.Instance.ScelfJob(3);
+						SetUIAction(true, "");
+						GameManager.Instance.CloneUserProp();
+						DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(), "");
+						return;
+					}
 					break;
 			}
-			if (value > 0)
+			if (value > 0&& propName!= "Prop_3")
 			{
 				BtnAnim(button.transform.Find("Prop").gameObject);
 				SetUIAction(false, propName);
