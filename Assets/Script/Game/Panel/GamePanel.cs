@@ -36,6 +36,28 @@ public class GamePanel : PanelBase
 		return number;
 	}
 
+	/// <summary>
+	/// 空出指定数量的空位
+	/// </summary>
+	/// <param name="x"></param>
+	public void FreeUpSpace(int x) {
+		int number= GetSelectedNum();
+		int upSpace = 3 - number;
+		if (x> upSpace) {
+			for (int i = 0; i < SelectedList.Count; i++)
+			{
+				if (SelectedList[i].SelfGameMove!=null){
+					SelectedList[i].SelfGameMove.GetComponent<SurfaceItem>().SufaDestroy();
+					SelectedList[i].SelfGameMove = null;
+					upSpace++;
+					if(x-upSpace==0){
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	private void Start()
 	{
 		foreach (var button in GetComponentsInChildren<Button>(true))

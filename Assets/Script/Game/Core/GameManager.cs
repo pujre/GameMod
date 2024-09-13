@@ -284,27 +284,18 @@ public class GameManager : SingletonMono<GameManager>
 	public void ScelfJob(int x=1)
 	{
 		GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
-		int number = gamePanel.GetSelectedNum();
-		//if (x>(3-number)){
-		//	for (int l = 0; l < x-(3-number); l++)
-		//	{
-		//		if (gamePanel.SelectedList[l].SelfGameMove != null)
-		//		{
-		//			Destroy(gamePanel.SelectedList[l].SelfGameMove);
-		//			//gamePanel.SelectedList[l].SelfGameMove = null;
-		//			break;
-		//		}
-		//	}
-		//}
+		int number = gamePanel.GetSelectedNum();//当前有几个物品
+		Debug.Log("当前有几个物体："+number);
+		gamePanel.FreeUpSpace(x);
 		for (int j = 0; j < x; j++)
 		{
-			GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem", GameObject.Find("Game/Panel"));
-			obj.transform.localRotation = Quaternion.identity;
-			obj.transform.localPosition = new Vector3(80, 1, -18);
 			for (int i = 0; i < gamePanel.SelectedList.Count; i++)
 			{
 				if (gamePanel.SelectedList[i].SelfGameMove == null)
 				{
+					GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem", GameObject.Find("Game/Panel"));
+					obj.transform.localRotation = Quaternion.identity;
+					obj.transform.localPosition = new Vector3(80, 1, -18);
 					gamePanel.SelectedList[i].SelfGameMove = obj;
 					obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
 					obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);

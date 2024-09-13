@@ -97,6 +97,16 @@ public class SurfaceItem : MonoBehaviour
 		}
 	}
 
+	public void SufaDestroy()
+	{
+        for (int i = Surfaces.Count; i >0; i--)
+        {
+			PoolManager.Instance.DestoryByRecycle(Surfaces[i].gameObject);
+		}
+		PoolManager.Instance.DestoryByRecycle(transform.gameObject);
+
+	}
+
 	private List<int> GenerateRandomColors(int count, int colorNumber)
 	{
 		List<int> colors = new List<int>();
