@@ -11,13 +11,17 @@ public class SurfaceItem : MonoBehaviour
 	private float Assign_Y = 0.65f;
 	private Staging Staging;
 	public List<Surface> Surfaces = new List<Surface>();
+	public GameObject BottomText;
 
 	public void QurStart(Vector3 pos)
 	{
-		GameObject bottomtext = Resources.Load<GameObject>("Prefab/bottomText");
-		GameObject oth = Instantiate(bottomtext, Vector3.zero, Quaternion.Euler(90, 0, 0), transform);
+		//GameObject bottomtext = Resources.Load<GameObject>("Prefab/bottomText");
+		//GameObject oth = Instantiate(bottomtext, Vector3.zero, Quaternion.Euler(90, 0, 0), transform);
+		GameObject oth = PoolManager.Instance.GetObject("bottomText", transform);
+		oth.transform.rotation = Quaternion.Euler(90, 0, 0);
 		oth.transform.localPosition = new Vector3(0,(Surfaces.Count * Assign_Y), 0);
 		oth.GetComponent<TextMeshPro>().text = GetTopColorNumber().ToString();
+		BottomText = oth;
 		QreVector3 = pos;
 		MoveToPosition(pos, () => IsOnMove = true);
 	}
@@ -88,7 +92,7 @@ public class SurfaceItem : MonoBehaviour
 
 		for (int i = 0; i < colors.Count; i++)
 		{
-			GameObject gameObject = PoolManager.Instance.CreateGameObject("surface");
+			GameObject gameObject = PoolManager.Instance.GetObject("surface");
 			gameObject.transform.SetParent(transform);
 			gameObject.transform.position = new Vector3(transform.position.x, transform.position.y + (i * Assign_Y), transform.position.z);
 			gameObject.transform.rotation = Quaternion.identity;
@@ -97,14 +101,18 @@ public class SurfaceItem : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 清除当前数据
+	/// </summary>
 	public void SufaDestroy()
 	{
-        for (int i = Surfaces.Count; i >0; i--)
+        for (int i = Surfaces.Count-1; i >0; i--)
         {
-			PoolManager.Instance.DestoryByRecycle(Surfaces[i].gameObject);
+			PoolManager.Instance.ReturnObject(Surfaces[i].gameObject);
 		}
-		PoolManager.Instance.DestoryByRecycle(transform.gameObject);
-
+		Surfaces.Clear();
+		PoolManager.Instance.ReturnObject(BottomText);
+		PoolManager.Instance.ReturnObject(transform.gameObject);
 	}
 
 	private List<int> GenerateRandomColors(int count, int colorNumber)

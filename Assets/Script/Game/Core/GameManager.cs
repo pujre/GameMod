@@ -7,6 +7,8 @@ public class GameManager : SingletonMono<GameManager>
 {
 	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
 	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
+	public List<Selected> SelectedList = new List<Selected>();
+	public List<Staging> StagingList = new List<Staging>();
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
 	private Vector3 StartPosition = new Vector3(0, 0, 0);
@@ -217,33 +219,84 @@ public class GameManager : SingletonMono<GameManager>
 						//OperationPath.Clear();
 						CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
 					}
-					
-					ScelfJob();
 					Destroy(obj);
 				}
 				else {
 					Staging staging = lastHighlightedObject.GetComponent<Staging>();
 					if (staging) {
 						si.ChangeInitialPosition(lastHighlightedObject.position + new Vector3(0, 1.2f, 0));
+						Debug.Log("Add:"+ staging.gameObject.name);
 						si.AddStaging(staging);
 						staging.AddAndRemoveStaging(obj);
 					}
                 }
-
-				GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
-					for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+					for (int i = 0; i < SelectedList.Count; i++)
 					{
-						if (gamePanel.SelectedList[i].SelfGameMove == SelectedObject)
+						if (SelectedList[i].SelfGameMove == SelectedObject)
 						{
-							gamePanel.SelectedList[i].SelfGameMove = null;
+							SelectedList[i].SelfGameMove = null;
 						}
 					}
-				SelectedObject = null;
+				if (GetSelectedNum()==0)
+				{
+					ScelfJob(3);
+				}
 			}
 			else
 			{
 				obj.transform.GetComponent<SurfaceItem>().QueMoveCancel();
-				SelectedObject = null;
+			}
+			SelectedObject = null;
+		}
+	}
+
+	public int GetSelectedNum()
+	{
+		int number = 0;
+		for (int i = 0; i < SelectedList.Count; i++)
+		{
+			if (SelectedList[i].SelfGameMove != null)
+			{
+				number++;
+			}
+		}
+		return number;
+	}
+
+	/// <summary>
+	/// 空出指定数量的空位
+	/// </summary>
+	/// <param name="x"></param>
+	public void FreeUpSpace(int x)
+	{
+		int number = GetSelectedNum();
+		int upSpace = SelectedList.Count - number;
+		if (x > upSpace)
+		{
+			for (int i = 0; i < SelectedList.Count; i++)
+			{
+				if (SelectedList[i].SelfGameMove != null)
+				{
+					SelectedList[i].SelfGameMove.GetComponent<SurfaceItem>().SufaDestroy();
+					SelectedList[i].SelfGameMove = null;
+					upSpace++;
+					if (x - upSpace == 0)
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	public void UpSpaceAll()
+	{
+		for (int i = 0; i < StagingList.Count; i++)
+		{
+			if (StagingList[i].SurfaceItem != null)
+			{
+				StagingList[i].SurfaceItem.GetComponent<SurfaceItem>().SufaDestroy();
+				StagingList[i].AddAndRemoveStaging (null);
 			}
 		}
 	}
@@ -274,6 +327,7 @@ public class GameManager : SingletonMono<GameManager>
 		NowLevel = level;
 		LevelData = LevelDataRoot.GetLevelData(level);
 		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
+		UpSpaceAll();
 		LoadGenerateBoxMatrix();
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
 		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
@@ -283,22 +337,19 @@ public class GameManager : SingletonMono<GameManager>
 
 	public void ScelfJob(int x=1)
 	{
-		GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
-		int number = gamePanel.GetSelectedNum();//当前有几个物品
-		Debug.Log("当前有几个物体："+number);
-		gamePanel.FreeUpSpace(x);
+		FreeUpSpace(x);
 		for (int j = 0; j < x; j++)
 		{
-			for (int i = 0; i < gamePanel.SelectedList.Count; i++)
+			for (int i = 0; i < SelectedList.Count; i++)
 			{
-				if (gamePanel.SelectedList[i].SelfGameMove == null)
+				if (SelectedList[i].SelfGameMove == null)
 				{
-					GameObject obj = PoolManager.Instance.CreateGameObject("surfaceItem", GameObject.Find("Game/Panel"));
+					GameObject obj = PoolManager.Instance.GetObject("surfaceItem", GameObject.Find("Game/Panel").transform);
 					obj.transform.localRotation = Quaternion.identity;
 					obj.transform.localPosition = new Vector3(80, 1, -18);
-					gamePanel.SelectedList[i].SelfGameMove = obj;
+					SelectedList[i].SelfGameMove = obj;
 					obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
-					obj.GetComponent<SurfaceItem>().QurStart(gamePanel.SelectedList[i].Pos);
+					obj.GetComponent<SurfaceItem>().QurStart(SelectedList[i].Pos);
 					AudioManager.Instance.PlaySFX("Hu（出现三个新的堆叠物）");
 					break;
 				}
@@ -665,7 +716,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		RemoveBoxMatrix();
 		GameObject PrefabObj = Resources.Load<GameObject>("LevelPrefab/Lv" + NowLevel.ToString());
-		GameObject bottomtext= Resources.Load<GameObject>("Prefab/bottomText");
+		//GameObject bottomtext= Resources.Load<GameObject>("Prefab/bottomText");
 		if (PrefabObj == null)
 		{
 			Debug.Log("未能加载到该关卡数据，加载的关卡为："+ NowLevel.ToString());
@@ -682,7 +733,10 @@ public class GameManager : SingletonMono<GameManager>
 				if (goundBackItem != null)
 				{
 					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
-					GameObject oth= Instantiate(bottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
+					GameObject oth = PoolManager.Instance.GetObject("bottomText", goundBackItem.transform);
+					oth.transform.rotation = Quaternion.Euler(90, 0, 0);
+					oth.transform.position = Vector3.zero;
+					//othbottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
 					goundBackItem.NumberText = oth;
 					if (goundBackItem.IsLock) {
 						GameObject spriteRendererPrefab = Resources.Load<GameObject>("Prefab/Lock");

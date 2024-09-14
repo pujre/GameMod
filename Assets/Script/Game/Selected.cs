@@ -1,6 +1,6 @@
 using UnityEngine;
-
-public class Selected : MonoBehaviour
+[System.Serializable]
+public class Selected
 {
     public GameObject SelfGameMove;
     public Vector3 Pos;

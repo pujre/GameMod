@@ -50,6 +50,7 @@ public class OverPanel : PanelBase
 			case "ContinueBtn"://¼ÌĞøÓÎÏ·
 				gameObject.SetActive(false);
 				GameManager.Instance.LoadNextLevel();
+				GameManager.Instance.ScelfJob(3);
 				break;
 			case "ADBtn":
 				break;

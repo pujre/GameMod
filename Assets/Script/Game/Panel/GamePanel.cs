@@ -11,7 +11,7 @@ public class GamePanel : PanelBase
 	public Text Prop_1Text, Prop_2Text, Prop_3Text, PromptText, PrompTitleText;
 	public TextMeshProUGUI LevelText, LevelTager;
 	public Image ScoreFractionalBar;
-	public List<Selected> SelectedList = new List<Selected>();
+	
 	public int NowScore = 0;
 	public int TagerScore = 0;
 	private Tween currentTween;
@@ -25,38 +25,7 @@ public class GamePanel : PanelBase
 		DelegateManager.Instance.AddEvent(OnEventKey.OnGameStar.ToString(), OnGameStar);
 	}
 
-	public int GetSelectedNum() {
-		int number = 0;
-		for (int i = 0; i < SelectedList.Count; i++)
-		{
-			if (SelectedList[i].SelfGameMove!=null) {
-				number++;
-			}
-		}
-		return number;
-	}
-
-	/// <summary>
-	/// 空出指定数量的空位
-	/// </summary>
-	/// <param name="x"></param>
-	public void FreeUpSpace(int x) {
-		int number= GetSelectedNum();
-		int upSpace = 3 - number;
-		if (x> upSpace) {
-			for (int i = 0; i < SelectedList.Count; i++)
-			{
-				if (SelectedList[i].SelfGameMove!=null){
-					SelectedList[i].SelfGameMove.GetComponent<SurfaceItem>().SufaDestroy();
-					SelectedList[i].SelfGameMove = null;
-					upSpace++;
-					if(x-upSpace==0){
-						break;
-					}
-				}
-			}
-		}
-	}
+	
 
 	private void Start()
 	{

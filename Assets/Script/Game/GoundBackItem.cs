@@ -382,7 +382,7 @@ public class GoundBackItem : MonoBehaviour
 				// 在子序列完成时执行回调
 				subSequence.OnComplete(() =>
 				{
-					PoolManager.Instance.DestoryByRecycle(obj.gameObject,false);
+					PoolManager.Instance.ReturnObject(obj.gameObject);
 					obj.transform.localScale = Vector3.one;
 					DelegateManager.Instance.TriggerEvent(OnEventKey.OnBonusEvent.ToString(), 1);
 				});
@@ -428,7 +428,7 @@ public class GoundBackItem : MonoBehaviour
 			sequence.Insert(0.08f * (SurfacesList.Count - 1 - i), moveTween);
 			moveTween.OnComplete(() =>
 			{
-				PoolManager.Instance.DestoryByRecycle(obj.gameObject);
+				PoolManager.Instance.ReturnObject(obj.gameObject);
 				obj.transform.localScale = Vector3.one;
 			});
 		}

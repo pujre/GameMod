@@ -1,28 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolObject : MonoBehaviour
+public class PoolObject : MonoBehaviour, IPoolable
 {
-	public virtual void OnCreate()
+	public void OnCreate()
 	{
 
 	}
 
-	//从对象池中取出调用
-	public virtual void OnFetch()
+	public void OnDestroy()
 	{
 
 	}
 
-	//回收时调用
-	public virtual void OnRecycle()
+	public void OnFetch()
 	{
 
 	}
 
-	//销毁时调用
-	public virtual void OnDestory()
+	public void OnRecycle()
 	{
 
 	}

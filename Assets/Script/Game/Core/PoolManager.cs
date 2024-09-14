@@ -1,348 +1,193 @@
-
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.IO;
 
-public class PoolManager : SingletonMono<PoolManager>
+/// <summary>
+/// 接口：可池化对象
+/// </summary>
+public interface IPoolable
 {
-	private static Vector3 OutOfRange = new Vector3(9000, 9000, 9000);
-	private  Dictionary<string, Dictionary<int, GameObject>> createPools = new Dictionary<string, Dictionary<int, GameObject>>();
-	private  Dictionary<string, Dictionary<int, GameObject>> recyclePools = new Dictionary<string, Dictionary<int, GameObject>>();
+	void OnCreate();
+	void OnFetch();
+	void OnRecycle();
+	void OnDestroy();
+}
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-	public  Dictionary<string, Dictionary<int, GameObject>> GetCreatePool()
+/// <summary>
+/// 单个对象池类，管理特定类型的对象
+/// </summary>
+public class Pool
+{
+	private Stack<GameObject> availableObjects = new Stack<GameObject>();
+	private GameObject prefab;
+
+	public Pool(GameObject prefab)
 	{
-		return createPools;
+		this.prefab = prefab;
 	}
-
-	public  Dictionary<string, Dictionary<int, GameObject>> GetRecyclePool()
-	{
-		return recyclePools;
-	}
-
-	#region 创建
-
-	//通过创建对象名字 直接实例化
-	public  GameObject CreateGameObject(string name, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(true, name, null, parent, isActive);
-	}
-
-	//通过预制体 直接实例化
-	public GameObject CreateGameObject(GameObject prefab, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(true, null, prefab, parent, isActive);
-	}
-
-	//通过名字 对象池实例化
-	public GameObject CreateGameObjectByPool(string name, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(false, name, null, parent, isActive);
-	}
-
-	//通过预制体 直接实例化
-	public  GameObject CreateGameObjectByPool(GameObject prefab, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(false, null, prefab, parent, isActive);
-	}
-
-	//通过创建对象名字 直接实例化
-	public  T CreateGameObject<T>(string name, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(true, name, null, parent, isActive).GetComponent<T>();
-	}
-
-	//通过预制体 直接实例化
-	public  T CreateGameObject<T>(GameObject prefab, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(true, null, prefab, parent, isActive).GetComponent<T>(); ;
-	}
-
-	//通过名字 对象池实例化
-	public  T CreateGameObjectByPool<T>(string name, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(false, name, null, parent, isActive).GetComponent<T>(); ;
-	}
-
-	//通过预制体 直接实例化
-	public  T CreateGameObjectByPool<T>(GameObject prefab, GameObject parent = null, bool isActive = true)
-	{
-		return GetNewObject(false, null, prefab, parent, isActive).GetComponent<T>(); ;
-	}
-
 
 	/// <summary>
-	/// 获取一个新的对象
+	/// 获取对象
 	/// </summary>
-	/// <param name="isNew">是否创建新的对象</param>
-	/// <param name="objName">实例化对象的名字</param>
-	/// <param name="prefab">实例化预制体</param>
-	/// <param name="parent">实例化父对象</param>
-	/// <param name="isActive"></param>
-	/// <returns></returns>
-	private  GameObject GetNewObject(bool isNew, string objName, GameObject prefab, GameObject parent = null, bool isActive = true)
+	public GameObject GetObject(Transform parent = null)
 	{
-		GameObject go = null;
-
-		//获取对象名字
-		string name = objName;
-		if (string.IsNullOrEmpty(name))
+		GameObject obj;
+		if (availableObjects.Count > 0)
 		{
-			name = prefab.name;
-		}
-
-		if (!isNew && IsExist(name))
-		{
-			if (!recyclePools.ContainsKey(name))
-			{
-				//创建新的对象
-				if (prefab != null)
-				{
-					go = InstantiateObject(prefab, parent);
-				}
-				else
-				{
-					go = NewGameObject(name, parent);
-				}
-			}
-			else
-			{
-				//从回收池中加载
-				List<int> ids = new List<int>(recyclePools[name].Keys);
-				int id = ids[0];
-				go = recyclePools[name][id];
-				recyclePools[name].Remove(id);
-				if (recyclePools[name].Count == 0) recyclePools.Remove(name);
-			}
+			obj = availableObjects.Pop();
+			obj.SetActive(true);
+			obj.transform.SetParent(parent);
 		}
 		else
 		{
-			//直接创建新的对象
-			if (prefab == null && !string.IsNullOrEmpty(objName))
-			{
-				go = NewGameObject(name, parent);
-
-			}
-			else if (prefab != null && string.IsNullOrEmpty(objName))
-			{
-				go = InstantiateObject(prefab, parent);
-			}
+			obj = Object.Instantiate(prefab, parent);
+			obj.name = prefab.name;
+			IPoolable poolable = obj.GetComponent<IPoolable>();
+			poolable?.OnCreate();
 		}
 
-		if (go == null)
-		{
-			Debug.LogError("PoolManager 加载失败：" + name);
-			return go;
-		}
+		IPoolable fetchPoolable = obj.GetComponent<IPoolable>();
+		fetchPoolable?.OnFetch();
 
-		//记录保存到createPool
-		if (!createPools.ContainsKey(name)) createPools.Add(name, new Dictionary<int, GameObject>());
-		createPools[name].Add(go.GetInstanceID(), go);
-
-		//初始化
-		PoolObject obj = go.GetComponent<PoolObject>();
-		if (obj) obj.OnFetch();
-
-		go.SetActive(isActive);
-		go.transform.SetParent(parent ? parent.transform : null);
-
-		return go;
+		return obj;
 	}
 
-	//实例化
-	private  GameObject InstantiateObject(GameObject prefab, GameObject parent = null)
+	/// <summary>
+	/// 回收对象
+	/// </summary>
+	public void ReturnObject(GameObject obj)
+	{
+		IPoolable poolable = obj.GetComponent<IPoolable>();
+		poolable?.OnRecycle();
+
+		obj.SetActive(false);
+		obj.transform.SetParent(null);
+		availableObjects.Push(obj);
+	}
+
+	/// <summary>
+	/// 清理对象池
+	/// </summary>
+	public void Clear()
+	{
+		while (availableObjects.Count > 0)
+		{
+			GameObject obj = availableObjects.Pop();
+			IPoolable poolable = obj.GetComponent<IPoolable>();
+			poolable?.OnDestroy();
+			Object.Destroy(obj);
+		}
+	}
+}
+
+/// <summary>
+/// 对象池管理器，单例模式
+/// </summary>
+public class PoolManager : SingletonMono<PoolManager>
+{
+	private Dictionary<string, Pool> pools = new Dictionary<string, Pool>();
+
+	/// <summary>
+	/// 获取对象
+	/// </summary>
+	public GameObject GetObject(string prefabName, Transform parent = null)
+	{
+		if (string.IsNullOrEmpty(prefabName))
+		{
+			Debug.LogError("Prefab name is null or empty.");
+			return null;
+		}
+
+		if (!pools.ContainsKey(prefabName))
+		{
+			// 加载预制体
+			GameObject prefab = Resources.Load<GameObject>(ResPath.GetPath(prefabName));
+			if (prefab == null)
+			{
+				Debug.LogError($"Prefab not found: {prefabName}");
+				return null;
+			}
+			pools[prefabName] = new Pool(prefab);
+		}
+
+		return pools[prefabName].GetObject(parent);
+	}
+
+	/// <summary>
+	/// 获取对象（通过预制体）
+	/// </summary>
+	public GameObject GetObject(GameObject prefab, Transform parent = null)
 	{
 		if (prefab == null)
 		{
-			throw new Exception("CreateGameObject error : prefab  is null");
-		}
-		Transform transform = parent == null ? null : parent.transform;
-		GameObject instanceTmp = UnityEngine.Object.Instantiate(prefab, transform);
-		instanceTmp.name = prefab.name;
-
-		PoolObject p = instanceTmp.GetComponent<PoolObject>();
-		if (p != null) p.OnCreate();
-
-		return instanceTmp;
-	}
-
-	//加载一个对象并实例化
-	private  GameObject NewGameObject(string gameObjectName, GameObject parent = null)
-	{
-		/****暂时从Resources读取****/
-		GameObject goTmp = Resources.Load<GameObject>(ResPath.GetPath(gameObjectName));
-
-		if (goTmp == null)
-		{
-			throw new Exception("CreateGameObject error dont find :" + gameObjectName);
+			Debug.LogError("Prefab is null.");
+			return null;
 		}
 
-		return InstantiateObject(goTmp, parent);
+		string prefabName = prefab.name;
+
+		if (!pools.ContainsKey(prefabName))
+		{
+			pools[prefabName] = new Pool(prefab);
+		}
+
+		return pools[prefabName].GetObject(parent);
 	}
 
-	#endregion
-
-	#region 销毁
-
-	//回收对象
-	public  void DestoryByRecycle(GameObject gameObject, bool isSetInactive = true)
+	/// <summary>
+	/// 回收对象
+	/// </summary>
+	public void ReturnObject(GameObject obj)
 	{
-		if (!gameObject) return;
-		//if (gameObject.name == "surface") gameObject.name = "surfaceItem";
-		string key = gameObject.name.Replace("(Clone)", "");
-		if (!recyclePools.ContainsKey(key)) recyclePools.Add(key, new Dictionary<int, GameObject>());
-
-		if (recyclePools[key].ContainsKey(gameObject.GetInstanceID()))
+		if (obj == null)
 		{
-			Debug.LogError("Recycle repeat by Destory -> " + gameObject.name);
+			Debug.LogError("GameObject is null.");
 			return;
 		}
-		recyclePools[key].Add(gameObject.GetInstanceID(), gameObject);
 
-		if (isSetInactive) gameObject.SetActive(false);
-		else gameObject.transform.position = OutOfRange;
+		string prefabName = obj.name.Replace("(Clone)", "");
 
-		gameObject.name = key;
-		PoolObject obj = gameObject.GetComponent<PoolObject>();
-		if (obj) obj.OnRecycle();
-		//if (!createPools.ContainsKey(key)) {
-		//	createPools[key].Add
-		//}
-		if (createPools.ContainsKey(key) && createPools[key].ContainsKey(gameObject.GetInstanceID()))
+		if (pools.ContainsKey(prefabName))
 		{
-			createPools[key].Remove(gameObject.GetInstanceID());
+			pools[prefabName].ReturnObject(obj);
 		}
-		
-		else Debug.LogError("对象池不存在GameObject：" + gameObject + " 不能回收！");
+		else
+		{
+			Debug.LogWarning($"No pool found for object: {prefabName}. Destroying object.");
+			IPoolable poolable = obj.GetComponent<IPoolable>();
+			poolable?.OnDestroy();
+			Destroy(obj);
+		}
 	}
 
-	//延时多久 回收
-	public  void DestoryByRecycle(GameObject gameObject, float time)
+	/// <summary>
+	/// 清理特定对象池
+	/// </summary>
+	public void ClearPool(string prefabName)
 	{
-		DestoryByRecycle(gameObject);
+		if (pools.ContainsKey(prefabName))
+		{
+			pools[prefabName].Clear();
+			pools.Remove(prefabName);
+		}
 	}
 
-
-	//直接销毁
-	public  void Destory(GameObject gameObject)
+	/// <summary>
+	/// 清理所有对象池
+	/// </summary>
+	public void ClearAllPools()
 	{
-		if (gameObject == null) return;
-
-		string key = gameObject.name.Replace("(Clone)", "");
-
-		PoolObject obj = gameObject.GetComponent<PoolObject>();
-		if (obj) obj.OnDestory();
-
-		//移除
-		if (createPools.ContainsKey(key) && createPools[key].ContainsKey(gameObject.GetInstanceID()))
+		foreach (var pool in pools.Values)
 		{
-			createPools[key].Remove(gameObject.GetInstanceID());
-			if (createPools[key].Count == 0) createPools.Remove(key);
+			pool.Clear();
 		}
-
-		UnityEngine.Object.Destroy(gameObject);
+		pools.Clear();
 	}
 
-	//直接销毁
-	public  void Destory(GameObject gameObject, float time)
+	/// <summary>
+	/// 判断对象池是否存在
+	/// </summary>
+	public bool PoolExists(string prefabName)
 	{
-		if (gameObject == null) return;
-
-		string key = gameObject.name.Replace("(Clone)", "");
-
-		PoolObject obj = gameObject.GetComponent<PoolObject>();
-		if (obj) obj.OnDestory();
-
-		//移除
-		if (createPools.ContainsKey(key) && createPools[key].ContainsKey(gameObject.GetInstanceID()))
-		{
-			createPools[key].Remove(gameObject.GetInstanceID());
-			if (createPools[key].Count == 0) createPools.Remove(key);
-		}
-
-		UnityEngine.Object.Destroy(gameObject, time);
+		return pools.ContainsKey(prefabName);
 	}
-
-	#endregion
-
-	//判断是否存在改对象
-	public  bool IsExist(string objName)
-	{
-		if (string.IsNullOrEmpty(objName))
-		{
-			Debug.LogError("PoolManager objName is null");
-			return false;
-		}
-
-		if ((createPools.ContainsKey(objName) && createPools[objName].Count > 0)
-			|| recyclePools.ContainsKey(objName) && recyclePools[objName].Count > 0)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	public  bool IsExist(GameObject gameObject)
-	{
-		if (gameObject == null) return false;
-
-		return IsExist(gameObject.name.Replace("(Clone)", ""));
-	}
-
-	//对象池回收 已经创建的了的对象池  对没有元素的清空  销毁所有在回收对象池
-	public  void PoolClean()
-	{
-		//清创创建了的对象池
-		List<string> cleanPool = new List<string>();
-		foreach (var item in createPools)
-		{
-			if (item.Value.Count == 0) cleanPool.Add(item.Key);
-		}
-
-		cleanPool.ForEach((s) => createPools.Remove(s));
-
-		//清空回收对象池
-		List<GameObject> cleanObj = new List<GameObject>();
-		foreach (var item in recyclePools)
-		{
-			foreach (var v in item.Value)
-			{
-				cleanObj.Add(v.Value);
-			}
-		}
-		cleanObj.ForEach((s) =>
-		{
-			PoolObject obj = s.GetComponent<PoolObject>();
-			if (obj) obj.OnDestory();
-			UnityEngine.Object.Destroy(s);
-		});
-		recyclePools.Clear();
-	}
-
-	//回收某一对象的池
-	public  void PoolClean(string name)
-	{
-		if (recyclePools.ContainsKey(name))
-		{
-			foreach (var item in recyclePools[name])
-			{
-				PoolObject obj = item.Value.GetComponent<PoolObject>();
-
-				if (obj) obj.OnDestory();
-				UnityEngine.Object.Destroy(item.Value);
-
-			}
-			recyclePools.Remove(name);
-		}
-
-		if (createPools.ContainsKey(name) && createPools[name].Count == 0) createPools.Remove(name);
-	}
-
-	
 }
