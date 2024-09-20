@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TYQ;
 using UnityEngine;
 
 public class GameManager : SingletonMono<GameManager>
 {
-	private Vector3 BlockSize = new Vector3(5.22f, 0, 6);//偏移值
-	private Vector3 BlockSizeDeviation = new Vector3(0, 0, 3);//偏移值
 	public List<Selected> SelectedList = new List<Selected>();
 	public List<Staging> StagingList = new List<Staging>();
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
-	private Vector3 StartPosition = new Vector3(0, 0, 0);
 	public List<Vector2Int> OperationPath = new List<Vector2Int>();
 
 	private Camera Cam;
@@ -29,12 +27,14 @@ public class GameManager : SingletonMono<GameManager>
 	private bool IsProp=false;
 	private int IsPropAppUserID;
 	private GameObject PropTranform_1;
+
 	#region 局部变量private
 	private RaycastHit hit;
 	private Ray ray;
 	private bool foundBottom = false;
 	private Vector3 newPosition;
 	private Transform lastHighlightedObject;
+	private bool hasStacked=false;
 	#endregion
 
 	protected override void Awake()
@@ -225,7 +225,6 @@ public class GameManager : SingletonMono<GameManager>
 					Staging staging = lastHighlightedObject.GetComponent<Staging>();
 					if (staging) {
 						si.ChangeInitialPosition(lastHighlightedObject.position + new Vector3(0, 1.2f, 0));
-						Debug.Log("Add:"+ staging.gameObject.name);
 						si.AddStaging(staging);
 						staging.AddAndRemoveStaging(obj);
 					}
@@ -329,9 +328,9 @@ public class GameManager : SingletonMono<GameManager>
 		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
 		UpSpaceAll();
 		LoadGenerateBoxMatrix();
-		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
-		DelegateManager.Instance.TriggerEvent(OnEventKey.OnLoadGameLevel.ToString());
-		DelegateManager.Instance.TriggerEvent(OnEventKey.OnGameStar.ToString());
+		TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp);
+		TYQEventCenter.Instance.Broadcast(OnEventKey.OnLoadGameLevel);
+		TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameStar);
 	}
 
 
@@ -362,7 +361,7 @@ public class GameManager : SingletonMono<GameManager>
 	/// <summary>
 	/// 计算堆叠逻辑
 	/// </summary>
-	#region MyRegion
+	#region 堆叠逻辑
 
 
 	public void CalculateElimination(int x, int y)
@@ -388,6 +387,7 @@ public class GameManager : SingletonMono<GameManager>
 				var ops = linkedItem.RemoveSurfaces();
 				linkedItem.DisplayNumbers(false);
 				OperationPath.Add(FilterLinked[index].StarVector2);
+				hasStacked = true;
 				//Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
@@ -434,6 +434,10 @@ public class GameManager : SingletonMono<GameManager>
 		if (OperationPath.Count == 0)
 		{
 			IsTouchInput = true;
+			if (hasStacked) {
+				TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);
+				hasStacked = false;
+			}
 		}
 	}
 
@@ -488,7 +492,7 @@ public class GameManager : SingletonMono<GameManager>
 		UIManager.Instance.GetPanel("GamePanel").GetComponent<GamePanel>().SetUIAction(true, "");
 		IsProp = false;
 		IsPropAppUserID = 0;
-		DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString(),"");
+		TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp);
 	}
 
 
@@ -539,6 +543,10 @@ public class GameManager : SingletonMono<GameManager>
 		return resultCoordinates;
 	}
 
+	/// <summary>
+	/// 排序连锁
+	/// </summary>
+	/// <param name="coordinates"></param>
 	void ProcessCoordinates(List<Vector2Int> coordinates)
 	{
 		bool needsResorting = false;

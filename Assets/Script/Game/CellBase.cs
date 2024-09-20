@@ -81,8 +81,15 @@ public enum ItemColorType
 	Red,
 	Green,
 	Blue,
-	Yello,
+	Yellow,
 	Organge,
+	Crimson,
+	DarkGreen,
+	DarkBlue,
+	DarkRed,
+	DarkYellow,
+	DarkCrimson, 
+	DarkCyan,
 	StarAll,
 }
 
@@ -93,6 +100,7 @@ public enum OnEventKey
 {
 	OnLoadGameLevel,//加载游戏关卡
 	OnGameStar,//
+	OnStackingCompleted,//一次操作下的所有颜色堆叠结束
 	OnStop,//
 	OnGameOverWin,//游戏结束胜利
 	OnGameOverLose,//游戏结束失败

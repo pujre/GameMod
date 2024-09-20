@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using TYQ;
 using UnityEngine;
 using VolumetricLines;
 
@@ -384,7 +385,7 @@ public class GoundBackItem : MonoBehaviour
 				{
 					PoolManager.Instance.ReturnObject(obj.gameObject);
 					obj.transform.localScale = Vector3.one;
-					DelegateManager.Instance.TriggerEvent(OnEventKey.OnBonusEvent.ToString(), 1);
+					TYQEventCenter.Instance.Broadcast(OnEventKey.OnBonusEvent, 1);
 				});
 
 				// 将子序列添加到主序列中

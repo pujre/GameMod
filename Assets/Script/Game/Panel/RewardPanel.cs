@@ -1,79 +1,84 @@
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class RewardPanel : PanelBase
+namespace TYQ
 {
-	public Text Tietletext;
-	public Image TietleImage;
-	public Sprite[] SpritesList;
-	public string[] TietleList;
-	public int TypeIndex;
-    void Start()
-    {
-		var buts = transform.GetComponentsInChildren<Button>();
-		for (int i = 0; i < buts.Length; i++)
-		{
-			Button button = buts[i];
-			button.onClick.AddListener(() => { OnClickEvent(button.gameObject); });
-		}
-	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-	public void ShowObtain(int x) {
-		Tietletext.text = TietleList[x];
-		TietleImage.sprite = SpritesList[x];
-		TietleImage.SetNativeSize();
-		TypeIndex = x;
-	}
-
-	void OnClickEvent(GameObject but)
+	public class RewardPanel : PanelBase
 	{
-		switch (but.name)
+		public Text Tietletext;
+		public Image TietleImage;
+		public Sprite[] SpritesList;
+		public string[] TietleList;
+		public int TypeIndex;
+		void Start()
 		{
-			case "X":
-				transform.gameObject.SetActive(false);
-				break;
-			case "ObtainPropsBtn":
-				Debug.Log("获取道具，道具id为："+ TypeIndex);
-				ADManager.Instance.ShowAD(ADType.Video, (isOn) => {
-					switch (TypeIndex)
-					{
-						case 0:
-							GameManager.Instance.GetNowLevelData().Item_1Number++;
-							break;
-						case 1:
-							GameManager.Instance.GetNowLevelData().Item_2Number++;
-							break;
-						case 2:
-							GameManager.Instance.GetNowLevelData().Item_3Number++;
-							break;
-						default:
-							break;
-					}
-					DelegateManager.Instance.TriggerEvent(OnEventKey.OnApplyProp.ToString());
+			var buts = transform.GetComponentsInChildren<Button>();
+			for (int i = 0; i < buts.Length; i++)
+			{
+				Button button = buts[i];
+				button.onClick.AddListener(() => { OnClickEvent(button.gameObject); });
+			}
+		}
+
+		// Update is called once per frame
+		void Update()
+		{
+
+		}
+
+		public void ShowObtain(int x)
+		{
+			Tietletext.text = TietleList[x];
+			TietleImage.sprite = SpritesList[x];
+			TietleImage.SetNativeSize();
+			TypeIndex = x;
+		}
+
+		void OnClickEvent(GameObject but)
+		{
+			switch (but.name)
+			{
+				case "X":
 					transform.gameObject.SetActive(false);
-				});
-				break;
+					break;
+				case "ObtainPropsBtn":
+					Debug.Log("获取道具，道具id为：" + TypeIndex);
+					ADManager.Instance.ShowAD(ADType.Video, (isOn) =>
+					{
+						switch (TypeIndex)
+						{
+							case 0:
+								GameManager.Instance.GetNowLevelData().Item_1Number++;
+								break;
+							case 1:
+								GameManager.Instance.GetNowLevelData().Item_2Number++;
+								break;
+							case 2:
+								GameManager.Instance.GetNowLevelData().Item_3Number++;
+								break;
+							default:
+								break;
+						}
+						TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp);
+						transform.gameObject.SetActive(false);
+					});
+					break;
+			}
+			AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
+
 		}
-		AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");
 
-	}
+		public override void CallSpecificMethod(string methodName, object[] parameters)
+		{
+			// 使用反射来调用方法
+			MethodInfo methodInfo = typeof(PausePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+			methodInfo?.Invoke(this, parameters);
+		}
 
-	public override void CallSpecificMethod(string methodName, object[] parameters)
-	{
-		// 使用反射来调用方法
-		MethodInfo methodInfo = typeof(PausePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-		methodInfo?.Invoke(this, parameters);
-	}
+		private void OnDestroy()
+		{
 
-	private void OnDestroy()
-	{
-		
+		}
 	}
 }
