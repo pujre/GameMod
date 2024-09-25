@@ -87,7 +87,7 @@ namespace TYQ
 					BtnAnim(button.transform.Find("Prop").gameObject);
 					SetUIAction(false, propName);
 					GameManager.Instance.SetUserProp(propId);
-					TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp, propName);
+					//TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp, propName);
 				}
 				else
 				{
@@ -149,13 +149,13 @@ namespace TYQ
 						break;
 					case "Prop_2":
 						Promp.transform.Find("2").gameObject.SetActive(true);
-						PrompTitleText.text = "转换";
-						PromptText.text = "将大饼颜色修改为万能的";
+						PrompTitleText.text = "互换";
+						PromptText.text = "将两组大饼互换";
 						break;
 					case "Prop_3":
 						Promp.transform.Find("3").gameObject.SetActive(true);
-						PrompTitleText.text = "互换";
-						PromptText.text = "将两组大饼互换";
+						PrompTitleText.text = "刷新";
+						PromptText.text = "重新刷新三组大饼";
 						break;
 				}
 			}

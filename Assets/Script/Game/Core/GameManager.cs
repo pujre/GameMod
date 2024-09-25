@@ -172,7 +172,7 @@ public class GameManager : SingletonMono<GameManager>
 				case 2:
 					//SelectedObject = obj.transform.gameObject;
 					//UserProp(2);
-
+					Debug.Log("PropTranform_1: " + (PropTranform_1==null? "  n ": PropTranform_1.gameObject.name));
 					if (PropTranform_1 == null)
 					{
 						PropTranform_1 = obj.transform.gameObject;

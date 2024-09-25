@@ -42,6 +42,9 @@ public class Pool
 			obj = Object.Instantiate(prefab, parent);
 			obj.name = prefab.name;
 			IPoolable poolable = obj.GetComponent<IPoolable>();
+			if (poolable==null) {
+				poolable = obj.AddComponent<PoolObject>();
+			}
 			poolable?.OnCreate();
 		}
 

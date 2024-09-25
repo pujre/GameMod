@@ -87,7 +87,7 @@ public class SurfaceItem : MonoBehaviour
 	/// <param name="colorNumber"></param>
 	public void CreatorSurface(int colorNumber = 3)
 	{
-		List<int> colors = GenerateRandomColors(9, colorNumber);
+		List<int> colors = GenerateRandomColors(Random.Range(colorNumber,9), colorNumber);
 		colors = GroupNumbersTogether(colors);
 
 		for (int i = 0; i < colors.Count; i++)
