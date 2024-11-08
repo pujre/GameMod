@@ -35,6 +35,7 @@ public class GameManager : SingletonMono<GameManager>
 	private Vector3 newPosition;
 	private Transform lastHighlightedObject;
 	private bool hasStacked=false;
+	private Vector3 initialPosition;
 	#endregion
 
 	protected override void Awake()
@@ -61,25 +62,26 @@ public class GameManager : SingletonMono<GameManager>
 				if (Physics.Raycast(ray, out hit))
 				{
 					HandleClick(hit.transform.gameObject);
+					initialPosition = hit.point;
 				}
 			}
 
 			if (IsDragging && SelectedObject != null)
 			{
+				// 使用Vector3.Lerp或Vector3.MoveTowards来平滑移动
 				if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 				{
-					newPosition = hitInfo.point;
-					newPosition.y = 3; //SelectedObject.transform.position.y; // 保持Y轴不变
-					SelectedObject.transform.position = newPosition;
+					initialPosition = hitInfo.point;
+					initialPosition.y = 3; //SelectedObject.transform.position.y; // 保持Y轴不变
 				}
-
+				SelectedObject.transform.position = Vector3.Lerp(SelectedObject.transform.position, initialPosition, Time.deltaTime * 15); // yourLerpSpeed根据需要调整
 				// 使用 RaycastAll 检测所有碰撞
 				RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
 				foundBottom = false;
 
 				foreach (RaycastHit hit in hits)
 				{
-					if (hit.transform.gameObject.tag == "bottom" && !IsProp &&
+					if (!IsProp && hit.transform.gameObject.tag == "bottom" &&
 						hit.transform.GetComponent<GoundBackItem>() &&
 						hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
 					{
@@ -94,7 +96,8 @@ public class GameManager : SingletonMono<GameManager>
 						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
 						foundBottom = true;
 						break; // 找到目标对象后退出循环
-					} else if (hit.transform.gameObject.tag == "bottom" && !IsProp&& hit.transform.gameObject.name == "Staging"&& hit.transform.GetComponent<Staging>()&&hit.transform.GetComponent<Staging>().IsStaging())
+					}
+					else if (!IsProp && hit.transform.gameObject.tag == "bottom" && hit.transform.gameObject.name == "Staging" && hit.transform.GetComponent<Staging>() && hit.transform.GetComponent<Staging>().IsStaging())
 					{
 						if (lastHighlightedObject != null)
 						{
@@ -106,7 +109,7 @@ public class GameManager : SingletonMono<GameManager>
 						foundBottom = true;
 						break; // 找到目标对象后退出循环
 					}
-					
+
 				}
 				// 当离开各自区域得时候判定
 				if (!foundBottom)
@@ -140,6 +143,7 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			SelectedObject = obj.transform.gameObject;
 			IsDragging = true;
+		
 		}
 		//else if (!IsProp && obj.name == "Staging")
 		//{
