@@ -126,6 +126,13 @@ namespace TYQ
 		}
 
 		/// <summary>
+		/// 展示当前关卡的通关目标
+		/// </summary>
+		public void ShowLevelTarge() {
+			
+		}
+
+		/// <summary>
 		/// 设置UI的展示与消失
 		/// </summary>
 		public void SetUIAction(bool action, string propName)

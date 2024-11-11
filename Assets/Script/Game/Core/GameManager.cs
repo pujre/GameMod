@@ -13,7 +13,7 @@ public class GameManager : SingletonMono<GameManager>
 	public List<Vector2Int> OperationPath = new List<Vector2Int>();
 
 	private Camera Cam;
-	public bool IsTouchInput = true;
+	public bool IsTouchInput = false;
 	private bool IsDragging = false;
 	private GameObject SelectedObject;
 
