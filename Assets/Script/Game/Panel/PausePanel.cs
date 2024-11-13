@@ -8,14 +8,22 @@ namespace TYQ
 	{
 		private Toggle[] toggles;
 		public Sprite[] images;
+		public GameObject LoseBtn, WinBtn;
 		private void Awake()
 		{
-			TYQEventCenter.Instance.AddListener(OnEventKey.OnStop, DelegateCallback);
+			//TYQEventCenter.Instance.AddListener(OnEventKey.OnStop, DelegateCallback);
+		}
+
+		private void OnEnable()
+		{
+			bool isOn = UIManager.Instance.GetPanel("HomePanel").gameObject.activeSelf;
+			LoseBtn.SetActive(!isOn);
+			WinBtn.SetActive(!isOn);
 		}
 		// Start is called before the first frame update
 		void Start()
 		{
-			var buts = transform.GetComponentsInChildren<Button>();
+			var buts = transform.GetComponentsInChildren<Button>(true);
 			for (int i = 0; i < buts.Length; i++)
 			{
 				Button button = buts[i];
@@ -45,6 +53,8 @@ namespace TYQ
 		}
 
 
+		
+
 		void OnClickEvent(GameObject but)
 		{
 			switch (but.name)
@@ -54,8 +64,15 @@ namespace TYQ
 					UIManager.Instance.SetUiPanelAction(gameObject.name, false);
 					break;
 				case "LoseBtn":
+					GameManager.Instance.FreeUpSpace(3);
+					GameManager.Instance.UpSpaceAll();
+					UIManager.Instance.SetUiPanelAction("HomePanel", true);
+					transform.gameObject.SetActive(false);
 					break;
 				case "WinBtn":
+					GameManager.Instance.FreeUpSpace(3);
+					transform.gameObject.SetActive(false);
+					GameManager.Instance.LoadLevel(GameManager.Instance.NowLevel);
 					break;
 			}
 			AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");

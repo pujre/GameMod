@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 400000}
+  - component: {fileID: 11400000}
+  m_Layer: 0
+  m_Name: FireWork_Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &400000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.144155, y: 40.60283, z: -90.67514}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0fa4281c02b2c746b04693f97c6f318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  startpos: {fileID: 0}
+  preftracer: {fileID: 100000, guid: b74a0fe7a4034dd44977461a7d0f2cd3, type: 3}
+  PrefOfExpl:
+  - {fileID: 100004, guid: af68dd9f459fb3a46a2d5c111f0849c5, type: 3}
+  - {fileID: 100004, guid: 6da1e100fc9911d498c44e2b90f97d7d, type: 3}
+  - {fileID: 100004, guid: f7a4af616956d6342953b673b4deac78, type: 3}
+  - {fileID: 100004, guid: 68be8ff407dd7a643b765a5fa1305861, type: 3}
+  - {fileID: 100006, guid: 0d9aa008d38ef094b86e03c64a26cd92, type: 3}
+  - {fileID: 100006, guid: 63edaf4406b56e34d8e6b1f2651d173e, type: 3}
+  - {fileID: 100006, guid: 2192fc8eaf2e3d346b6f8a999db63e3e, type: 3}
+  - {fileID: 100004, guid: 97d99103d0ecd2c41a2876c3fac69733, type: 3}
+  - {fileID: 100004, guid: 9b48349d2a49535439b33678587864fc, type: 3}
+  - {fileID: 100004, guid: 872eef0f518bf044aa107337bd23ebd1, type: 3}
+  - {fileID: 100004, guid: dd4f30d46a5170040bc6dad8edbc66b2, type: 3}
+  - {fileID: 100004, guid: 5c8ad1fd21df22045a5a0939f279adcb, type: 3}
+  - {fileID: 100004, guid: bf98849ff0970fa4bb369c9e51e667aa, type: 3}
+  speed: 0.3
+  rangeOfRandom: 3

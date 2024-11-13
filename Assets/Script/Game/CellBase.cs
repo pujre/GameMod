@@ -108,6 +108,7 @@ public enum OnEventKey
 	OnApplyProp,//使用道具
 	OnBonusEvent,//加分
 	OnCalculate,//消除事件
+	ShowLevelTarge,//展示关卡目标
 }
 
 /// <summary>

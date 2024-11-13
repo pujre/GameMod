@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using TMPro;
 using TYQ;
@@ -16,6 +17,9 @@ namespace TYQ
 
 		public int NowScore = 0;
 		public int TagerScore = 0;
+		public GameObject LevelTarget;
+		public Text TagerLevelText, TagerScoreText;
+
 		private Tween currentTween;
 		public List<GameObject> PropBtnList = new List<GameObject>();
 		private RectTransform buttonRectTransform;
@@ -26,6 +30,7 @@ namespace TYQ
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnLoadGameLevel, LoadGameLevel);
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnGameStar, OnGameStar);
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnStackingCompleted, GameWin);
+			TYQEventCenter.Instance.AddListener(OnEventKey.ShowLevelTarge, ShowLevelTarge); 
 		}
 
 
@@ -53,8 +58,8 @@ namespace TYQ
 				int propId = 0;
 				if (currentTween != null && currentTween.IsActive())
 				{
-					currentTween.Kill(); // Í£Ö¹µ±Ç°µÄ¶¯»­
-					buttonRectTransform.localScale = Vector3.one; // ÖØÖÃËõ·Å
+					currentTween.Kill(); // åœæ­¢å½“å‰çš„åŠ¨ç”»
+					buttonRectTransform.localScale = Vector3.one; // é‡ç½®ç¼©æ”¾
 				}
 				switch (button.name)
 				{
@@ -111,29 +116,49 @@ namespace TYQ
 				}
 
 			}
-			AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
+			AudioManager.Instance.PlaySFX("click_uiï¼ˆç‚¹å‡»UIæŒ‰é’®ï¼‰");
 		}
 
 
 		public void BtnAnim(GameObject button)
 		{
 			buttonRectTransform = button.GetComponent<RectTransform>();
-			currentTween = buttonRectTransform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.1f)  // ·Å´óµ½1.2±¶£¬³ÖĞøÊ±¼ä0.1Ãë
+			currentTween = buttonRectTransform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.1f)  // æ”¾å¤§åˆ°1.2å€ï¼ŒæŒç»­æ—¶é—´0.1ç§’
 			.OnComplete(() =>
 			{
-				buttonRectTransform.DOScale(Vector3.one, 0.1f);  // ËõĞ¡»ØÔ­À´µÄ´óĞ¡£¬³ÖĞøÊ±¼ä0.1Ãë
+				buttonRectTransform.DOScale(Vector3.one, 0.1f);  // ç¼©å°å›åŸæ¥çš„å¤§å°ï¼ŒæŒç»­æ—¶é—´0.1ç§’
 			});
 		}
 
 		/// <summary>
-		/// Õ¹Ê¾µ±Ç°¹Ø¿¨µÄÍ¨¹ØÄ¿±ê
+		/// å±•ç¤ºå½“å‰å…³å¡çš„é€šå…³ç›®æ ‡
 		/// </summary>
 		public void ShowLevelTarge() {
-			
+			GameManager.Instance.IsTouchInput = false;
+			PropBtnList.ForEach(obj => obj.SetActive(false));
+			LevelTarget.SetActive(true);
+			TagerLevelText.text = "Level:" + GameManager.Instance.NowLevel;
+			TagerScoreText.text = GameManager.Instance.GetNowLevelData().ClearanceScore.ToString();
+			Transform LevelTargebackGound_2 = LevelTarget.transform.Find("LevelTargebackGound_2");
+			TaTimeManager.Instance.StartTimer(3f, () => {
+				Sequence sequence = DOTween.Sequence();
+				sequence.Join(LevelTargebackGound_2.DOMove(transform.Find("Top").position, 1f));
+				sequence.Join(LevelTargebackGound_2.DOScale(Vector3.zero, 1f));
+				sequence.OnComplete(() => {
+					LevelTarget.SetActive(false);
+					GameManager.Instance.IsTouchInput = true;
+					PropBtnList.ForEach(obj => obj.SetActive(true));
+					LevelTargebackGound_2.transform.localScale = Vector3.one;
+					LevelTargebackGound_2.transform.localPosition = Vector3.one;
+					GameManager.Instance.ScelfJob(3);
+				});
+				// æ’­æ”¾åºåˆ—
+				sequence.Play();				
+			});
 		}
 
 		/// <summary>
-		/// ÉèÖÃUIµÄÕ¹Ê¾ÓëÏûÊ§
+		/// è®¾ç½®é“å…·UIçš„å±•ç¤ºä¸æ¶ˆå¤±
 		/// </summary>
 		public void SetUIAction(bool action, string propName)
 		{
@@ -142,8 +167,9 @@ namespace TYQ
 				PropBtnList[i].SetActive(action);
 			}
 			Promp.transform.Find("1").gameObject.SetActive(!action);
-			Promp.transform.Find("3").gameObject.SetActive(!action);
 			Promp.transform.Find("2").gameObject.SetActive(!action);
+			Promp.transform.Find("3").gameObject.SetActive(!action);
+
 			if (!action)
 			{
 				Promp.SetActive(true);
@@ -151,18 +177,18 @@ namespace TYQ
 				{
 					case "Prop_1":
 						Promp.transform.Find("1").gameObject.SetActive(true);
-						PrompTitleText.text = "´¸×Ó";
-						PromptText.text = "ÆÆ»µÕû×é´ó±ı";
+						PrompTitleText.text = "é”¤å­";
+						PromptText.text = "ç ´åæ•´ç»„å¤§é¥¼";
 						break;
 					case "Prop_2":
 						Promp.transform.Find("2").gameObject.SetActive(true);
-						PrompTitleText.text = "»¥»»";
-						PromptText.text = "½«Á½×é´ó±ı»¥»»";
+						PrompTitleText.text = "äº’æ¢";
+						PromptText.text = "å°†ä¸¤ç»„å¤§é¥¼äº’æ¢";
 						break;
 					case "Prop_3":
 						Promp.transform.Find("3").gameObject.SetActive(true);
-						PrompTitleText.text = "Ë¢ĞÂ";
-						PromptText.text = "ÖØĞÂË¢ĞÂÈı×é´ó±ı";
+						PrompTitleText.text = "åˆ·æ–°";
+						PromptText.text = "é‡æ–°åˆ·æ–°ä¸‰ç»„å¤§é¥¼";
 						break;
 				}
 			}
@@ -207,7 +233,7 @@ namespace TYQ
 		{
 			ScoreFractionalBar.fillAmount = 0;
 			NowScore = 0;
-			LevelText.text = string.Format("µÚ{0}¹Ø", GameManager.Instance.NowLevel);
+			LevelText.text = string.Format("ç¬¬{0}å…³", GameManager.Instance.NowLevel);
 			TagerScore = GameManager.Instance.GetNowLevelData().ClearanceScore;
 			LevelTager.text = string.Format("{0}/{1}", NowScore.ToString(), TagerScore.ToString());
 		}
@@ -230,7 +256,7 @@ namespace TYQ
 			Prop_3Text.text = GameManager.Instance.GetNowLevelData().Item_3Number.ToString();
 		}
 
-		// ÊµÏÖ»ùÀàµÄ³éÏó·½·¨
+		// å®ç°åŸºç±»çš„æŠ½è±¡æ–¹æ³•
 		public override void CallSpecificMethod(string methodName, object[] parameters)
 		{
 			MethodInfo methodInfo = typeof(GamePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);

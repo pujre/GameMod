@@ -15,7 +15,7 @@ public class SuTest : MonoBehaviour
 	{
 		
 	}
-
+	
 
 
 	public void StartColorDOTransition(Color targetColor) {

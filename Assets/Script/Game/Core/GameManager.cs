@@ -317,7 +317,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		var levelDataJson = Resources.Load<TextAsset>("LevelData");
 		LevelDataRoot = LitJson.JsonMapper.ToObject<LevelDataRoot>(levelDataJson.text);
-		LoadLevel(1);
+		
 	}
 
 	public void LoadNextLevel()
@@ -334,7 +334,7 @@ public class GameManager : SingletonMono<GameManager>
 		LoadGenerateBoxMatrix();
 		TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp);
 		TYQEventCenter.Instance.Broadcast(OnEventKey.OnLoadGameLevel);
-		TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameStar);
+		TYQEventCenter.Instance.Broadcast(OnEventKey.ShowLevelTarge);
 	}
 
 
