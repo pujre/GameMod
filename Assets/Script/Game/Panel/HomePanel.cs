@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,8 @@ namespace TYQ
 				Button button = buts[i];
 				button.onClick.AddListener(() => { OnClickEvent(button.gameObject); });
 			}
-
+			//string path= Path.Combine(Application.dataPath, "Scenes", "Level1.unity");
+			//Debug.Log(path);
 		}
 
 		// Update is called once per frame

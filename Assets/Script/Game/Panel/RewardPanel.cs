@@ -43,7 +43,7 @@ namespace TYQ
 					transform.gameObject.SetActive(false);
 					break;
 				case "ObtainPropsBtn":
-					Debug.Log("»ñÈ¡µÀ¾ß£¬µÀ¾ßidÎª£º" + TypeIndex);
+					Debug.Log("è·å–é“å…·ï¼Œé“å…·idä¸ºï¼š" + TypeIndex);
 					ADManager.Instance.ShowAD(ADType.Video, (isOn) =>
 					{
 						switch (TypeIndex)
@@ -65,13 +65,13 @@ namespace TYQ
 					});
 					break;
 			}
-			AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
+			AudioManager.Instance.PlaySFX("click_uiï¼ˆç‚¹å‡»UIæŒ‰é’®ï¼‰");
 
 		}
 
 		public override void CallSpecificMethod(string methodName, object[] parameters)
 		{
-			// Ê¹ÓÃ·´ÉäÀ´µ÷ÓÃ·½·¨
+			// ä½¿ç”¨åå°„æ¥è°ƒç”¨æ–¹æ³•
 			MethodInfo methodInfo = typeof(PausePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
 			methodInfo?.Invoke(this, parameters);
 		}
