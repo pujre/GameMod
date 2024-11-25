@@ -19,10 +19,12 @@ namespace TYQ
 		public int TagerScore = 0;
 		public GameObject LevelTarget;
 		public Text TagerLevelText, TagerScoreText;
+		public GameObject Double_explosion_ukraine;
 
 		private Tween currentTween;
 		public List<GameObject> PropBtnList = new List<GameObject>();
 		private RectTransform buttonRectTransform;
+		private bool isSettlement = false;
 		private void Awake()
 		{
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnApplyProp, DelegateCallback);
@@ -224,8 +226,17 @@ namespace TYQ
 		{
 			if (NowScore >= TagerScore)
 			{
-				UIManager.Instance.SetUiPanelAction("OverPanel", true);
-				TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
+				if (!isSettlement) {
+					isSettlement=true;
+					Double_explosion_ukraine.SetActive(true);
+					Double_explosion_ukraine.GetComponentInChildren<ParticleSystem>().Play();
+					TaTimeManager.Instance.StartTimer(3f, () => {
+						UIManager.Instance.SetUiPanelAction("OverPanel", true);
+						TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
+						Double_explosion_ukraine.SetActive(false);
+						isSettlement = false;
+					});
+				}
 			}
 		}
 

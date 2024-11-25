@@ -109,8 +109,16 @@ namespace WeChatWASM
                 Debug.LogError("因构建模板检查失败终止导出。");
                 return WXExportError.BUILD_WEBGL_FAILED;
             }
+            if (CheckInvalidPerfIntegration())
+            {
+                Debug.LogError("性能分析工具只能用于Development Build, 终止导出! ");
+                return WXExportError.BUILD_WEBGL_FAILED;
+            }
+
+
             CheckBuildTarget();
             Init();
+            ProcessWxPerfBinaries();
             // JSLib
             SettingWXTextureMinJSLib();
             UpdateGraphicAPI();
@@ -206,6 +214,141 @@ namespace WeChatWASM
                 }
             }
             return WXExportError.SUCCEED;
+        }
+
+        private static int GetEnabledFlagStringIndex(string inAllText, string inTagStr)
+        {
+            try
+            {
+                int tagStrIdx = inAllText.IndexOf(inTagStr);
+                if (tagStrIdx == -1) throw new Exception($"Tag string '{inTagStr}' not found.");
+
+                int enabledStrIdx = inAllText.IndexOf("enabled: ", tagStrIdx);
+                if (enabledStrIdx == -1) throw new Exception("'enabled: ' string not found after tag.");
+
+                // inAllText[enabledStrIdx] == 'e'
+                // And that is to say, inAllText[enabledStrIdx + 9] should be 0 or 1
+                return enabledStrIdx + 9;
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"Failed to get enabled flag string index: {ex.Message}");
+                throw;
+            }
+        }
+
+        private static void SetPluginCompatibilityByModifyingMetadataFile(string inAssetPath, bool inEnabled)
+        {
+            try
+            {
+                string metaPath = AssetDatabase.GetTextMetaFilePathFromAssetPath(inAssetPath); // 获取.meta文件的路径
+                string enableFlagStr = inEnabled? "1" : "0";
+
+                // 读取.meta文件
+                // 处理WebGL
+                string metaContent = File.ReadAllText(metaPath);
+                int idxWebGLEnableFlag = GetEnabledFlagStringIndex(metaContent, "WebGL: WebGL");
+
+                metaContent = metaContent.Remove(idxWebGLEnableFlag, 1).Insert(idxWebGLEnableFlag, enableFlagStr);
+                // WeixinMiniGame
+                int idxWeixinMiniGameEnableFlag = GetEnabledFlagStringIndex(metaContent, "WeixinMiniGame: WeixinMiniGame");
+
+                metaContent = metaContent.Remove(idxWeixinMiniGameEnableFlag, 1).Insert(idxWeixinMiniGameEnableFlag, enableFlagStr);
+
+                // 写回.meta文件
+
+                File.WriteAllText(metaPath, metaContent);
+                AssetDatabase.ImportAsset(inAssetPath, ImportAssetOptions.ForceUpdate);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogError($"Failed to enable plugin asset: {ex.Message}");
+            }
+        }
+
+        private static void ProcessWxPerfBinaries()
+        {
+            string[] wxPerfPlugins;
+            string DS = WXAssetsTextTools.DS;
+            if (UnityUtil.GetSDKMode() == UnityUtil.SDKMode.Package)
+            {
+                wxPerfPlugins = new string[]
+                {
+                    $"Packages{DS}com.qq.weixin.minigame{DS}Runtime{DS}Plugins{DS}WxPerfJsBridge.jslib",
+                    $"Packages{DS}com.qq.weixin.minigame{DS}Runtime{DS}Plugins{DS}wx_perf_2022.a",
+                    $"Packages{DS}com.qq.weixin.minigame{DS}Runtime{DS}Plugins{DS}wx_perf_2021.a",
+                };
+            }
+            else
+            {
+                string jsLibRootDir = $"Assets{DS}WX-WASM-SDK-V2{DS}Runtime{DS}Plugins{DS}";
+
+                // 下方顺序不可变动
+                wxPerfPlugins = new string[]
+                {
+                     $"{jsLibRootDir}WxPerfJsBridge.jslib",
+                     $"{jsLibRootDir}wx_perf_2022.a",
+                     $"{jsLibRootDir}wx_perf_2021.a",
+                };
+            }
+
+            {
+                // WxPerfJsBridge.jslib
+                var wxPerfJSBridgeImporter = AssetImporter.GetAtPath(wxPerfPlugins[0]) as PluginImporter;
+#if PLATFORM_WEIXINMINIGAME
+                wxPerfJSBridgeImporter.SetCompatibleWithPlatform(BuildTarget.WeixinMiniGame, config.CompileOptions.enablePerfAnalysis);
+#else
+                wxPerfJSBridgeImporter.SetCompatibleWithPlatform(BuildTarget.WebGL, config.CompileOptions.enablePerfAnalysis);
+#endif
+                SetPluginCompatibilityByModifyingMetadataFile(wxPerfPlugins[0], config.CompileOptions.enablePerfAnalysis);
+            }
+
+            {
+                // wx_perf_2022.a
+                bool bShouldEnablePerf2022Plugin = config.CompileOptions.enablePerfAnalysis && IsCompatibleWithUnity202203OrNewer();
+
+                var wxPerf2022Importer = AssetImporter.GetAtPath(wxPerfPlugins[1]) as PluginImporter;
+#if PLATFORM_WEIXINMINIGAME
+                wxPerf2022Importer.SetCompatibleWithPlatform(BuildTarget.WeixinMiniGame, bShouldEnablePerf2022Plugin);
+#else
+                wxPerf2022Importer.SetCompatibleWithPlatform(BuildTarget.WebGL, bShouldEnablePerf2022Plugin);
+#endif
+                SetPluginCompatibilityByModifyingMetadataFile(wxPerfPlugins[1], bShouldEnablePerf2022Plugin); 
+            }
+
+            {
+                // wx_perf_2021.a
+                bool bShouldEnablePerf2021Plugin = config.CompileOptions.enablePerfAnalysis && IsCompatibleWithUnity202103To202203();
+
+                var wxPerf2021Importer = AssetImporter.GetAtPath(wxPerfPlugins[2]) as PluginImporter;
+#if PLATFORM_WEIXINMINIGAME
+                wxPerf2021Importer.SetCompatibleWithPlatform(BuildTarget.WeixinMiniGame, bShouldEnablePerf2021Plugin);
+#else
+                wxPerf2021Importer.SetCompatibleWithPlatform(BuildTarget.WebGL, bShouldEnablePerf2021Plugin);
+#endif
+                SetPluginCompatibilityByModifyingMetadataFile(wxPerfPlugins[2], bShouldEnablePerf2021Plugin);
+            }
+            AssetDatabase.Refresh();
+        }
+
+        private static bool IsCompatibleWithUnity202203OrNewer()
+        {
+#if UNITY_2022_3_OR_NEWER
+            return true;
+#else
+            return false;
+#endif
+        }
+
+        static bool IsCompatibleWithUnity202103To202203()
+        {
+#if UNITY_2022_3_OR_NEWER
+            return false;
+#elif !UNITY_2021_3_OR_NEWER
+            return false;
+#else
+            return true;
+#endif
         }
 
         private static void CheckBuildTarget()
@@ -316,6 +459,16 @@ namespace WeChatWASM
                 return false;
             }
             return true;
+        }
+
+
+        // Assert when release + Perf-feature
+        private static bool CheckInvalidPerfIntegration()
+        {
+            const string MACRO_ENABLE_WX_PERF_FEATURE = "ENABLE_WX_PERF_FEATURE";
+            string defineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+
+            return (!config.CompileOptions.DevelopBuild) && (defineSymbols.IndexOf(MACRO_ENABLE_WX_PERF_FEATURE) != -1);
         }
 
         private static void ConvertDotnetCode()
@@ -1310,15 +1463,23 @@ namespace WeChatWASM
         {
             StringBuilder sb = new StringBuilder();
             // 添加player-connection-ip信息
-            var host = Dns.GetHostEntry("");
-            foreach (var ip in host.AddressList)
+            try
             {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                var host = Dns.GetHostEntry("");
+                foreach (var ip in host.AddressList)
                 {
-                    sb.Append($"player-connection-ip={ip.ToString()}");
-                    break;
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        sb.Append($"player-connection-ip={ip.ToString()}");
+                        break;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Debug.LogWarning("[可选]生成Boot info 失败！错误：" + e.Message);
+            }
+
 
             return sb.ToString();
         }
@@ -1402,6 +1563,9 @@ namespace WeChatWASM
                 config.FontOptions.Mathematical_Operators ? "true" : "false",
                 customUnicodeRange,
                 boolConfigInfo,
+                config.CompileOptions.DevelopBuild ? "true" : "false",
+                config.CompileOptions.enablePerfAnalysis ? "true" : "false",
+                config.ProjectConf.MemorySize.ToString(),
             });
 
             List<Rule> replaceList = new List<Rule>(replaceArrayList);
