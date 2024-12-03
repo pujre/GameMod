@@ -6,7 +6,7 @@ namespace TYQ
 
 	public class RewardPanel : PanelBase
 	{
-		public Text Tietletext;
+		public Text Tietletext, DescribeText;
 		public Image TietleImage;
 		public Sprite[] SpritesList;
 		public string[] TietleList;
@@ -33,6 +33,18 @@ namespace TYQ
 			TietleImage.sprite = SpritesList[x];
 			TietleImage.SetNativeSize();
 			TypeIndex = x;
+			switch (x)
+			{
+				case 0:
+					DescribeText.text = "破坏整组大饼";
+					break;
+				case 1:
+					DescribeText.text = "将两组大饼互换";
+					break;
+				case 2:
+					DescribeText.text = "重新刷新三组大饼";
+					break;
+			}
 		}
 
 		void OnClickEvent(GameObject but)

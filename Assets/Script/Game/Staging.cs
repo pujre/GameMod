@@ -7,9 +7,14 @@ public class Staging : MonoBehaviour
 	public GameObject ADIcon;
 	public bool IsOn=false;
 
+	private void Start()
+	{
+		AD(true);
+	}
+
 	public bool IsStaging()
 	{
-		if (SurfaceItem)
+		if (SurfaceItem==null&&!IsOn)
 		{
 			return false;
 		}else
@@ -27,14 +32,26 @@ public class Staging : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 设置是否解锁
+	/// </summary>
+	/// <param name="isAd"></param>
 	public void AD(bool isAd)
 	{
 		if (!ADIcon) {
 			ADIcon=PoolManager.Instance.GetObject("bottomText",transform);
 		}
+		IsOn = !isAd;
 		ADIcon.SetActive(isAd);
 		ADIcon.GetComponent<TextMeshPro>().text = "解锁";
+		ADIcon.GetComponent<TextMeshPro>().fontSize = 23;
 		ADIcon.transform.localPosition = new Vector3 (0,1.5f,0);
 	}
-		
+
+
+	public void ShowAD() {
+		ADIcon.SetActive(false);
+		IsOn=true;
+		Debug.Log("播放广告或者询问是否播放广告");
+	}
 }

@@ -145,10 +145,10 @@ public class GameManager : SingletonMono<GameManager>
 			IsDragging = true;
 		
 		}
-		//else if (!IsProp && obj.name == "Staging")
-		//{
-
-		//}
+		else if (!IsProp && hit.transform.gameObject.tag == "bottom" && hit.transform.gameObject.name == "Staging" && hit.transform.GetComponent<Staging>() && !hit.transform.GetComponent<Staging>().IsStaging())
+		{
+			hit.transform.GetComponent<Staging>().ShowAD();
+		}
 		else if (!IsProp && obj.transform.GetComponent<GoundBackItem>() && obj.transform.GetComponent<GoundBackItem>().IsLock)
 		{
 			ADManager.Instance.ShowAD(ADType.Video, (isOn) =>

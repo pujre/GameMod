@@ -139,13 +139,13 @@ namespace TYQ
 			GameManager.Instance.IsTouchInput = false;
 			PropBtnList.ForEach(obj => obj.SetActive(false));
 			LevelTarget.SetActive(true);
-			TagerLevelText.text = "Level:" + GameManager.Instance.NowLevel;
+			TagerLevelText.text = "关卡" + GameManager.Instance.NowLevel.ToString();
 			TagerScoreText.text = GameManager.Instance.GetNowLevelData().ClearanceScore.ToString();
 			Transform LevelTargebackGound_2 = LevelTarget.transform.Find("LevelTargebackGound_2");
-			TaTimeManager.Instance.StartTimer(3f, () => {
+			TaTimeManager.Instance.StartTimer(1f, () => {
 				Sequence sequence = DOTween.Sequence();
-				sequence.Join(LevelTargebackGound_2.DOMove(transform.Find("Top").position, 1f));
-				sequence.Join(LevelTargebackGound_2.DOScale(Vector3.zero, 1f));
+				sequence.Join(LevelTargebackGound_2.DOMove(transform.Find("Top/sign_1").position, 0.5f));
+				sequence.Join(LevelTargebackGound_2.DOScale(Vector3.zero, 0.5f));
 				sequence.OnComplete(() => {
 					LevelTarget.SetActive(false);
 					GameManager.Instance.IsTouchInput = true;
@@ -168,10 +168,10 @@ namespace TYQ
 			{
 				PropBtnList[i].SetActive(action);
 			}
-			Promp.transform.Find("1").gameObject.SetActive(!action);
-			Promp.transform.Find("2").gameObject.SetActive(!action);
-			Promp.transform.Find("3").gameObject.SetActive(!action);
-
+			Promp.transform.Find("1").gameObject.SetActive(false);
+			Promp.transform.Find("2").gameObject.SetActive(false);
+			Promp.transform.Find("3").gameObject.SetActive(false);
+			UIManager.Instance.GetPanel("Top").gameObject.SetActive(false);
 			if (!action)
 			{
 				Promp.SetActive(true);
@@ -197,6 +197,7 @@ namespace TYQ
 			else
 			{
 				Promp.SetActive(false);
+				UIManager.Instance.GetPanel("Top").gameObject.SetActive(true);
 			}
 		}
 
@@ -228,6 +229,7 @@ namespace TYQ
 			{
 				if (!isSettlement) {
 					isSettlement=true;
+					GameManager.Instance.IsTouchInput = false;
 					Double_explosion_ukraine.SetActive(true);
 					Double_explosion_ukraine.GetComponentInChildren<ParticleSystem>().Play();
 					TaTimeManager.Instance.StartTimer(3f, () => {
@@ -235,6 +237,7 @@ namespace TYQ
 						TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
 						Double_explosion_ukraine.SetActive(false);
 						isSettlement = false;
+						GameManager.Instance.IsTouchInput = true;
 					});
 				}
 			}

@@ -53,7 +53,7 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	/// <param name="isOn"></param>
 	public void SetvolumetricLine(bool isOn) {
-		volumetricLine.gameObject.SetActive(isOn);
+		//volumetricLine.gameObject.SetActive(isOn);
 	}
 
 	/// <summary>
