@@ -82,6 +82,7 @@ namespace TYQ
 						if (value > 0)
 						{
 							GameManager.Instance.ScelfJob(3);
+							GameManager.Instance.GetNowLevelData().Item_3Number--;
 							SetUIAction(true, "");
 							GameManager.Instance.CloneUserProp();
 							TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp);
@@ -268,6 +269,10 @@ namespace TYQ
 			Prop_1Text.text = GameManager.Instance.GetNowLevelData().Item_1Number.ToString();
 			Prop_2Text.text = GameManager.Instance.GetNowLevelData().Item_2Number.ToString();
 			Prop_3Text.text = GameManager.Instance.GetNowLevelData().Item_3Number.ToString();
+			Prop_1Text.transform.parent.Find("+").gameObject.SetActive(GameManager.Instance.GetNowLevelData().Item_1Number <= 0 ? true : false);
+			Prop_2Text.transform.parent.Find("+").gameObject.SetActive(GameManager.Instance.GetNowLevelData().Item_2Number <= 0 ? true : false);
+			Prop_3Text.transform.parent.Find("+").gameObject.SetActive(GameManager.Instance.GetNowLevelData().Item_3Number <= 0 ? true : false);
+
 		}
 
 		// 实现基类的抽象方法

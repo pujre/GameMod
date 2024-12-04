@@ -186,7 +186,7 @@ public class GameManager : SingletonMono<GameManager>
 					{
 						obj.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
 						SelectedObject = PropTranform_1;
-						UserProp(3);
+						UserProp(2);
 					}
 					break;
 				case 3:
@@ -477,14 +477,7 @@ public class GameManager : SingletonMono<GameManager>
 				SelectedObject = null;				
 				break;
 			case 2:
-				//LevelData.Item_2Number--;
-				//SelectedObject.GetComponent<GoundBackItem>().TopTranslateColor(1);
-				//CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
-				//SelectedObject = null;
-				//Debug.Log("最顶部的那个变成星星");
-				break;
-			case 3:
-				LevelData.Item_3Number--;
+				LevelData.Item_2Number--;
 				PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true);
 				CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
 				SelectedObject = null;
