@@ -10,7 +10,7 @@ namespace TYQ
 {
 	public class GamePanel : PanelBase
 	{
-		public GameObject Promp;
+		public GameObject Promp, LevelObjectives;
 		public Text Prop_1Text, Prop_2Text, Prop_3Text, PromptText, PrompTitleText;
 		public TextMeshProUGUI LevelText, LevelTager;
 		public Image ScoreFractionalBar;
@@ -140,12 +140,12 @@ namespace TYQ
 			GameManager.Instance.IsTouchInput = false;
 			PropBtnList.ForEach(obj => obj.SetActive(false));
 			LevelTarget.SetActive(true);
-			TagerLevelText.text = "关卡" + GameManager.Instance.NowLevel.ToString();
+			TagerLevelText.text = GameManager.Instance.NowLevel.ToString();
 			TagerScoreText.text = GameManager.Instance.GetNowLevelData().ClearanceScore.ToString();
 			Transform LevelTargebackGound_2 = LevelTarget.transform.Find("LevelTargebackGound_2");
 			TaTimeManager.Instance.StartTimer(1f, () => {
 				Sequence sequence = DOTween.Sequence();
-				sequence.Join(LevelTargebackGound_2.DOMove(transform.Find("Top/sign_1").position, 0.5f));
+				sequence.Join(LevelTargebackGound_2.DOMove(transform.Find("LevelObjectives/sign_1").position, 0.5f));
 				sequence.Join(LevelTargebackGound_2.DOScale(Vector3.zero, 0.5f));
 				sequence.OnComplete(() => {
 					LevelTarget.SetActive(false);
@@ -173,6 +173,7 @@ namespace TYQ
 			Promp.transform.Find("2").gameObject.SetActive(false);
 			Promp.transform.Find("3").gameObject.SetActive(false);
 			UIManager.Instance.GetPanel("Top").gameObject.SetActive(false);
+			LevelObjectives.gameObject.SetActive(false);
 			if (!action)
 			{
 				Promp.SetActive(true);
@@ -199,6 +200,7 @@ namespace TYQ
 			{
 				Promp.SetActive(false);
 				UIManager.Instance.GetPanel("Top").gameObject.SetActive(true);
+				LevelObjectives.gameObject.SetActive(true);
 			}
 		}
 
