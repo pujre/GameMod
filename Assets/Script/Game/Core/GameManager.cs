@@ -221,7 +221,8 @@ public class GameManager : SingletonMono<GameManager>
 						si.Surfaces.Clear();
 						lj.DisplayNumbers(true);
 						//OperationPath.Clear();
-						CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y);
+						CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y,0);
+						Debug.Log("_______放下堆叠物______");
 					}
 					Destroy(obj);
 				}
@@ -368,7 +369,7 @@ public class GameManager : SingletonMono<GameManager>
 	#region 堆叠逻辑
 
 
-	public void CalculateElimination(int x, int y)
+	public void CalculateElimination(int x, int y, int step=0)
 	{
 		if (GoundBackItemArray2D != null)
 		{
@@ -376,13 +377,13 @@ public class GameManager : SingletonMono<GameManager>
 			List<Vector2Int> GoundBackItemList = GetGoundBackItems(x, y);
 			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
 			{
-				ChainCall();
+				ChainCall(step++);
 				return;
 			}
 			ProcessCoordinates(GoundBackItemList);
 			if (FilterLinked == null || FilterLinked.Count == 0)
 			{
-				ChainCall();
+				ChainCall(step++);
 				return;
 			}
 			void StartNextAnimation(int index)
@@ -400,7 +401,7 @@ public class GameManager : SingletonMono<GameManager>
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
 						{
-							ChainCall();
+							ChainCall(step++);
 						});
 						return;
 					}
@@ -417,7 +418,7 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 
-	void ChainCall()
+	void ChainCall(int step)
 	{
 		//Debug.Log("开始连锁数据");
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
@@ -431,7 +432,7 @@ public class GameManager : SingletonMono<GameManager>
 				//{
 				//	Debug.Log(OperationPath.Count + "余下的坐标的位置为 X:" + OperationPath[OperationPath.Count - 1].x + "Y:" + OperationPath[OperationPath.Count - 1].y);
 				//}
-				CalculateElimination(po.x, po.y);
+				CalculateElimination(po.x, po.y, step++);
 				break;
 			}
 		}
@@ -764,6 +765,22 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			DestroyImmediate(ItemParent.transform.GetChild(i).gameObject);
 		}
+	}
+
+	/// <summary>
+	/// 还有几个已解锁未放置的空位
+	/// </summary>
+	/// <returns></returns>
+	public int IsItAvailable() {
+		int available = 0;
+		for (int i = 0; i < ItemParent.transform.GetChild(0).childCount; i++)
+		{
+			GoundBackItem goundBackItem = ItemParent.transform.GetChild(0).GetChild(i).GetComponent<GoundBackItem>();
+			if (!goundBackItem.IsLock&&goundBackItem.SurfacesList.Count==0) {
+				available++;
+			}
+		}
+		return available;
 	}
 }
 
