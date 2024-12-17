@@ -396,7 +396,8 @@ public class GoundBackItem : MonoBehaviour
 			{
 				//SetChinderPosition();
 				if (IsSurface()) {
-					GameManager.Instance.OperationPath.Add(ItemPosition);
+					//GameManager.Instance.OperationPath.Add(ItemPosition);
+					Debug.Log("序列完成后添加？X:"+ ItemPosition.x+"  Y:"+ ItemPosition.y);
 				}
 				action!.Invoke();
 			});

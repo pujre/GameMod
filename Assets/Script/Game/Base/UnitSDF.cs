@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class UnitSDF : MonoBehaviour
 {
+	/// <summary>
+	/// 获取指定坐标的周围的坐标点
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <returns></returns>
     public static List<Vector2Int> GetCreatorPos(int x,int y) {
 		List<Vector2Int> vector2s;
 		if (!(x % 2 == 0))
@@ -19,6 +25,8 @@ public class UnitSDF : MonoBehaviour
 		}
 		return vector2s;
 	}
+
+	
 
 	/// <summary>
 	/// 筛选相连着得坐标
@@ -49,12 +57,12 @@ public class UnitSDF : MonoBehaviour
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
 		List<InstructionData> instructionData = new List<InstructionData>();
-		//Debug.Log("____________________________________");
+		Debug.Log("____________________________________");
 		// 查找起点
 		Vector2Int start = coordinates.FirstOrDefault(pos =>
 		{
 			List<Vector2Int> neighbors = GameManager.Instance.GetAroundPos(pos.x, pos.y).Where(pos => coordinates.Contains(pos)).ToList();
-			//Debug.Log(string.Format("当前检查的点的坐标为{0},{1}，当前该点周围的的数组长度为：{2}", pos.x, pos.y, neighbors.Count)); ;
+			Debug.Log(string.Format("当前检查的点的坐标为{0},{1}，当前该点周围的的数组长度为：{2}", pos.x, pos.y, neighbors.Count)); ;
 			return neighbors.Count == 1;
 		});
 
@@ -67,12 +75,12 @@ public class UnitSDF : MonoBehaviour
 		while(!isOn)
 		{
 			List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y).Where(pos => coordinates.Contains(pos)&& !visited.Contains(pos)).ToList(); // 获取当前坐标周围的坐标
-			//Debug.Log(string.Format("坐标为：{0},长度为：{1},Index为：{2},已访问过的数为：{3}，当前数为：{4}", start,around.Count,index,visited.Count, coordinates.Count));
+			Debug.Log(string.Format("坐标为：{0},长度为：{1},Index为：{2},已访问过的数为：{3}，当前数为：{4}", start,around.Count,index,visited.Count, coordinates.Count));
 			if (around.Count == 0)
 			{
 				if (instructionData.Count == coordinates.Count - 1)
 				{
-					//Debug.Log("没有更多节点可以访问，结束,返回的路径长度为："+ instructionData.Count);
+					Debug.Log("没有更多节点可以访问，结束,返回的路径长度为："+ instructionData.Count);
 					isOn = true;
 					break;
 				}
@@ -89,7 +97,7 @@ public class UnitSDF : MonoBehaviour
                 instructionData.RemoveRange(instructionData.Count - backtrackCount, backtrackCount);
 				index -= backtrackCount;
 
-				//Debug.Log("回溯了" + backtrackCount + "次");
+				Debug.Log("回溯了" + backtrackCount + "次");
 				//continue;
 			}
 
@@ -130,7 +138,7 @@ public class UnitSDF : MonoBehaviour
 			else
 			{
 				// 没有更多节点可以访问，结束
-				//Debug.Log("没有更多节点可以访问，结束,返回的路径长度为：" + instructionData.Count);
+				Debug.Log("没有更多节点可以访问，结束,返回的路径长度为：" + instructionData.Count);
 				isOn = true;
 				break;
 			}
