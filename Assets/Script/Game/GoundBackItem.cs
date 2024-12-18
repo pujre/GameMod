@@ -22,6 +22,7 @@ public class GoundBackItem : MonoBehaviour
 	public List<Surface> SurfacesList = new List<Surface>();
 	public TextMeshPro NumberTextMesh = null;
 	public GameObject SpriteRendener;
+	public bool IsRunAnim=false;
 	private void Awake()
 	{
 		GoundBack_Y = 1.9f;
@@ -62,6 +63,14 @@ public class GoundBackItem : MonoBehaviour
 	/// <returns></returns>
 	public bool IsAddSurface() {
 		return SurfacesList.Count == 0 && !IsLock ? true : false;
+	}
+
+	/// <summary>
+	/// 当前堆上有物品且没有被锁
+	/// </summary>
+	/// <returns></returns>
+	public bool IsCanBeOperated() {
+		return SurfacesList.Count > 0 && !IsLock ? true : false;
 	}
 
 	/// <summary>
@@ -289,7 +298,9 @@ public class GoundBackItem : MonoBehaviour
 			//SetChinderPosition();
 			action?.Invoke();
 			DisplayNumbers(true);
+			IsRunAnim=false;
 		});
+		IsRunAnim=true;
 		sequence.Play();  // 播放序列
 	}
 

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using TYQ;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class GameManager : SingletonMono<GameManager>
 {
@@ -381,7 +382,8 @@ public class GameManager : SingletonMono<GameManager>
 		if (GoundBackItemArray2D != null)
 		{
 			FilterLinked.Clear();
-			List<Vector2Int> GoundBackItemList = GetGoundBackItems(x, y);
+			//List<Vector2Int> GoundBackItemList = GetGoundBackItems(x, y);
+			List<Vector2Int> GoundBackItemList = UnitSDF.FindConnectedPieces(new Vector2Int(x,y));
 			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
 			{
 				//ChainCall(step++);
@@ -523,27 +525,10 @@ public class GameManager : SingletonMono<GameManager>
 	/// <returns></returns>
 	public List<Vector2Int> GetGoundBackItems(int x, int y)
 	{
-		var topColor = GetGoundBackItem(x, y).GetTopColor();
-		List<Vector2Int> coordinates = new List<Vector2Int>();
-		string log = "";
-		//获取整个盘上顶部颜色相同的加入list
-		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
-		{
-			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
-			{
-				if (GoundBackItemArray2D[i, j] != null&& GoundBackItemArray2D[i, j].IsSurface() && (GoundBackItemArray2D[i, j].GetTopColor() == topColor|| GoundBackItemArray2D[i, j].GetTopColor()== ItemColorType.StarAll))
-				{
-					coordinates.Add(new Vector2Int(i, j));
-				}
-			}
-		}
-		//如果不包含操作的点则作废
-		if (!coordinates.Contains(new Vector2Int(x, y)))
-		{
-			return null;
-		}
+		List<Vector2Int> coordinates = GetSpecifyColorList(x,y);
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		List<Vector2Int> resultCoordinates = new List<Vector2Int>();
+		Debug.Log("开始筛选顶部相同颜色的坐标");
 		foreach (var coord in coordinates)
 		{
 			if (!visited.Contains(coord))
@@ -555,15 +540,40 @@ public class GameManager : SingletonMono<GameManager>
 					foreach (var position in group)
 					{
 						resultCoordinates.Add(new Vector2Int(position.x, position.y));
-						log += position + "、";
 					}
 				}
 			}
 		}
-		Debug.Log("顶部相同颜色的坐标为：" + log);
 		return resultCoordinates;
 	}
 
+	/// <summary>
+	/// 获取棋盘上与指定点相同颜色的所有棋子坐标
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <returns></returns>
+	public List<Vector2Int> GetSpecifyColorList(int x,int y) {
+		var topColor = GetGoundBackItem(x, y).GetTopColor();
+		List<Vector2Int> coordinates = new List<Vector2Int>();
+		//获取整个盘上顶部颜色相同的加入list
+		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
+		{
+			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
+			{
+				if (GoundBackItemArray2D[i, j] != null && GoundBackItemArray2D[i, j].IsSurface() && (GoundBackItemArray2D[i, j].GetTopColor() == topColor || GoundBackItemArray2D[i, j].GetTopColor() == ItemColorType.StarAll))
+				{
+					coordinates.Add(new Vector2Int(i, j));
+				}
+			}
+		}
+		//如果不包含操作的点则作废
+		if (!coordinates.Contains(new Vector2Int(x, y)))
+		{
+			return null;
+		}
+		return coordinates;
+	}
 
 	/// <summary>
 	/// 排序连锁
@@ -669,7 +679,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// 获取指定坐标的周围的点
+	/// 获取指定坐标的周围的点,存在棋盘上的点
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -681,6 +691,16 @@ public class GameManager : SingletonMono<GameManager>
 		).ToList();
 	}
 
+	/// <summary>
+	/// 获取指定点周围相同颜色且可计算的坐标
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <returns></returns>
+	public List<Vector2Int> GetAroundCanBeOperatedPos(int x, int y) {
+		ItemColorType topColor = GetGoundBackItem(x, y).GetTopColor();
+		return GetAroundPos(x, y).Where(pos =>!GetGoundBackItem(pos.x, pos.y).IsRunAnim && GetGoundBackItem(pos.x, pos.y).IsCanBeOperated()&&GetGoundBackItem(pos.x, pos.y).GetTopColor() == topColor ).ToList();
+	}
 
 	/// <summary>
 	/// 获取当前指定的组
