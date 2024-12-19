@@ -10,4 +10,9 @@ public class InstructionData
 		StarVector2=star;
 		EndVector2=end;
 	}
+
+	public override string ToString()
+	{
+		return $"Start: {StarVector2}, End: {EndVector2}";
+	}
 }

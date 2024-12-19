@@ -406,9 +406,13 @@ public class GoundBackItem : MonoBehaviour
 			sequence.OnComplete(() =>
 			{
 				//SetChinderPosition();
-				if (IsSurface()) {
-					//GameManager.Instance.OperationPath.Add(ItemPosition);
-					Debug.Log("序列完成后添加？X:"+ ItemPosition.x+"  Y:"+ ItemPosition.y);
+				if (IsSurface())
+				{
+					if (IsCanBeOperated())
+					{
+						Debug.Log("序列完成后添加？X:" + ItemPosition.x + "  Y:" + ItemPosition.y);
+						GameManager.Instance.OperationPath.Add(ItemPosition);
+					}
 				}
 				action!.Invoke();
 			});

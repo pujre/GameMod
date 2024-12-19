@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TYQ;
+using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class GameManager : SingletonMono<GameManager>
 {
@@ -226,7 +226,7 @@ public class GameManager : SingletonMono<GameManager>
 						//OperationPath.Clear();
 						if (!DontSimcity) {
 							CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y, 0);
-							Debug.Log(string.Format("放置了堆叠堆，X:{0},Y{1}", lj.ItemPosition.x, lj.ItemPosition.y));
+							Debug.Log(string.Format("-放置- 了堆叠堆，X:{0},Y{1}", lj.ItemPosition.x, lj.ItemPosition.y));
 
 						}
 					}
@@ -382,19 +382,18 @@ public class GameManager : SingletonMono<GameManager>
 		if (GoundBackItemArray2D != null)
 		{
 			FilterLinked.Clear();
-			//List<Vector2Int> GoundBackItemList = GetGoundBackItems(x, y);
 			List<Vector2Int> GoundBackItemList = UnitSDF.FindConnectedPieces(new Vector2Int(x,y));
 			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
 			{
-				//ChainCall(step++);
-				Debug.Log(string.Format("放置-当前点X:{0},Y:{1}在棋盘上无可连线的点", x,y));
+				ChainCall(step++);
+				Debug.Log(string.Format("放置-当前点X:{0},Y:{1}在棋盘周围上无可连线的点", x,y));
 				return;
 			}
-			ProcessCoordinates(GoundBackItemList);
+			FilterLinked = UnitSDF.FilterLinkedCoordinates(GoundBackItemList);
 			if (FilterLinked == null || FilterLinked.Count == 0)
 			{
-				//ChainCall(step++);
-				Debug.Log(string.Format("放置-当前点X:{0},Y:{1}需要完成的连锁动作已经完成", x, y));
+				ChainCall(step++);
+				Debug.Log(string.Format("放置-当前点X:{0},Y:{1}，排序后无连锁", x, y));
 				return;
 			}
 			void StartNextAnimation(int index)
@@ -404,7 +403,7 @@ public class GameManager : SingletonMono<GameManager>
 				linkedItem.DisplayNumbers(false);
 				OperationPath.Add(FilterLinked[index].StarVector2);
 				hasStacked = true;
-				Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
+				//Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
 					if (linkedItem)
@@ -420,9 +419,7 @@ public class GameManager : SingletonMono<GameManager>
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
 						{
-							//ChainCall(step++);
-							Debug.Log(string.Format("动作完成后连锁-当前点X:{0},Y:{1}需要完成的连锁动作已经完成", FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y));
-
+							ChainCall(step++);
 						});
 						return;
 					}
@@ -433,7 +430,7 @@ public class GameManager : SingletonMono<GameManager>
 				});
 
 			}
-			IsTouchInput = false;
+			//IsTouchInput = false;
 			StartNextAnimation(0);
 		}
 	}
@@ -445,15 +442,10 @@ public class GameManager : SingletonMono<GameManager>
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
 		{
 			var po = OperationPath[i];
-			//Debug.Log(OperationPath.Count + "开始连锁数据----x:" + po.x + "y:" + po.y);
 			OperationPath.Remove(po);
 			if (GoundBackItemArray2D[po.x, po.y].GetComponent<GoundBackItem>().IsSurface())
 			{
-				//if (OperationPath.Count > 0)
-				//{
-				//	Debug.Log(OperationPath.Count + "余下的坐标的位置为 X:" + OperationPath[OperationPath.Count - 1].x + "Y:" + OperationPath[OperationPath.Count - 1].y);
-				//}
-				CalculateElimination(po.x, po.y, step++);
+				CalculateElimination(po.x, po.y, step);
 				break;
 			}
 		}
@@ -575,38 +567,7 @@ public class GameManager : SingletonMono<GameManager>
 		return coordinates;
 	}
 
-	/// <summary>
-	/// 排序连锁
-	/// </summary>
-	/// <param name="coordinates"></param>
-	void ProcessCoordinates(List<Vector2Int> coordinates)
-	{
-		bool needsResorting = false;
-		for (int i = 0; i < coordinates.Count - 1; i++)
-		{
-			if (!GetAroundPos(coordinates[i].x, coordinates[i].y).Contains(coordinates[i + 1]))
-			{
-				needsResorting = true;
-				break;
-			}
-		}
-		if (needsResorting)
-		{
-			Debug.Log("——需要重新排序——");
-			FilterLinked = UnitSDF.FilterLinkedCoordinates(coordinates);
-			Debug.Log("FilterLinked的长度为：" + FilterLinked.Count);
-		}
-		else
-		{
-			FilterLinked.Clear();
-			for (int i = 0; i < coordinates.Count - 1; i++)
-			{
-				Debug.Log(string.Format("点{0}移动到点{1}", coordinates[i], coordinates[i + 1]));
-				FilterLinked.Add(new InstructionData(coordinates[i], coordinates[i + 1]));
-			}
-		}
 
-	}
 
 
 	/// <summary>
@@ -697,9 +658,14 @@ public class GameManager : SingletonMono<GameManager>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
 	/// <returns></returns>
-	public List<Vector2Int> GetAroundCanBeOperatedPos(int x, int y) {
-		ItemColorType topColor = GetGoundBackItem(x, y).GetTopColor();
-		return GetAroundPos(x, y).Where(pos =>!GetGoundBackItem(pos.x, pos.y).IsRunAnim && GetGoundBackItem(pos.x, pos.y).IsCanBeOperated()&&GetGoundBackItem(pos.x, pos.y).GetTopColor() == topColor ).ToList();
+	public List<Vector2Int> GetAroundCanBeOperatedPos(int x, int y)
+	{
+		if (GetGoundBackItem(x, y).IsCanBeOperated())
+		{
+			ItemColorType topColor = GetGoundBackItem(x, y).GetTopColor();
+			return GetAroundPos(x, y).Where(pos => !GetGoundBackItem(pos.x, pos.y).IsRunAnim && GetGoundBackItem(pos.x, pos.y).IsCanBeOperated() && GetGoundBackItem(pos.x, pos.y).GetTopColor() == topColor).ToList();
+		}
+		else { return new List<Vector2Int>(); }
 	}
 
 	/// <summary>
