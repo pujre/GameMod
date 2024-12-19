@@ -75,7 +75,7 @@ namespace TYQ
 					GameManager.Instance.LoadLevel(GameManager.Instance.NowLevel);
 					break;
 			}
-			AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
+			AudioManager.Instance.PlaySFX("click_uiï¼ˆç‚¹å‡»UIæŒ‰é’®ï¼‰");
 
 		}
 
@@ -91,7 +91,7 @@ namespace TYQ
 					DataManager.Instance.SetData(OnDataKey.Music_On, isOn ? 0 : 1);
 					if (isOn)
 					{
-						AudioManager.Instance.PlayBGM("bgm2£¨ÓÎÏ·½çÃæ£©");
+						AudioManager.Instance.PlayBGM("bgm2ï¼ˆæ¸¸æˆç•Œé¢ï¼‰");
 					}
 					else
 					{
@@ -105,18 +105,18 @@ namespace TYQ
 					DataManager.Instance.SetData(OnDataKey.Sound_On, isOn ? 0 : 1);
 					break;
 			}
-			AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
+			AudioManager.Instance.PlaySFX("click_uiï¼ˆç‚¹å‡»UIæŒ‰é’®ï¼‰");
 		}
 
 		void DelegateCallback()
 		{
-			Debug.Log("ÔİÍ£Ãæ°åÏÔÊ¾");
+			Debug.Log("æš‚åœé¢æ¿æ˜¾ç¤º");
 		}
 
-		// ÊµÏÖ»ùÀàµÄ³éÏó·½·¨
+		// å®ç°åŸºç±»çš„æŠ½è±¡æ–¹æ³•
 		public override void CallSpecificMethod(string methodName, object[] parameters)
 		{
-			// Ê¹ÓÃ·´ÉäÀ´µ÷ÓÃ·½·¨
+			// ä½¿ç”¨åå°„æ¥è°ƒç”¨æ–¹æ³•
 			MethodInfo methodInfo = typeof(PausePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
 			methodInfo?.Invoke(this, parameters);
 		}

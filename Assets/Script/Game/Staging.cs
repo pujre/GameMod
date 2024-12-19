@@ -37,7 +37,7 @@ public class Staging : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ÉèÖÃÊÇ·ñ½âËø
+	/// è®¾ç½®æ˜¯å¦è§£é”
 	/// </summary>
 	/// <param name="isAd"></param>
 	public void AD(bool isAd)
@@ -45,7 +45,7 @@ public class Staging : MonoBehaviour
 		if (!ADIcon) {
 			ADIcon=PoolManager.Instance.GetObject("bottomText",transform);
 			ADIcon.name = "ADIcon";
-			ADIcon.GetComponent<TextMeshPro>().text = "ÁÙÊ±¸ñ×Ó";
+			ADIcon.GetComponent<TextMeshPro>().text = "ä¸´æ—¶æ ¼å­";
 			ADIcon.GetComponent<TextMeshPro>().fontSize = 11;
 			ADIcon.transform.localPosition = new Vector3(0, 1.5f, -1.03f);
 		}
@@ -60,6 +60,6 @@ public class Staging : MonoBehaviour
 		ADIcon.SetActive(false);
 		ShareImage.SetActive(false);
 		IsOn =true;
-		Debug.Log("²¥·Å¹ã¸æ»òÕßÑ¯ÎÊÊÇ·ñ²¥·Å¹ã¸æ");
+		Debug.Log("æ’­æ”¾å¹¿å‘Šæˆ–è€…è¯¢é—®æ˜¯å¦æ’­æ”¾å¹¿å‘Š");
 	}
 }

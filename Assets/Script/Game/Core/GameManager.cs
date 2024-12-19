@@ -31,7 +31,7 @@ public class GameManager : SingletonMono<GameManager>
 	private int IsPropAppUserID;
 	private GameObject PropTranform_1;
 
-	#region ¾Ö²¿±äÁ¿private
+	#region å±€éƒ¨å˜é‡private
 	private RaycastHit hit;
 	private Ray ray;
 	private bool foundBottom = false;
@@ -44,14 +44,14 @@ public class GameManager : SingletonMono<GameManager>
 	protected override void Awake()
 	{
 		base.Awake();
-		Cam = Camera.main; // »ñÈ¡Ö÷ÉãÏñ»ú
+		Cam = Camera.main; // è·å–ä¸»æ‘„åƒæœº
 		ResPath.Init();
 	}
 
 	void Start()
 	{
 		LoadlevelData();
-		AudioManager.Instance.PlayBGM("bgm2£¨ÓÎÏ·½çÃæ£©");
+		AudioManager.Instance.PlayBGM("bgm2ï¼ˆæ¸¸æˆç•Œé¢ï¼‰");
 	}
 
 
@@ -71,14 +71,14 @@ public class GameManager : SingletonMono<GameManager>
 
 			if (IsDragging && SelectedObject != null)
 			{
-				// Ê¹ÓÃVector3.Lerp»òVector3.MoveTowardsÀ´Æ½»¬ÒÆ¶¯
+				// ä½¿ç”¨Vector3.Lerpæˆ–Vector3.MoveTowardsæ¥å¹³æ»‘ç§»åŠ¨
 				if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity))
 				{
 					initialPosition = hitInfo.point;
-					initialPosition.y = 3; //SelectedObject.transform.position.y; // ±£³ÖYÖá²»±ä
+					initialPosition.y = 3; //SelectedObject.transform.position.y; // ä¿æŒYè½´ä¸å˜
 				}
-				SelectedObject.transform.position = Vector3.Lerp(SelectedObject.transform.position, initialPosition, Time.deltaTime * 15); // yourLerpSpeed¸ù¾İĞèÒªµ÷Õû
-				// Ê¹ÓÃ RaycastAll ¼ì²âËùÓĞÅö×²
+				SelectedObject.transform.position = Vector3.Lerp(SelectedObject.transform.position, initialPosition, Time.deltaTime * 15); // yourLerpSpeedæ ¹æ®éœ€è¦è°ƒæ•´
+				// ä½¿ç”¨ RaycastAll æ£€æµ‹æ‰€æœ‰ç¢°æ’
 				RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity);
 				foundBottom = false;
 
@@ -98,7 +98,7 @@ public class GameManager : SingletonMono<GameManager>
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
 						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
 						foundBottom = true;
-						break; // ÕÒµ½Ä¿±ê¶ÔÏóºóÍË³öÑ­»·
+						break; // æ‰¾åˆ°ç›®æ ‡å¯¹è±¡åé€€å‡ºå¾ªç¯
 					}
 					else if (!IsProp && hit.transform.gameObject.tag == "bottom" && hit.transform.gameObject.name == "Staging" && hit.transform.GetComponent<Staging>() && hit.transform.GetComponent<Staging>().IsStaging())
 					{
@@ -110,11 +110,11 @@ public class GameManager : SingletonMono<GameManager>
 						lastHighlightedObject = hit.transform;
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
 						foundBottom = true;
-						break; // ÕÒµ½Ä¿±ê¶ÔÏóºóÍË³öÑ­»·
+						break; // æ‰¾åˆ°ç›®æ ‡å¯¹è±¡åé€€å‡ºå¾ªç¯
 					}
 
 				}
-				// µ±Àë¿ª¸÷×ÔÇøÓòµÃÊ±ºòÅĞ¶¨
+				// å½“ç¦»å¼€å„è‡ªåŒºåŸŸå¾—æ—¶å€™åˆ¤å®š
 				if (!foundBottom)
 				{
 					if (lastHighlightedObject != null)
@@ -137,7 +137,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// µã»÷Âß¼­
+	/// ç‚¹å‡»é€»è¾‘
 	/// </summary>
 	/// <param name="obj"></param>
 	/// <returns></returns>
@@ -183,7 +183,7 @@ public class GameManager : SingletonMono<GameManager>
 					if (PropTranform_1 == null)
 					{
 						PropTranform_1 = obj.transform.gameObject;
-						PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "»»");
+						PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "æ¢");
 					}
 					else if (PropTranform_1 != null && PropTranform_1 != obj.transform.gameObject)
 					{
@@ -220,13 +220,13 @@ public class GameManager : SingletonMono<GameManager>
 						lj.SetvolumetricLine(false);
 						si.QueMoveEnd();
 						lj.AddSurfacesList(si.Surfaces);
-						AudioManager.Instance.PlaySFX("Put£¨·ÅÏÂ¶ÑµşÎï£©");
+						AudioManager.Instance.PlaySFX("Putï¼ˆæ”¾ä¸‹å †å ç‰©ï¼‰");
 						si.Surfaces.Clear();
 						lj.DisplayNumbers(true);
 						//OperationPath.Clear();
 						if (!DontSimcity) {
 							CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y, 0);
-							Debug.Log(string.Format("-·ÅÖÃ- ÁË¶Ñµş¶Ñ£¬X:{0},Y{1}", lj.ItemPosition.x, lj.ItemPosition.y));
+							Debug.Log(string.Format("-æ”¾ç½®- äº†å †å å †ï¼ŒX:{0},Y{1}", lj.ItemPosition.x, lj.ItemPosition.y));
 
 						}
 					}
@@ -274,7 +274,7 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 	/// <summary>
-	/// ¿Õ³öÖ¸¶¨ÊıÁ¿µÄ¿ÕÎ»
+	/// ç©ºå‡ºæŒ‡å®šæ•°é‡çš„ç©ºä½
 	/// </summary>
 	/// <param name="x"></param>
 	public void FreeUpSpace(int x)
@@ -360,7 +360,7 @@ public class GameManager : SingletonMono<GameManager>
 					SelectedList[i].SelfGameMove = obj;
 					obj.GetComponent<SurfaceItem>().CreatorSurface(GetNowLevelData().ColourNum);
 					obj.GetComponent<SurfaceItem>().QurStart(SelectedList[i].Pos);
-					AudioManager.Instance.PlaySFX("Hu£¨³öÏÖÈı¸öĞÂµÄ¶ÑµşÎï£©");
+					AudioManager.Instance.PlaySFX("Huï¼ˆå‡ºç°ä¸‰ä¸ªæ–°çš„å †å ç‰©ï¼‰");
 					break;
 				}
 			}
@@ -372,9 +372,9 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// ¼ÆËã¶ÑµşÂß¼­
+	/// è®¡ç®—å †å é€»è¾‘
 	/// </summary>
-	#region ¶ÑµşÂß¼­
+	#region å †å é€»è¾‘
 
 
 	public void CalculateElimination(int x, int y, int step=0)
@@ -386,14 +386,14 @@ public class GameManager : SingletonMono<GameManager>
 			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
 			{
 				ChainCall(step++);
-				Debug.Log(string.Format("·ÅÖÃ-µ±Ç°µãX:{0},Y:{1}ÔÚÆåÅÌÖÜÎ§ÉÏÎŞ¿ÉÁ¬ÏßµÄµã", x,y));
+				Debug.Log(string.Format("æ”¾ç½®-å½“å‰ç‚¹X:{0},Y:{1}åœ¨æ£‹ç›˜å‘¨å›´ä¸Šæ— å¯è¿çº¿çš„ç‚¹", x,y));
 				return;
 			}
 			FilterLinked = UnitSDF.FilterLinkedCoordinates(GoundBackItemList);
 			if (FilterLinked == null || FilterLinked.Count == 0)
 			{
 				ChainCall(step++);
-				Debug.Log(string.Format("·ÅÖÃ-µ±Ç°µãX:{0},Y:{1}£¬ÅÅĞòºóÎŞÁ¬Ëø", x, y));
+				Debug.Log(string.Format("æ”¾ç½®-å½“å‰ç‚¹X:{0},Y:{1}ï¼Œæ’åºåæ— è¿é”", x, y));
 				return;
 			}
 			void StartNextAnimation(int index)
@@ -403,7 +403,7 @@ public class GameManager : SingletonMono<GameManager>
 				linkedItem.DisplayNumbers(false);
 				OperationPath.Add(FilterLinked[index].StarVector2);
 				hasStacked = true;
-				//Debug.Log("Ìí¼ÓÁË×ø±êÊı¾İ£ºx:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
+				//Debug.Log("æ·»åŠ äº†åæ ‡æ•°æ®ï¼šx:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
 					if (linkedItem)
@@ -438,7 +438,7 @@ public class GameManager : SingletonMono<GameManager>
 
 	void ChainCall(int step)
 	{
-		Debug.Log(string.Format("¿ªÊ¼Á¬ËøÊı¾İ,µÚ{0}²½", step));
+		Debug.Log(string.Format("å¼€å§‹è¿é”æ•°æ®,ç¬¬{0}æ­¥", step));
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
 		{
 			var po = OperationPath[i];
@@ -479,7 +479,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// Ê¹ÓÃµÀ¾ß
+	/// ä½¿ç”¨é“å…·
 	/// </summary>
 	/// <param name="propId"></param>
 	public void UserProp(int propId)
@@ -510,7 +510,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// »ñÈ¡µ±Ç°×ø±ê¶¥²¿µÄÑÕÉ«¼°ÆäÕû¸öÅÌµÄÑÕÉ«×ö×ø±ê¼¯ºÏÈ»ºóÉ¸Ñ¡
+	/// è·å–å½“å‰åæ ‡é¡¶éƒ¨çš„é¢œè‰²åŠå…¶æ•´ä¸ªç›˜çš„é¢œè‰²åšåæ ‡é›†åˆç„¶åç­›é€‰
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -520,7 +520,7 @@ public class GameManager : SingletonMono<GameManager>
 		List<Vector2Int> coordinates = GetSpecifyColorList(x,y);
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		List<Vector2Int> resultCoordinates = new List<Vector2Int>();
-		Debug.Log("¿ªÊ¼É¸Ñ¡¶¥²¿ÏàÍ¬ÑÕÉ«µÄ×ø±ê");
+		Debug.Log("å¼€å§‹ç­›é€‰é¡¶éƒ¨ç›¸åŒé¢œè‰²çš„åæ ‡");
 		foreach (var coord in coordinates)
 		{
 			if (!visited.Contains(coord))
@@ -540,7 +540,7 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 	/// <summary>
-	/// »ñÈ¡ÆåÅÌÉÏÓëÖ¸¶¨µãÏàÍ¬ÑÕÉ«µÄËùÓĞÆå×Ó×ø±ê
+	/// è·å–æ£‹ç›˜ä¸Šä¸æŒ‡å®šç‚¹ç›¸åŒé¢œè‰²çš„æ‰€æœ‰æ£‹å­åæ ‡
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -548,7 +548,7 @@ public class GameManager : SingletonMono<GameManager>
 	public List<Vector2Int> GetSpecifyColorList(int x,int y) {
 		var topColor = GetGoundBackItem(x, y).GetTopColor();
 		List<Vector2Int> coordinates = new List<Vector2Int>();
-		//»ñÈ¡Õû¸öÅÌÉÏ¶¥²¿ÑÕÉ«ÏàÍ¬µÄ¼ÓÈëlist
+		//è·å–æ•´ä¸ªç›˜ä¸Šé¡¶éƒ¨é¢œè‰²ç›¸åŒçš„åŠ å…¥list
 		for (int i = 0; i < GoundBackItemArray2D.GetLength(0); i++)
 		{
 			for (int j = 0; j < GoundBackItemArray2D.GetLength(1); j++)
@@ -559,7 +559,7 @@ public class GameManager : SingletonMono<GameManager>
 				}
 			}
 		}
-		//Èç¹û²»°üº¬²Ù×÷µÄµãÔò×÷·Ï
+		//å¦‚æœä¸åŒ…å«æ“ä½œçš„ç‚¹åˆ™ä½œåºŸ
 		if (!coordinates.Contains(new Vector2Int(x, y)))
 		{
 			return null;
@@ -571,7 +571,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// ½«¸ø¶¨µÄÊı¾İ°´ÕÕÖ¸¶¨µÄ¹æÔòÅÅĞò
+	/// å°†ç»™å®šçš„æ•°æ®æŒ‰ç…§æŒ‡å®šçš„è§„åˆ™æ’åº
 	/// </summary>
 	/// <param name="coordinates"></param>
 	/// <returns></returns>
@@ -600,17 +600,17 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				return path;
 			}
-			var around = GetAroundPos(current.x, current.y);// »ñÈ¡µ±Ç°×ø±êÖÜÎ§µÄ×ø±ê
-			var nextSteps = around.Where(remainingCoords.Contains).ToList();// É¸Ñ¡³ö´ı·ÃÎÊµÄÖÜÎ§×ø±ê
+			var around = GetAroundPos(current.x, current.y);// è·å–å½“å‰åæ ‡å‘¨å›´çš„åæ ‡
+			var nextSteps = around.Where(remainingCoords.Contains).ToList();// ç­›é€‰å‡ºå¾…è®¿é—®çš„å‘¨å›´åæ ‡
 			if (nextSteps.Count == 0 && path.Count < coordinates.Count)
 			{
 				continue;
 			}
-			foreach (var next in nextSteps)// ±éÀúËùÓĞ¿ÉĞĞµÄÏÂÒ»²½
+			foreach (var next in nextSteps)// éå†æ‰€æœ‰å¯è¡Œçš„ä¸‹ä¸€æ­¥
 			{
-				List<Vector2Int> newPath = new List<Vector2Int>(path) { next };// ´´½¨°üº¬ÏÂÒ»²½µÄĞÂÂ·¾¶
-				stack.Push((next, newPath));// ½«ĞÂÂ·¾¶ºÍ×ø±êÑ¹ÈëÕ»
-				remainingCoords.Remove(next); // ´Ó´ı·ÃÎÊ¼¯ºÏÖĞÒÆ³ıµ±Ç°×ø±ê
+				List<Vector2Int> newPath = new List<Vector2Int>(path) { next };// åˆ›å»ºåŒ…å«ä¸‹ä¸€æ­¥çš„æ–°è·¯å¾„
+				stack.Push((next, newPath));// å°†æ–°è·¯å¾„å’Œåæ ‡å‹å…¥æ ˆ
+				remainingCoords.Remove(next); // ä»å¾…è®¿é—®é›†åˆä¸­ç§»é™¤å½“å‰åæ ‡
 			}
 			if (nextSteps.Count == 0 && path.Count == coordinates.Count)
 			{
@@ -626,7 +626,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 
-	// ¼ì²éÌØ¶¨µãÊÇ·ñÂú×ãÌõ¼ş
+	// æ£€æŸ¥ç‰¹å®šç‚¹æ˜¯å¦æ»¡è¶³æ¡ä»¶
 	public bool CheckAndAddIfMatch(Vector2Int vex1, Vector2Int vex2)
 	{
 		if (GoundBackItemArray2D[vex1.x, vex1.y].IsSurface() && GetGoundBackItem(vex2.x, vex2.y).IsSurface() &&
@@ -640,7 +640,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// »ñÈ¡Ö¸¶¨×ø±êµÄÖÜÎ§µÄµã,´æÔÚÆåÅÌÉÏµÄµã
+	/// è·å–æŒ‡å®šåæ ‡çš„å‘¨å›´çš„ç‚¹,å­˜åœ¨æ£‹ç›˜ä¸Šçš„ç‚¹
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -653,7 +653,7 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 	/// <summary>
-	/// »ñÈ¡Ö¸¶¨µãÖÜÎ§ÏàÍ¬ÑÕÉ«ÇÒ¿É¼ÆËãµÄ×ø±ê
+	/// è·å–æŒ‡å®šç‚¹å‘¨å›´ç›¸åŒé¢œè‰²ä¸”å¯è®¡ç®—çš„åæ ‡
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -669,7 +669,7 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 	/// <summary>
-	/// »ñÈ¡µ±Ç°Ö¸¶¨µÄ×é
+	/// è·å–å½“å‰æŒ‡å®šçš„ç»„
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -691,7 +691,7 @@ public class GameManager : SingletonMono<GameManager>
 
 
 	/// <summary>
-	/// ĞÂ½¨Ò»¸öÖ¸¶¨´óĞ¡µÄ¿ÕµÄµØÍ¼Íø¸ñ
+	/// æ–°å»ºä¸€ä¸ªæŒ‡å®šå¤§å°çš„ç©ºçš„åœ°å›¾ç½‘æ ¼
 	/// </summary>
 	/// <param name="width"></param>
 	/// <param name="height"></param>
@@ -716,7 +716,7 @@ public class GameManager : SingletonMono<GameManager>
 	//			goundBackItem.SetData(x, z, $"{x},{z}");
 	//			if (GetNowLevelData().IsLock(x, z))
 	//			{
-	//				Debug.Log(string.Format("ÉèÖÃlock£¬x£º{0}£¬y£º{1}", x, z));
+	//				Debug.Log(string.Format("è®¾ç½®lockï¼Œxï¼š{0}ï¼Œyï¼š{1}", x, z));
 	//				goundBackItem.LockOrUnLockTheItem(true);
 	//			}
 	//			GoundBackItemArray2D[x, z] = goundBackItem;
@@ -727,7 +727,7 @@ public class GameManager : SingletonMono<GameManager>
 	#endregion
 
 	/// <summary>
-	/// ¼ÓÔØlevel Prefab
+	/// åŠ è½½level Prefab
 	/// </summary>
 	private void LoadGenerateBoxMatrix()
 	{
@@ -736,7 +736,7 @@ public class GameManager : SingletonMono<GameManager>
 		//GameObject bottomtext= Resources.Load<GameObject>("Prefab/bottomText");
 		if (PrefabObj == null)
 		{
-			Debug.Log("Î´ÄÜ¼ÓÔØµ½¸Ã¹Ø¿¨Êı¾İ£¬¼ÓÔØµÄ¹Ø¿¨Îª£º"+ NowLevel.ToString());
+			Debug.Log("æœªèƒ½åŠ è½½åˆ°è¯¥å…³å¡æ•°æ®ï¼ŒåŠ è½½çš„å…³å¡ä¸ºï¼š"+ NowLevel.ToString());
 			return;
 		}
 		else {
@@ -761,14 +761,14 @@ public class GameManager : SingletonMono<GameManager>
 						goundBackItem.SpriteRendener = spriteRenderer;
 						spriteRenderer.transform.localPosition = new Vector3(0,1.4f,1);
 					}
-					goundBackItem.DisplayNumbers(true, goundBackItem.IsLock ? "½âËø" : "");
+					goundBackItem.DisplayNumbers(true, goundBackItem.IsLock ? "è§£é”" : "");
 				}
 			}
 		}
 	}
 
 	/// <summary>
-	/// ÒÆ³ıµ±Ç°µØÍ¼Íø¸ñ
+	/// ç§»é™¤å½“å‰åœ°å›¾ç½‘æ ¼
 	/// </summary>
 	public void RemoveBoxMatrix()
 	{
@@ -779,7 +779,7 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 	/// <summary>
-	/// »¹ÓĞ¼¸¸öÒÑ½âËøÎ´·ÅÖÃµÄ¿ÕÎ»
+	/// è¿˜æœ‰å‡ ä¸ªå·²è§£é”æœªæ”¾ç½®çš„ç©ºä½
 	/// </summary>
 	/// <returns></returns>
 	public int IsItAvailable() {

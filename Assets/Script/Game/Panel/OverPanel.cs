@@ -38,12 +38,12 @@ namespace TYQ
 
 		void OnClickEvent(GameObject but)
 		{
-			Debug.Log("µã»÷ÁË°´Å¥£º" + but.name);
+			Debug.Log("ç‚¹å‡»äº†æŒ‰é’®ï¼š" + but.name);
 			switch (but.name)
 			{
 				case "XBtn":
 				case "GoundBack":
-				case "ContinueBtn"://¼ÌĞøÓÎÏ·
+				case "ContinueBtn"://ç»§ç»­æ¸¸æˆ
 					gameObject.SetActive(false);
 					GameManager.Instance.LoadNextLevel();
 					break;
@@ -52,15 +52,15 @@ namespace TYQ
 				case "LoseRe":
 					break;
 			}
-			AudioManager.Instance.PlaySFX("click_ui£¨µã»÷UI°´Å¥£©");
+			AudioManager.Instance.PlaySFX("click_uiï¼ˆç‚¹å‡»UIæŒ‰é’®ï¼‰");
 		}
 
 
 
-		// ÊµÏÖ»ùÀàµÄ³éÏó·½·¨
+		// å®ç°åŸºç±»çš„æŠ½è±¡æ–¹æ³•
 		public override void CallSpecificMethod(string methodName, object[] parameters)
 		{
-			// Ê¹ÓÃ·´ÉäÀ´µ÷ÓÃ·½·¨
+			// ä½¿ç”¨åå°„æ¥è°ƒç”¨æ–¹æ³•
 			MethodInfo methodInfo = typeof(PausePanel).GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
 			methodInfo?.Invoke(this, parameters);
 		}

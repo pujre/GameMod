@@ -8,7 +8,7 @@ namespace TYQ
 			gameObject.SetActive(isOn);
 		}
 
-		// 调用特定方法
+		// 璋冪敤鐗瑰畾鏂规硶
 		public abstract void CallSpecificMethod(string methodName, object[] parameters);
 	}
 }

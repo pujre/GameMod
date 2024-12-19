@@ -7,7 +7,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 public class UnitSDF : MonoBehaviour
 {
 	/// <summary>
-	/// »ñÈ¡Ö¸¶¨×ø±êµÄÖÜÎ§µÄ×ø±êµã
+	/// è·å–æŒ‡å®šåæ ‡çš„å‘¨å›´çš„åæ ‡ç‚¹
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="y"></param>
@@ -29,7 +29,7 @@ public class UnitSDF : MonoBehaviour
 	}
 
 	/// <summary>
-	/// É¸Ñ¡ÏàÁÚµÄ×ø±ê
+	/// ç­›é€‰ç›¸é‚»çš„åæ ‡
 	/// </summary>
 	/// <param name="coord"></param>
 	/// <param name="vector2Ints"></param>
@@ -48,7 +48,7 @@ public class UnitSDF : MonoBehaviour
 			group.Add(current);
 			foreach (var neighbor in GameManager.Instance.GetAroundPos(current.x, current.y))
 			{
-				// Èç¹ûÁÚ¾ÓÔÚ coordinates ÖĞÇÒÎ´±»·ÃÎÊ¹ı£¬Ôò½«ÁÚ¾ÓÑ¹ÈëÕ»
+				// å¦‚æœé‚»å±…åœ¨ coordinates ä¸­ä¸”æœªè¢«è®¿é—®è¿‡ï¼Œåˆ™å°†é‚»å±…å‹å…¥æ ˆ
 				if (coordinates.Contains(neighbor) && !visited.Contains(neighbor))
 				{
 					stack.Push(neighbor);
@@ -58,7 +58,7 @@ public class UnitSDF : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ´ÓÖ¸¶¨µã¿ªÊ¼ËÑÑ°¸ÃµãÖÜÎ§ËùÓĞµÄµã
+	/// ä»æŒ‡å®šç‚¹å¼€å§‹æœå¯»è¯¥ç‚¹å‘¨å›´æ‰€æœ‰çš„ç‚¹
 	/// </summary>
 	/// <param name="startHex"></param>
 	/// <returns></returns>
@@ -72,9 +72,9 @@ public class UnitSDF : MonoBehaviour
 		while (queue.Count > 0)
 		{
 			Vector2Int currentHex = queue.Dequeue();
-			//Debug.Log(string.Format("-ËÑÑ°µã- ÏÖÔÚËÑË÷×ø±êµãX:{0},Y:{1}µã¸½¼şµÄµã", currentHex.x, currentHex.y));
+			//Debug.Log(string.Format("-æœå¯»ç‚¹- ç°åœ¨æœç´¢åæ ‡ç‚¹X:{0},Y:{1}ç‚¹é™„ä»¶çš„ç‚¹", currentHex.x, currentHex.y));
 			List<Vector2Int> aroundCan = GameManager.Instance.GetAroundCanBeOperatedPos(currentHex.x, currentHex.y);
-			//Debug.Log(string.Format("-ËÑÑ°µã- ×ø±êµãX:{0},Y:{1}µã¸½¼şµÄ·ûºÏÒªÇóµÄµãµÄÊıÁ¿Îª£º{2}", currentHex.x, currentHex.y,aroundCan.Count));
+			//Debug.Log(string.Format("-æœå¯»ç‚¹- åæ ‡ç‚¹X:{0},Y:{1}ç‚¹é™„ä»¶çš„ç¬¦åˆè¦æ±‚çš„ç‚¹çš„æ•°é‡ä¸ºï¼š{2}", currentHex.x, currentHex.y,aroundCan.Count));
 			for (int i = 0; i < aroundCan.Count; i++)
 			{
 				if (!visited.Contains(aroundCan[i]))
@@ -85,7 +85,7 @@ public class UnitSDF : MonoBehaviour
 				}
 			}
 		}
-		Debug.Log(string.Format("-ËÑÑ°µã- µãX:{0}£¬Y£º{1}ÖÜÎ§ËùÓĞµÄµãÒ»¹²ÓĞ{2}¸ö£¬Îª£º{3}", startHex.x, startHex.y, visited.ToList().Count, log));
+		Debug.Log(string.Format("-æœå¯»ç‚¹- ç‚¹X:{0}ï¼ŒYï¼š{1}å‘¨å›´æ‰€æœ‰çš„ç‚¹ä¸€å…±æœ‰{2}ä¸ªï¼Œä¸ºï¼š{3}", startHex.x, startHex.y, visited.ToList().Count, log));
 		if (visited.ToList().Count == 1)
 		{
 			return null;
@@ -98,7 +98,7 @@ public class UnitSDF : MonoBehaviour
 
 	#region Old script
 	/// <summary>
-	/// Éî¶ÈËÑË÷
+	/// æ·±åº¦æœç´¢
 	/// </summary>
 	/// <param name="coordinates"></param>
 	/// <returns></returns>
@@ -106,30 +106,30 @@ public class UnitSDF : MonoBehaviour
 	//{
 	//	List<InstructionData> instructionData = new List<InstructionData>();
 	//	Debug.Log("____________________________________");
-	//	// ²éÕÒÆğµã
+	//	// æŸ¥æ‰¾èµ·ç‚¹
 	//	Vector2Int start = FindCountIsOne(coordinates);
-	//	Debug.Log(string.Format("²éÕÒÆğµã-É¸Ñ¡ºóµãµÄ×ø±êÎªX:{0},Y:{1},ËûµÄÖÜÎ§µãÎª{2}", start.x, start.y, GameManager.Instance.GetAroundCanBeOperatedPos(start.x, start.y).Count.ToString()));
+	//	Debug.Log(string.Format("æŸ¥æ‰¾èµ·ç‚¹-ç­›é€‰åç‚¹çš„åæ ‡ä¸ºX:{0},Y:{1},ä»–çš„å‘¨å›´ç‚¹ä¸º{2}", start.x, start.y, GameManager.Instance.GetAroundCanBeOperatedPos(start.x, start.y).Count.ToString()));
 
-	//	// ÓÃÓÚ¼ÇÂ¼·ÃÎÊ¹ıµÄ½ÚµãºÍÎ´·ÃÎÊµÄÁÚ¾Ó
+	//	// ç”¨äºè®°å½•è®¿é—®è¿‡çš„èŠ‚ç‚¹å’Œæœªè®¿é—®çš„é‚»å±…
 	//	Dictionary<Vector2Int, InstDataCalculus> visitedNodes = new Dictionary<Vector2Int, InstDataCalculus>();
 	//	bool isOn=false;
 	//	int index = 0;
 	//	HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 	//	while(!isOn)
 	//	{
-	//		List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y).Where(pos => coordinates.Contains(pos)&& !visited.Contains(pos)).ToList(); // »ñÈ¡µ±Ç°×ø±êÖÜÎ§µÄ×ø±ê
+	//		List<Vector2Int> around = GameManager.Instance.GetAroundPos(start.x, start.y).Where(pos => coordinates.Contains(pos)&& !visited.Contains(pos)).ToList(); // è·å–å½“å‰åæ ‡å‘¨å›´çš„åæ ‡
 	//		string aroundString = string.Join(", ", around.Select(pos => pos.ToString()).ToArray());
-	//		Debug.Log(string.Format("×ø±êÎª£º{0},³¤¶ÈÎª£º{1},IndexÎª£º{2},ÒÑ·ÃÎÊ¹ıµÄÊıÎª£º{3}£¬µ±Ç°×ÜÊıÎª£º{4}£¬º¬ÓĞÒÔÏÂÕâĞ©µã£º{5}", start,around.Count,index,visited.Count, coordinates.Count, aroundString));
+	//		Debug.Log(string.Format("åæ ‡ä¸ºï¼š{0},é•¿åº¦ä¸ºï¼š{1},Indexä¸ºï¼š{2},å·²è®¿é—®è¿‡çš„æ•°ä¸ºï¼š{3}ï¼Œå½“å‰æ€»æ•°ä¸ºï¼š{4}ï¼Œå«æœ‰ä»¥ä¸‹è¿™äº›ç‚¹ï¼š{5}", start,around.Count,index,visited.Count, coordinates.Count, aroundString));
 	//		if (around.Count == 0)
 	//		{
 	//			if (instructionData.Count == coordinates.Count - 1)
 	//			{
-	//				Debug.Log("Ã»ÓĞ¸ü¶à½Úµã¿ÉÒÔ·ÃÎÊ£¬½áÊø,·µ»ØµÄÂ·¾¶³¤¶ÈÎª£º"+ instructionData.Count);
+	//				Debug.Log("æ²¡æœ‰æ›´å¤šèŠ‚ç‚¹å¯ä»¥è®¿é—®ï¼Œç»“æŸ,è¿”å›çš„è·¯å¾„é•¿åº¦ä¸ºï¼š"+ instructionData.Count);
 	//				isOn = true;
 	//				break;
 	//			}
 
-	//			// »ØËİ£ºµ±Ç°½ÚµãÃ»ÓĞÎ´·ÃÎÊµÄÁÚ¾Ó£¬´Ó¼ÇÂ¼ÖĞÈ¡»ØÉÏÒ»¸ö½Úµã
+	//			// å›æº¯ï¼šå½“å‰èŠ‚ç‚¹æ²¡æœ‰æœªè®¿é—®çš„é‚»å±…ï¼Œä»è®°å½•ä¸­å–å›ä¸Šä¸€ä¸ªèŠ‚ç‚¹
 	//			var lastEntry = visitedNodes.Last();
 	//			start = lastEntry.Key;
 	//			around = lastEntry.Value.VisitedNodes.Except(new List<Vector2Int> { start }).ToList();
@@ -141,7 +141,7 @@ public class UnitSDF : MonoBehaviour
 	//               instructionData.RemoveRange(instructionData.Count - backtrackCount, backtrackCount);
 	//			index -= backtrackCount;
 
-	//			Debug.Log("»ØËİÁË" + backtrackCount + "´Î");
+	//			Debug.Log("å›æº¯äº†" + backtrackCount + "æ¬¡");
 	//			//continue;
 	//		}
 
@@ -151,7 +151,7 @@ public class UnitSDF : MonoBehaviour
 	//			Vector2Int next = around[0];
 	//			instructionData.Add(new InstructionData(start, next));
 	//			visited.Add(start);
-	//			Debug.Log(string.Format("Ìí¼ÓÁËÒ»¸öInstructionData£¬startÎª£º{0},endÎª£º{1},", start, next));
+	//			Debug.Log(string.Format("æ·»åŠ äº†ä¸€ä¸ªInstructionDataï¼Œstartä¸ºï¼š{0},endä¸ºï¼š{1},", start, next));
 	//			start = next;
 	//			index++;
 	//			if (visitedNodes.ContainsKey(start)) {
@@ -165,24 +165,24 @@ public class UnitSDF : MonoBehaviour
 	//				index++;
 	//				UpdateVisitedNodes(visitedNodes, start, index, around);
 	//				instructionData.Add(new InstructionData(around[0], start));
-	//				Debug.Log(string.Format("Ìí¼ÓÁËÒ»¸öInstructionData£¬startÎª£º{0},endÎª£º{1},", around[0], start));
+	//				Debug.Log(string.Format("æ·»åŠ äº†ä¸€ä¸ªInstructionDataï¼Œstartä¸ºï¼š{0},endä¸ºï¼š{1},", around[0], start));
 	//				visited.Add(around[0]);
 	//			}
 	//			else {
 	//				index++;
-	//				// ¼ÇÂ¼µ±Ç°½Úµã¼°ÆäÎ´·ÃÎÊµÄÁÚ¾Ó
+	//				// è®°å½•å½“å‰èŠ‚ç‚¹åŠå…¶æœªè®¿é—®çš„é‚»å±…
 	//				UpdateVisitedNodes(visitedNodes, start, index, around);
 	//				Vector2Int next = around[0];
 	//				instructionData.Add(new InstructionData(start, next));
-	//				Debug.Log(string.Format("Ìí¼ÓÁËÒ»¸öInstructionData£¬startÎª£º{0},endÎª£º{1},", start, next));
+	//				Debug.Log(string.Format("æ·»åŠ äº†ä¸€ä¸ªInstructionDataï¼Œstartä¸ºï¼š{0},endä¸ºï¼š{1},", start, next));
 	//				visited.Add(start);
 	//				start = next;
 	//			}
 	//		}
 	//		else
 	//		{
-	//			// Ã»ÓĞ¸ü¶à½Úµã¿ÉÒÔ·ÃÎÊ£¬½áÊø
-	//			Debug.Log("Ã»ÓĞ¸ü¶à½Úµã¿ÉÒÔ·ÃÎÊ£¬½áÊø,·µ»ØµÄÂ·¾¶³¤¶ÈÎª£º" + instructionData.Count);
+	//			// æ²¡æœ‰æ›´å¤šèŠ‚ç‚¹å¯ä»¥è®¿é—®ï¼Œç»“æŸ
+	//			Debug.Log("æ²¡æœ‰æ›´å¤šèŠ‚ç‚¹å¯ä»¥è®¿é—®ï¼Œç»“æŸ,è¿”å›çš„è·¯å¾„é•¿åº¦ä¸ºï¼š" + instructionData.Count);
 	//			isOn = true;
 	//			break;
 	//		}
@@ -198,20 +198,20 @@ public class UnitSDF : MonoBehaviour
 	{
 		List<InstructionData> instructionData = new List<InstructionData>();
 		Debug.Log("____________________________________");
-		// Ê¹ÓÃHashSetÌá¸ß²éÕÒĞ§ÂÊ
+		// ä½¿ç”¨HashSetæé«˜æŸ¥æ‰¾æ•ˆç‡
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
-		// ²éÕÒÆğµã£º¶ÈÎª1µÄ½Úµã
+		// æŸ¥æ‰¾èµ·ç‚¹ï¼šåº¦ä¸º1çš„èŠ‚ç‚¹
 		Vector2Int start = FindCountIsOne(coordinates);
-		//Debug.Log($"ÕÒµ½Æğµã£ºX={start.x}, Y={start.y}");
-		// ³õÊ¼»¯·ÃÎÊ¼ÇÂ¼
+		//Debug.Log($"æ‰¾åˆ°èµ·ç‚¹ï¼šX={start.x}, Y={start.y}");
+		// åˆå§‹åŒ–è®¿é—®è®°å½•
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
-		// ³õÊ¼»¯Â·¾¶
+		// åˆå§‹åŒ–è·¯å¾„
 		List<InstructionData> path = new List<InstructionData>();
-		// ¿ªÊ¼µİ¹éËÑË÷
+		// å¼€å§‹é€’å½’æœç´¢
 		bool success = FindPath(start, coordinateSet, visited, path, null);
 		if (success)
 		{
-			//Debug.Log($"Â·¾¶ËÑË÷³É¹¦£¬Â·¾¶³¤¶ÈÎª£º{path.Count}");
+			//Debug.Log($"è·¯å¾„æœç´¢æˆåŠŸï¼Œè·¯å¾„é•¿åº¦ä¸ºï¼š{path.Count}");
 			return path;
 		}
 		else
@@ -219,7 +219,7 @@ public class UnitSDF : MonoBehaviour
 			if (coordinates.Count==4) {
 				Vector2Int three = FindCountIsThree(coordinates);
 				if (three == default) {
-					Debug.LogWarning("0:Î´ÄÜÕÒµ½¸²¸ÇËùÓĞ½ÚµãµÄÍêÕûÂ·¾¶¡£");
+					Debug.LogWarning("0:æœªèƒ½æ‰¾åˆ°è¦†ç›–æ‰€æœ‰èŠ‚ç‚¹çš„å®Œæ•´è·¯å¾„ã€‚");
 					return new List<InstructionData>();
 				} else {
                     for (int i = 0; i < coordinates.Count; i++)
@@ -234,66 +234,66 @@ public class UnitSDF : MonoBehaviour
 			}
             else
             {
-				Debug.LogWarning("1:Î´ÄÜÕÒµ½¸²¸ÇËùÓĞ½ÚµãµÄÍêÕûÂ·¾¶¡£");
+				Debug.LogWarning("1:æœªèƒ½æ‰¾åˆ°è¦†ç›–æ‰€æœ‰èŠ‚ç‚¹çš„å®Œæ•´è·¯å¾„ã€‚");
 				return new List<InstructionData>();
 			}
 		}
 	}
 
 	/// <summary>
-	/// µİ¹éDFSËÑË÷Â·¾¶
+	/// é€’å½’DFSæœç´¢è·¯å¾„
 	/// </summary>
-	/// <param name="current">µ±Ç°½Úµã</param>
-	/// <param name="coordinateSet">ËùÓĞÆå×Ó×ø±êµÄHashSet</param>
-	/// <param name="visited">ÒÑ·ÃÎÊ½ÚµãµÄHashSet</param>
-	/// <param name="path">µ±Ç°Â·¾¶µÄInstructionDataÁĞ±í</param>
-	/// <param name="previous">ÉÏÒ»¸ö½Úµã</param>
-	/// <returns>ÊÇ·ñÕÒµ½ÍêÕûÂ·¾¶</returns>
+	/// <param name="current">å½“å‰èŠ‚ç‚¹</param>
+	/// <param name="coordinateSet">æ‰€æœ‰æ£‹å­åæ ‡çš„HashSet</param>
+	/// <param name="visited">å·²è®¿é—®èŠ‚ç‚¹çš„HashSet</param>
+	/// <param name="path">å½“å‰è·¯å¾„çš„InstructionDataåˆ—è¡¨</param>
+	/// <param name="previous">ä¸Šä¸€ä¸ªèŠ‚ç‚¹</param>
+	/// <returns>æ˜¯å¦æ‰¾åˆ°å®Œæ•´è·¯å¾„</returns>
 	private static bool FindPath(Vector2Int current, HashSet<Vector2Int> coordinateSet, HashSet<Vector2Int> visited, List<InstructionData> path, Vector2Int? previous)
 	{
 		visited.Add(current);
-		Debug.Log($"·ÃÎÊ½Úµã£ºX={current.x}, Y={current.y}");
+		Debug.Log($"è®¿é—®èŠ‚ç‚¹ï¼šX={current.x}, Y={current.y}");
 
-		// Èç¹ûÓĞÉÏÒ»¸ö½Úµã£¬Ôò¼ÇÂ¼Â·¾¶
+		// å¦‚æœæœ‰ä¸Šä¸€ä¸ªèŠ‚ç‚¹ï¼Œåˆ™è®°å½•è·¯å¾„
 		if (previous.HasValue)
 		{
 			path.Add(new InstructionData(previous.Value, current));
-			Debug.Log($"Ìí¼ÓÂ·¾¶£º{previous.Value} -> {current}");
+			Debug.Log($"æ·»åŠ è·¯å¾„ï¼š{previous.Value} -> {current}");
 		}
 
-		// Èç¹ûËùÓĞ½Úµã¶¼ÒÑ·ÃÎÊ£¬·µ»Ø³É¹¦
+		// å¦‚æœæ‰€æœ‰èŠ‚ç‚¹éƒ½å·²è®¿é—®ï¼Œè¿”å›æˆåŠŸ
 		if (visited.Count == coordinateSet.Count)
 		{
 			return true;
 		}
 
-		// »ñÈ¡ËùÓĞÎ´·ÃÎÊµÄÁÚ¾Ó
+		// è·å–æ‰€æœ‰æœªè®¿é—®çš„é‚»å±…
 		List<Vector2Int> neighbors = GameManager.Instance.GetAroundPos(current.x, current.y)
 			.Where(pos => coordinateSet.Contains(pos) && !visited.Contains(pos))
 			.ToList();
 
 		foreach (var neighbor in neighbors)
 		{
-			// ³¢ÊÔ·ÃÎÊÁÚ¾Ó
+			// å°è¯•è®¿é—®é‚»å±…
 			bool found = FindPath(neighbor, coordinateSet, visited, path, current);
 			if (found)
 			{
 				return true;
 			}
 
-			// »ØËİ£¬ÒÆ³ıÂ·¾¶ÖĞµÄ×îºóÒ»²½
+			// å›æº¯ï¼Œç§»é™¤è·¯å¾„ä¸­çš„æœ€åä¸€æ­¥
 			if (path.Count > 0)
 			{
 				InstructionData lastStep = path[path.Count - 1];
 				if (lastStep.EndVector2 == neighbor)
 				{
 					path.RemoveAt(path.Count - 1);
-					Debug.Log($"»ØËİÂ·¾¶£ºÒÆ³ı {lastStep.StarVector2} -> {lastStep.EndVector2}");
+					Debug.Log($"å›æº¯è·¯å¾„ï¼šç§»é™¤ {lastStep.StarVector2} -> {lastStep.EndVector2}");
 				}
 			}
 		}
 
-		// Èç¹ûÎŞ·¨¼ÌĞø£¬ÒÆ³ıµ±Ç°½ÚµãµÄ·ÃÎÊ¼ÇÂ¼²¢·µ»ØÊ§°Ü
+		// å¦‚æœæ— æ³•ç»§ç»­ï¼Œç§»é™¤å½“å‰èŠ‚ç‚¹çš„è®¿é—®è®°å½•å¹¶è¿”å›å¤±è´¥
 		visited.Remove(current);
 		return false;
 	}
@@ -304,7 +304,7 @@ public class UnitSDF : MonoBehaviour
 	#endregion
 
 	/// <summary>
-	/// ¼ÇÂ¼µ±Ç°½Úµã¼°ÆäÎ´·ÃÎÊµÄÁÚ¾Ó
+	/// è®°å½•å½“å‰èŠ‚ç‚¹åŠå…¶æœªè®¿é—®çš„é‚»å±…
 	/// </summary>
 	/// <param name="visitedNodes"></param>
 	/// <param name="start"></param>
@@ -326,7 +326,7 @@ public class UnitSDF : MonoBehaviour
 
 	public static Vector2Int FindCountIsOne(List<Vector2Int> coordinates) {
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
-		// Ô¤¼ÆËãËùÓĞ×ø±êµÄÁÚ¾ÓÊıÁ¿£¬ÒÔ¼õÉÙÖØ¸´¼ÆËã
+		// é¢„è®¡ç®—æ‰€æœ‰åæ ‡çš„é‚»å±…æ•°é‡ï¼Œä»¥å‡å°‘é‡å¤è®¡ç®—
 		Dictionary<Vector2Int, int> neighborsCountDict = new Dictionary<Vector2Int, int>();
 		foreach (var pos in coordinates)
 		{
@@ -337,12 +337,12 @@ public class UnitSDF : MonoBehaviour
 		var start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 1).Key;
 		if (start == default)
 		{
-			// Ã»ÓĞÕÒµ½ÔòÕÒÁÚ¾ÓÊıÁ¿Îª3µÄ
+			// æ²¡æœ‰æ‰¾åˆ°åˆ™æ‰¾é‚»å±…æ•°é‡ä¸º3çš„
 			start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 3).Key;
 		}
 		if (start == default)
 		{
-			// Èç¹ûÒÀÈ»Ã»ÕÒµ½ÔòÕÒÁÚ¾ÓÊıÁ¿´óÓÚ1µÄ
+			// å¦‚æœä¾ç„¶æ²¡æ‰¾åˆ°åˆ™æ‰¾é‚»å±…æ•°é‡å¤§äº1çš„
 			start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value > 1).Key;
 		}
 		return start;
@@ -352,7 +352,7 @@ public class UnitSDF : MonoBehaviour
 	public static Vector2Int FindCountIsThree(List<Vector2Int> coordinates)
 	{
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
-		// Ô¤¼ÆËãËùÓĞ×ø±êµÄÁÚ¾ÓÊıÁ¿£¬ÒÔ¼õÉÙÖØ¸´¼ÆËã
+		// é¢„è®¡ç®—æ‰€æœ‰åæ ‡çš„é‚»å±…æ•°é‡ï¼Œä»¥å‡å°‘é‡å¤è®¡ç®—
 		Dictionary<Vector2Int, int> neighborsCountDict = new Dictionary<Vector2Int, int>();
 		foreach (var pos in coordinates)
 		{

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ½Ó¿Ú£º¿É³Ø»¯¶ÔÏó
+/// æ¥å£ï¼šå¯æ± åŒ–å¯¹è±¡
 /// </summary>
 public interface IPoolable
 {
@@ -13,7 +13,7 @@ public interface IPoolable
 }
 
 /// <summary>
-/// µ¥¸ö¶ÔÏó³ØÀà£¬¹ÜÀíÌØ¶¨ÀàĞÍµÄ¶ÔÏó
+/// å•ä¸ªå¯¹è±¡æ± ç±»ï¼Œç®¡ç†ç‰¹å®šç±»å‹çš„å¯¹è±¡
 /// </summary>
 public class Pool
 {
@@ -26,7 +26,7 @@ public class Pool
 	}
 
 	/// <summary>
-	/// »ñÈ¡¶ÔÏó
+	/// è·å–å¯¹è±¡
 	/// </summary>
 	public GameObject GetObject(Transform parent = null)
 	{
@@ -55,7 +55,7 @@ public class Pool
 	}
 
 	/// <summary>
-	/// »ØÊÕ¶ÔÏó
+	/// å›æ”¶å¯¹è±¡
 	/// </summary>
 	public void ReturnObject(GameObject obj)
 	{
@@ -68,7 +68,7 @@ public class Pool
 	}
 
 	/// <summary>
-	/// ÇåÀí¶ÔÏó³Ø
+	/// æ¸…ç†å¯¹è±¡æ± 
 	/// </summary>
 	public void Clear()
 	{
@@ -83,14 +83,14 @@ public class Pool
 }
 
 /// <summary>
-/// ¶ÔÏó³Ø¹ÜÀíÆ÷£¬µ¥ÀıÄ£Ê½
+/// å¯¹è±¡æ± ç®¡ç†å™¨ï¼Œå•ä¾‹æ¨¡å¼
 /// </summary>
 public class PoolManager : SingletonMono<PoolManager>
 {
 	private Dictionary<string, Pool> pools = new Dictionary<string, Pool>();
 
 	/// <summary>
-	/// »ñÈ¡¶ÔÏó
+	/// è·å–å¯¹è±¡
 	/// </summary>
 	public GameObject GetObject(string prefabName, Transform parent = null)
 	{
@@ -102,7 +102,7 @@ public class PoolManager : SingletonMono<PoolManager>
 
 		if (!pools.ContainsKey(prefabName))
 		{
-			// ¼ÓÔØÔ¤ÖÆÌå
+			// åŠ è½½é¢„åˆ¶ä½“
 			GameObject prefab = Resources.Load<GameObject>(ResPath.GetPath(prefabName));
 			if (prefab == null)
 			{
@@ -116,7 +116,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	/// <summary>
-	/// »ñÈ¡¶ÔÏó£¨Í¨¹ıÔ¤ÖÆÌå£©
+	/// è·å–å¯¹è±¡ï¼ˆé€šè¿‡é¢„åˆ¶ä½“ï¼‰
 	/// </summary>
 	public GameObject GetObject(GameObject prefab, Transform parent = null)
 	{
@@ -137,7 +137,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	/// <summary>
-	/// »ØÊÕ¶ÔÏó
+	/// å›æ”¶å¯¹è±¡
 	/// </summary>
 	public void ReturnObject(GameObject obj)
 	{
@@ -163,7 +163,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	/// <summary>
-	/// ÇåÀíÌØ¶¨¶ÔÏó³Ø
+	/// æ¸…ç†ç‰¹å®šå¯¹è±¡æ± 
 	/// </summary>
 	public void ClearPool(string prefabName)
 	{
@@ -175,7 +175,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	/// <summary>
-	/// ÇåÀíËùÓĞ¶ÔÏó³Ø
+	/// æ¸…ç†æ‰€æœ‰å¯¹è±¡æ± 
 	/// </summary>
 	public void ClearAllPools()
 	{
@@ -187,7 +187,7 @@ public class PoolManager : SingletonMono<PoolManager>
 	}
 
 	/// <summary>
-	/// ÅĞ¶Ï¶ÔÏó³ØÊÇ·ñ´æÔÚ
+	/// åˆ¤æ–­å¯¹è±¡æ± æ˜¯å¦å­˜åœ¨
 	/// </summary>
 	public bool PoolExists(string prefabName)
 	{

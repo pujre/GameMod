@@ -7,13 +7,13 @@ public class ResPath : MonoBehaviour
 	private static Dictionary<string, string> pathDic = new Dictionary<string, string>();
 	const string pathFilePath = "PrefabPath";
 
-	//³õÊ¼»¯
+	//åˆå§‹åŒ–
 	public static void Init()
 	{
 		LoadPath();
 	}
 
-	//¼ÓÔØ±¾µØÂ·¾¶
+	//åŠ è½½æœ¬åœ°è·¯å¾„
 	static void LoadPath()
 	{
 		try
@@ -34,7 +34,7 @@ public class ResPath : MonoBehaviour
 	}
 
 	/// <summary>
-	/// »ñÈ¡×ÊÔ´Â·¾¶
+	/// è·å–èµ„æºè·¯å¾„
 	/// </summary>
 	/// <param name="name"></param>
 	/// <returns></returns>

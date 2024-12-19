@@ -15,14 +15,14 @@ public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
 				{
 					if (instance == null)
 					{
-						// ÔÚ³¡¾°ÖĞ²éÕÒÊÇ·ñÒÑ´æÔÚ¸ÃÀàĞÍµÄÊµÀı
+						// åœ¨åœºæ™¯ä¸­æŸ¥æ‰¾æ˜¯å¦å·²å­˜åœ¨è¯¥ç±»å‹çš„å®ä¾‹
 						instance = FindObjectOfType<T>();
-						// Èç¹û³¡¾°ÖĞ²»´æÔÚ¸ÃÀàĞÍµÄÊµÀı£¬Ôò´´½¨Ò»¸öĞÂµÄGameObject²¢Ìí¼Ó¸Ã×é¼ş
+						// å¦‚æœåœºæ™¯ä¸­ä¸å­˜åœ¨è¯¥ç±»å‹çš„å®ä¾‹ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªæ–°çš„GameObjectå¹¶æ·»åŠ è¯¥ç»„ä»¶
 						if (instance == null)
 						{
 							GameObject singletonObject = new GameObject(typeof(T).Name + "_Singleton");
 							instance = singletonObject.AddComponent<T>();
-							DontDestroyOnLoad(singletonObject); // ±£ÁôÔÚ³¡¾°ÇĞ»»Ê±²»±»Ïú»Ù
+							DontDestroyOnLoad(singletonObject); // ä¿ç•™åœ¨åœºæ™¯åˆ‡æ¢æ—¶ä¸è¢«é”€æ¯
 						}
 					}
 				}
@@ -31,19 +31,19 @@ public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
 		}
 	}
 
-	// Ê¹ÓÃvirtualĞéº¯Êı£¬×ÓÀà¼Ì³Ğ¿ÉÄÜ»¹ĞèÒªÓÃAwake()
+	// ä½¿ç”¨virtualè™šå‡½æ•°ï¼Œå­ç±»ç»§æ‰¿å¯èƒ½è¿˜éœ€è¦ç”¨Awake()
 	protected virtual void Awake()
 	{
-		// ¼ì²éÊÇ·ñ´æÔÚÖØ¸´µÄÊµÀı
+		// æ£€æŸ¥æ˜¯å¦å­˜åœ¨é‡å¤çš„å®ä¾‹
 		if (instance == null)
 		{
 			instance = this as T;
-			DontDestroyOnLoad(gameObject); // È·±£ÔÚ³¡¾°ÇĞ»»Ê±²»»áÏú»Ù¸ÃÊµÀı
+			DontDestroyOnLoad(gameObject); // ç¡®ä¿åœ¨åœºæ™¯åˆ‡æ¢æ—¶ä¸ä¼šé”€æ¯è¯¥å®ä¾‹
 		}
 		else if (instance != this)
 		{
-			Debug.LogWarning("´æÔÚÖØ¸´µÄµ¥Àı" + typeof(T).Name + "£¬É¾³ı");
-			Destroy(gameObject); // É¾³ıÖØ¸´µÄÊµÀı
+			Debug.LogWarning("å­˜åœ¨é‡å¤çš„å•ä¾‹" + typeof(T).Name + "ï¼Œåˆ é™¤");
+			Destroy(gameObject); // åˆ é™¤é‡å¤çš„å®ä¾‹
 		}
 	}
 }

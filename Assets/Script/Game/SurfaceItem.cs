@@ -6,8 +6,8 @@ using TMPro;
 
 public class SurfaceItem : MonoBehaviour
 {
-	public bool IsOnMove = false; // ÊÇ·ñÔÊĞíÍÏ¶¯
-	public Vector3 QreVector3; // ³õÊ¼×ø±ê
+	public bool IsOnMove = false; // æ˜¯å¦å…è®¸æ‹–åŠ¨
+	public Vector3 QreVector3; // åˆå§‹åæ ‡
 	private float Assign_Y = 0.65f;
 	private Staging Staging;
 	public List<Surface> Surfaces = new List<Surface>();
@@ -27,7 +27,7 @@ public class SurfaceItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ¸Ä±äËÉÊÖºó»Ø¸´µÄÎ»ÖÃ
+	/// æ”¹å˜æ¾æ‰‹åå›å¤çš„ä½ç½®
 	/// </summary>
 	/// <param name="pos"></param>
 	public void ChangeInitialPosition(Vector3 pos) {
@@ -82,7 +82,7 @@ public class SurfaceItem : MonoBehaviour
 
 
 	/// <summary>
-	/// Éú³ÉÖ¸¶¨ÑÕÉ«ÊıµÄËæ»úsurface
+	/// ç”ŸæˆæŒ‡å®šé¢œè‰²æ•°çš„éšæœºsurface
 	/// </summary>
 	/// <param name="colorNumber"></param>
 	public void CreatorSurface(int colorNumber = 3)
@@ -102,7 +102,7 @@ public class SurfaceItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Çå³ıµ±Ç°Êı¾İ
+	/// æ¸…é™¤å½“å‰æ•°æ®
 	/// </summary>
 	public void SufaDestroy()
 	{
@@ -141,13 +141,13 @@ public class SurfaceItem : MonoBehaviour
 
 	private List<int> GroupNumbersTogether(List<int> lst)
 	{
-		// ´´½¨Ò»¸ö×ÖµäÀ´´æ´¢Ã¿¸öÊı×Ö³öÏÖµÄ´ÎÊı
+		// åˆ›å»ºä¸€ä¸ªå­—å…¸æ¥å­˜å‚¨æ¯ä¸ªæ•°å­—å‡ºç°çš„æ¬¡æ•°
 		Dictionary<int, List<int>> countDict = lst.GroupBy(x => x).ToDictionary(g => g.Key, g => g.ToList());
 
-		// ½«Êı×Ö°´ÕÕ·Ö×é¼ÓÈë½á¹ûÁĞ±í£¬µ«²»¸Ä±ä×éÄÚË³Ğò
+		// å°†æ•°å­—æŒ‰ç…§åˆ†ç»„åŠ å…¥ç»“æœåˆ—è¡¨ï¼Œä½†ä¸æ”¹å˜ç»„å†…é¡ºåº
 		List<int> groupedList = new List<int>();
 		List<int> keys = countDict.Keys.ToList();
-		Shuffle(keys);  // ´òÂÒ¼üµÄË³Ğò
+		Shuffle(keys);  // æ‰“ä¹±é”®çš„é¡ºåº
 		foreach (var key in keys)
 		{
 			groupedList.AddRange(countDict[key]);

@@ -10,7 +10,7 @@ using System.Threading;
 using UnityEngine;
 
 /// <summary>
-/// ±³¾°¸ñ×Ó
+/// èƒŒæ™¯æ ¼å­
 /// </summary>
 public class CellBase
 {
@@ -23,16 +23,16 @@ class InstDataCalculus
 {
 	public int Index;
 	/// <summary>
-	/// Î´·ÃÎÊ¹ıµÄµãµÄ¼¯ºÏ
+	/// æœªè®¿é—®è¿‡çš„ç‚¹çš„é›†åˆ
 	/// </summary>
 	public List<Vector2Int> VisitedNodes;
 	/// <summary>
-	/// ÒÑ¾­·ÃÎÊ¹ıµÄµãµÄ¼¯ºÏ
+	/// å·²ç»è®¿é—®è¿‡çš„ç‚¹çš„é›†åˆ
 	/// </summary>
 	public List<Vector2Int> FoldNodes;
 
 	/// <summary>
-	/// Î´·ÃÎÊ¹ıµÄµãµÄ¼¯ºÏ
+	/// æœªè®¿é—®è¿‡çš„ç‚¹çš„é›†åˆ
 	/// </summary>
 	/// <param name="index"></param>
 	/// <param name="visitedNodes"></param>
@@ -45,7 +45,7 @@ class InstDataCalculus
 		
 	}
 	/// <summary>
-	/// °ÑÒ»¸öµã¼ÓÈëÒÑ¾­·ÃÎÊµÄµã,²¢ÇÒ°ÑËûÒÆ³ı³öÎ´·ÃÎÊµÄµãµÄ¼¯ºÏ
+	/// æŠŠä¸€ä¸ªç‚¹åŠ å…¥å·²ç»è®¿é—®çš„ç‚¹,å¹¶ä¸”æŠŠä»–ç§»é™¤å‡ºæœªè®¿é—®çš„ç‚¹çš„é›†åˆ
 	/// </summary>
 	/// <param name="fold"></param>
 	public void SetFoldNodes(Vector2Int fold) {
@@ -56,7 +56,7 @@ class InstDataCalculus
 };
 
 /// <summary>
-/// Ò»µş¸ñ×Ó
+/// ä¸€å æ ¼å­
 /// </summary>
 public class StackableItem
 {
@@ -64,7 +64,7 @@ public class StackableItem
 }
 
 /// <summary>
-/// µ¥¸ö¸ñ×Ó
+/// å•ä¸ªæ ¼å­
 /// </summary>
 public class Item
 {
@@ -73,7 +73,7 @@ public class Item
 }
 
 /// <summary>
-/// ¸ñ×ÓÑÕÉ«Ã¶¾Ù
+/// æ ¼å­é¢œè‰²æšä¸¾
 /// </summary>
 public enum ItemColorType
 {
@@ -94,25 +94,25 @@ public enum ItemColorType
 }
 
 /// <summary>
-/// ÓÎÏ·ÊÂ¼ş
+/// æ¸¸æˆäº‹ä»¶
 /// </summary>
 public enum OnEventKey
 {
-	OnLoadGameLevel,//¼ÓÔØÓÎÏ·¹Ø¿¨
+	OnLoadGameLevel,//åŠ è½½æ¸¸æˆå…³å¡
 	OnGameStar,//
-	OnStackingCompleted,//Ò»´Î²Ù×÷ÏÂµÄËùÓĞÑÕÉ«¶Ñµş½áÊø
+	OnStackingCompleted,//ä¸€æ¬¡æ“ä½œä¸‹çš„æ‰€æœ‰é¢œè‰²å †å ç»“æŸ
 	OnStop,//
-	OnGameOverWin,//ÓÎÏ·½áÊøÊ¤Àû
-	OnGameOverLose,//ÓÎÏ·½áÊøÊ§°Ü
-	OnAd,//¿´¹ã¸æ
-	OnApplyProp,//Ê¹ÓÃµÀ¾ß
-	OnBonusEvent,//¼Ó·Ö
-	OnCalculate,//Ïû³ıÊÂ¼ş
-	ShowLevelTarge,//Õ¹Ê¾¹Ø¿¨Ä¿±ê
+	OnGameOverWin,//æ¸¸æˆç»“æŸèƒœåˆ©
+	OnGameOverLose,//æ¸¸æˆç»“æŸå¤±è´¥
+	OnAd,//çœ‹å¹¿å‘Š
+	OnApplyProp,//ä½¿ç”¨é“å…·
+	OnBonusEvent,//åŠ åˆ†
+	OnCalculate,//æ¶ˆé™¤äº‹ä»¶
+	ShowLevelTarge,//å±•ç¤ºå…³å¡ç›®æ ‡
 }
 
 /// <summary>
-/// ´æ´¢ÊÂ¼şKeyÖµ
+/// å­˜å‚¨äº‹ä»¶Keyå€¼
 /// </summary>
 public enum OnDataKey
 {
@@ -127,7 +127,7 @@ public enum OnDataKey
 }
 
 /// <summary>
-/// ÒÆ¶¯¶¯»­ÊÂ¼ş
+/// ç§»åŠ¨åŠ¨ç”»äº‹ä»¶
 /// </summary>
 public enum MoveTweenType
 {
@@ -143,14 +143,14 @@ public class LevelDataRoot
 	public LevelDataRoot() {
 	}
 	/// <summary>
-	/// »ñÈ¡Ö¸¶¨¹Ø¿¨Êı¾İ
+	/// è·å–æŒ‡å®šå…³å¡æ•°æ®
 	/// </summary>
 	/// <param name="level"></param>
 	/// <returns></returns>
 	public LevelData GetLevelData(int level)
 	{
 		if (LevelDatas==null|| LevelDatas.Count==0) {
-			Debug.Log(string.Format("»ñÈ¡Ö¸¶¨{0}¹Ø¿¨Êı¾İÎª¿Õ", level));
+			Debug.Log(string.Format("è·å–æŒ‡å®š{0}å…³å¡æ•°æ®ä¸ºç©º", level));
 			return null;
 		}
 		foreach (LevelData item in LevelDatas)
@@ -160,7 +160,7 @@ public class LevelDataRoot
 				return item;
 			}
 		}
-		Debug.Log(string.Format("»ñÈ¡Ö¸¶¨{0}¹Ø¿¨Êı¾İÎª¿Õ", level));
+		Debug.Log(string.Format("è·å–æŒ‡å®š{0}å…³å¡æ•°æ®ä¸ºç©º", level));
 		return null;
 	}
 }
@@ -172,38 +172,38 @@ public class LevelData
 	public int ColourNum;
 	public int MaxNum;
 	/// <summary>
-	/// µÀ¾ßID
+	/// é“å…·ID
 	/// </summary>
 	public int Item_1ID;
 	/// <summary>
-	/// µÀ¾ßÊıÁ¿
+	/// é“å…·æ•°é‡
 	/// </summary>
 	public int Item_1Number;
 	/// <summary>
-	/// µÀ¾ßÃèÊö
+	/// é“å…·æè¿°
 	/// </summary>
 	public string Describe_1;
 	/// <summary>
-	/// µÀ¾ßID
+	/// é“å…·ID
 	/// </summary>
 	public int Item_2ID;
 	/// <summary>
-	/// µÀ¾ßÊıÁ¿
+	/// é“å…·æ•°é‡
 	/// </summary>
 	public int Item_2Number;
 	/// <summary>
-	/// µÀ¾ßÃèÊö
+	/// é“å…·æè¿°
 	/// </summary>
 	public string Describe_2;/// <summary>
-							 /// µÀ¾ßID
+							 /// é“å…·ID
 							 /// </summary>
 	public int Item_3ID;
 	/// <summary>
-	/// µÀ¾ßÊıÁ¿
+	/// é“å…·æ•°é‡
 	/// </summary>
 	public int Item_3Number;
 	/// <summary>
-	/// µÀ¾ßÃèÊö
+	/// é“å…·æè¿°
 	/// </summary>
 	public string Describe_3;
 	public LevelData() {

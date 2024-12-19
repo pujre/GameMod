@@ -9,14 +9,14 @@ using VolumetricLines;
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
-	public bool IsLock = false;//true±íÊ¾ËøÉÏ£¬ĞèÒª½âËø
-	public float delayBetweenMoves = 0.35f;  // Ã¿¸ö¶ÔÏóÒÆ¶¯Ö®¼äµÄÑÓ³Ù
+	public bool IsLock = false;//trueè¡¨ç¤ºé”ä¸Šï¼Œéœ€è¦è§£é”
+	public float delayBetweenMoves = 0.35f;  // æ¯ä¸ªå¯¹è±¡ç§»åŠ¨ä¹‹é—´çš„å»¶è¿Ÿ
 	public GameObject NumberText;
 	public VolumetricLineStripBehavior volumetricLine;
 	public float GoundBack_Y;
 	public float Assign_Y;
 	/// <summary>
-	/// ¸Ã½ÚµãËùÊôµÃ×ø±ê
+	/// è¯¥èŠ‚ç‚¹æ‰€å±å¾—åæ ‡
 	/// </summary>
 	public Vector2Int ItemPosition;
 	public List<Surface> SurfacesList = new List<Surface>();
@@ -50,7 +50,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ÉèÖÃÌØĞ§µÄ¿ªÆôºÍ¹Ø±Õ
+	/// è®¾ç½®ç‰¹æ•ˆçš„å¼€å¯å’Œå…³é—­
 	/// </summary>
 	/// <param name="isOn"></param>
 	public void SetvolumetricLine(bool isOn) {
@@ -58,7 +58,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// µ±Ç°¶ÑÉÏÃ»ÓĞÎïÆ·ÇÒÃ»ÓĞ±»Ëø
+	/// å½“å‰å †ä¸Šæ²¡æœ‰ç‰©å“ä¸”æ²¡æœ‰è¢«é”
 	/// </summary>
 	/// <returns></returns>
 	public bool IsAddSurface() {
@@ -66,7 +66,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// µ±Ç°¶ÑÉÏÓĞÎïÆ·ÇÒÃ»ÓĞ±»Ëø
+	/// å½“å‰å †ä¸Šæœ‰ç‰©å“ä¸”æ²¡æœ‰è¢«é”
 	/// </summary>
 	/// <returns></returns>
 	public bool IsCanBeOperated() {
@@ -74,7 +74,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// µ±Ç°¶ÑÉÏÓĞÎïÆ·
+	/// å½“å‰å †ä¸Šæœ‰ç‰©å“
 	/// </summary>
 	/// <returns></returns>
 	public bool IsSurface()
@@ -83,7 +83,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Ô¤½»»»
+	/// é¢„äº¤æ¢
 	/// </summary>
 	//public void PropPreExchange(Transform preEx) {
 	//	if (preEx != null)
@@ -111,13 +111,13 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Ö¸¶¨Ê±¼äÄÚ½«ËùÓĞÎïÌåÑÕÉ«ÉèÖÃÎªÖ¸¶¨ÑÕÉ«
+	/// æŒ‡å®šæ—¶é—´å†…å°†æ‰€æœ‰ç‰©ä½“é¢œè‰²è®¾ç½®ä¸ºæŒ‡å®šé¢œè‰²
 	/// </summary>
 	/// <param name="targetColor"></param>
 	/// <param name="duration"></param>
 	/// <param name="colorType"></param>
 	public void SetAllColor(Color targetColor, float duration, ItemColorType colorType) {
-		Sequence sequence = DOTween.Sequence();  // ´´½¨Ò»¸öDoTweenĞòÁĞ
+		Sequence sequence = DOTween.Sequence();  // åˆ›å»ºä¸€ä¸ªDoTweenåºåˆ—
 		for (int i = 0; i < SurfacesList.Count; i++)
 		{
 			var target = SurfacesList[i];
@@ -138,11 +138,11 @@ public class GoundBackItem : MonoBehaviour
 		{
 
 		});
-		sequence.Play();  // ²¥·ÅĞòÁĞ
+		sequence.Play();  // æ’­æ”¾åºåˆ—
 	}
 
 	/// <summary>
-	/// ´ÓĞÂ²¼¾ÖÎ»ÖÃ
+	/// ä»æ–°å¸ƒå±€ä½ç½®
 	/// </summary>
 	public void SetChinderPosition() {
 		if (SurfacesList == null) return;
@@ -154,7 +154,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ÏÔÊ¾×î¶¥²ãµÄÊı×Ö,»òÕßÉèÖÃÊı×Ö
+	/// æ˜¾ç¤ºæœ€é¡¶å±‚çš„æ•°å­—,æˆ–è€…è®¾ç½®æ•°å­—
 	/// </summary>
 	public void DisplayNumbers(bool isSet,string str="") {
 		NumberText.SetActive(isSet);
@@ -166,7 +166,7 @@ public class GoundBackItem : MonoBehaviour
 				NumberTextMesh = NumberText.GetComponent<TextMeshPro>();
 			}
 			NumberTextMesh.text = string.IsNullOrEmpty(str) ? colorNumber == 0 ? "" : colorNumber.ToString() : str;
-			if (str.Contains("½âËø"))
+			if (str.Contains("è§£é”"))
 			{
 				NumberText.transform.localPosition = new Vector3(0, 1.35f, -1.7f);
 				NumberTextMesh.fontSize = 13;
@@ -200,7 +200,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// »ñÈ¡µ±Ç°×Ó½ÚµãÏÂÑÕÉ«Àà±ğ×ÜÊı
+	/// è·å–å½“å‰å­èŠ‚ç‚¹ä¸‹é¢œè‰²ç±»åˆ«æ€»æ•°
 	/// </summary>
 	/// <returns></returns>
 	public int GetNowColorNumber() {
@@ -216,7 +216,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// »ñÈ¡µ±Ç°¶¥²¿Í¬ÑÕÉ«µÄ½ÚµãÊı
+	/// è·å–å½“å‰é¡¶éƒ¨åŒé¢œè‰²çš„èŠ‚ç‚¹æ•°
 	/// </summary>
 	/// <returns></returns>
 	public int GetTopColorNumber()
@@ -238,7 +238,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ´Óµ±Ç°µÄSurfaceÀïÃæ´Ó0¿ªÊ¼ÒÆ³ıÖ¸¶¨ÑÕÉ«µÄsurface£¬²¢·µ»ØÒÆ³ıµÄsurfaceÊı×é
+	/// ä»å½“å‰çš„Surfaceé‡Œé¢ä»0å¼€å§‹ç§»é™¤æŒ‡å®šé¢œè‰²çš„surfaceï¼Œå¹¶è¿”å›ç§»é™¤çš„surfaceæ•°ç»„
 	/// </summary>
 	/// <param name="itemColor"></param>
 	/// <returns></returns>
@@ -265,7 +265,7 @@ public class GoundBackItem : MonoBehaviour
 
 	public void AddSurfaces(List<Surface> listsurface, Action action = null)
 	{
-		Sequence sequence = DOTween.Sequence();  // ´´½¨Ò»¸öDoTweenĞòÁĞ
+		Sequence sequence = DOTween.Sequence();  // åˆ›å»ºä¸€ä¸ªDoTweenåºåˆ—
 		List<Vector3> o3s = GetEndListVector3(listsurface.Count);
 		Vector3 direction = (listsurface[listsurface.Count - 1].transform.position - o3s[o3s.Count - 1]).normalized;
 		for (int i = 0; i < listsurface.Count; i++)
@@ -275,15 +275,15 @@ public class GoundBackItem : MonoBehaviour
 			obj.transform.SetParent(transform);
 			Vector3[] path = new Vector3[] { obj.transform.position, controlPoint, o3s[i] };
 			float delay = 0.03f * i;
-			// ¼ÆËã´¹Ö±ÏòÁ¿£¨·¨ÏòÁ¿£©
+			// è®¡ç®—å‚ç›´å‘é‡ï¼ˆæ³•å‘é‡ï¼‰
 			Vector3 normal = Vector3.Cross(direction, Vector3.up).normalized;
-			// ´´½¨Ò»¸ö±íÊ¾ÑØ×Å·¨ÏòÁ¿Ğı×ª180¶ÈµÄËÄÔªÊı
+			// åˆ›å»ºä¸€ä¸ªè¡¨ç¤ºæ²¿ç€æ³•å‘é‡æ—‹è½¬180åº¦çš„å››å…ƒæ•°
 			Quaternion rotation = Quaternion.AngleAxis(180, normal);
 			sequence.Insert(delay,
 				obj.transform.DOPath(path, 0.5f, PathType.CatmullRom)
 					.SetEase(Ease.Linear)
 					.OnStart(() => {
-						AudioManager.Instance.PlaySFX("Flip£¨·­×ªµş¼ÓÊ±£©");
+						AudioManager.Instance.PlaySFX("Flipï¼ˆç¿»è½¬å åŠ æ—¶ï¼‰");
 						obj.transform.DORotateQuaternion(rotation, 0.45f)
 								 .SetEase(Ease.Linear);
 					})
@@ -301,11 +301,11 @@ public class GoundBackItem : MonoBehaviour
 			IsRunAnim=false;
 		});
 		IsRunAnim=true;
-		sequence.Play();  // ²¥·ÅĞòÁĞ
+		sequence.Play();  // æ’­æ”¾åºåˆ—
 	}
 
 	/// <summary>
-	/// »ñÈ¡µ±Ç°¶¥¶ËµÄsurfaceÑÕÉ«
+	/// è·å–å½“å‰é¡¶ç«¯çš„surfaceé¢œè‰²
 	/// </summary>
 	/// <returns></returns>
 	public ItemColorType GetTopColor() {
@@ -315,7 +315,7 @@ public class GoundBackItem : MonoBehaviour
 
 
 	/// <summary>
-	/// »ñÈ¡µ±Ç°´Ó¶¥¶Ë¿ªÊ¼ÍùÏÂÊıµÚx¸ö²»Í¬ÑÕÉ«µÄsurfaceÑÕÉ«
+	/// è·å–å½“å‰ä»é¡¶ç«¯å¼€å§‹å¾€ä¸‹æ•°ç¬¬xä¸ªä¸åŒé¢œè‰²çš„surfaceé¢œè‰²
 	/// </summary>
 	/// <param name="x"></param>
 	/// <returns></returns>
@@ -336,7 +336,7 @@ public class GoundBackItem : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ±È½ÏÆ÷
+	/// æ¯”è¾ƒå™¨
 	/// </summary>
 	/// <param name="item2"></param>
 	/// <returns></returns>
@@ -356,7 +356,7 @@ public class GoundBackItem : MonoBehaviour
 		int startIndex = Mathf.Max(SurfacesList.Count - x, 0);
 		for (int i = SurfacesList.Count-1; i >= startIndex; i--)
 		{
-			//Debug.Log(string.Format("X:{0},Y:{1},¿ªÊ¼±äÉ«£ºi={2}", ItemPosition.x, ItemPosition.y,i));
+			//Debug.Log(string.Format("X:{0},Y:{1},å¼€å§‹å˜è‰²ï¼ši={2}", ItemPosition.x, ItemPosition.y,i));
 			if (i >= startIndex)
 			{
 				SurfacesList[i].TranslateColore(Color.white, () => {
@@ -369,7 +369,7 @@ public class GoundBackItem : MonoBehaviour
 		}
 	}
 	/// <summary>
-	/// ÒÆ³ıÂú×ãÌõ¼şµÄ¶¥¶ËµÄÎïÌå
+	/// ç§»é™¤æ»¡è¶³æ¡ä»¶çš„é¡¶ç«¯çš„ç‰©ä½“
 	/// </summary>
 	public void RemoveTopColorObject(Action action=null)
 	{
@@ -377,21 +377,21 @@ public class GoundBackItem : MonoBehaviour
 		if (count >= 10/*&& GetNowColorNumber()==1*/)
 		{
 			List<Surface> sl = RemoveSurfaces();
-			Sequence sequence = DOTween.Sequence();  // ´´½¨Ò»¸öDoTweenĞòÁĞ
+			Sequence sequence = DOTween.Sequence();  // åˆ›å»ºä¸€ä¸ªDoTweenåºåˆ—
 			for (int i = 0; i < sl.Count; i++)
 			{
 				var obj = sl[i];
 				Vector3 ka = obj.transform.localPosition + new Vector3(0,5, 0);
 
-				// ´´½¨Ò»¸ö×ÓĞòÁĞÀ´Í¬Ê±½øĞĞÒÆ¶¯ºÍËõ·ÅµÄ±ä»¯
+				// åˆ›å»ºä¸€ä¸ªå­åºåˆ—æ¥åŒæ—¶è¿›è¡Œç§»åŠ¨å’Œç¼©æ”¾çš„å˜åŒ–
 				Sequence subSequence = DOTween.Sequence();
 				subSequence.AppendCallback(() => {
-					AudioManager.Instance.PlaySFX("Ding£¨ÏûÍê·ÉÉÏÈ¥Ôö¼Ó»ı·Ö£©");
+					AudioManager.Instance.PlaySFX("Dingï¼ˆæ¶ˆå®Œé£ä¸Šå»å¢åŠ ç§¯åˆ†ï¼‰");
 				});
 				subSequence.Join(obj.transform.DOLocalMove(ka, 0.05f).SetEase(Ease.Linear));
 				subSequence.Join(obj.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.05f).SetEase(Ease.Linear));
 				//subSequence.Insert()
-				// ÔÚ×ÓĞòÁĞÍê³ÉÊ±Ö´ĞĞ»Øµ÷
+				// åœ¨å­åºåˆ—å®Œæˆæ—¶æ‰§è¡Œå›è°ƒ
 				subSequence.OnComplete(() =>
 				{
 					PoolManager.Instance.ReturnObject(obj.gameObject);
@@ -399,9 +399,9 @@ public class GoundBackItem : MonoBehaviour
 					TYQEventCenter.Instance.Broadcast(OnEventKey.OnBonusEvent, 1);
 				});
 
-				// ½«×ÓĞòÁĞÌí¼Óµ½Ö÷ĞòÁĞÖĞ
+				// å°†å­åºåˆ—æ·»åŠ åˆ°ä¸»åºåˆ—ä¸­
 				sequence.Append(subSequence);
-				sequence.AppendInterval(delayBetweenMoves);  // ÔÚÃ¿¸ö¶ÔÏóÒÆ¶¯ºóÌí¼ÓÑÓ³Ù
+				sequence.AppendInterval(delayBetweenMoves);  // åœ¨æ¯ä¸ªå¯¹è±¡ç§»åŠ¨åæ·»åŠ å»¶è¿Ÿ
 			}
 			sequence.OnComplete(() =>
 			{
@@ -410,23 +410,23 @@ public class GoundBackItem : MonoBehaviour
 				{
 					if (IsCanBeOperated())
 					{
-						Debug.Log("ĞòÁĞÍê³ÉºóÌí¼Ó£¿X:" + ItemPosition.x + "  Y:" + ItemPosition.y);
+						Debug.Log("åºåˆ—å®Œæˆåæ·»åŠ ï¼ŸX:" + ItemPosition.x + "  Y:" + ItemPosition.y);
 						GameManager.Instance.OperationPath.Add(ItemPosition);
 					}
 				}
 				action!.Invoke();
 			});
-			sequence.Play();  // ²¥·ÅĞòÁĞ
+			sequence.Play();  // æ’­æ”¾åºåˆ—
 		}
 		else
 		{
 			action!.Invoke();
-			//Debug.Log(string.Format("×ø±ê {0},{1}Î´Âú×ãÌõ¼ş£¬µ±Ç°ÊıÎª{2}", x, y, count));
+			//Debug.Log(string.Format("åæ ‡ {0},{1}æœªæ»¡è¶³æ¡ä»¶ï¼Œå½“å‰æ•°ä¸º{2}", x, y, count));
 		}
 	}
 
 	/// <summary>
-	/// ÒÆ³ıËùÓĞÎïÌå
+	/// ç§»é™¤æ‰€æœ‰ç‰©ä½“
 	/// </summary>
 	public void RemoveObject(Action action = null)
 	{
@@ -437,7 +437,7 @@ public class GoundBackItem : MonoBehaviour
 		{
 			GameObject obj = SurfacesList[i].gameObject;
 			Vector3 ka = obj.transform.localPosition + new Vector3(0, 50, 0);
-			// ´´½¨²¢²¥·Å×ÓĞòÁĞ
+			// åˆ›å»ºå¹¶æ’­æ”¾å­åºåˆ—
 			Tween scaleTween = obj.transform.DOScale(new Vector3(0.01f, 0.01f, 0.01f),0.5f).SetEase(Ease.Linear);
 			Tween moveTween  = obj.transform.DOLocalMove(ka, 0.5f).SetEase(Ease.Linear);
 
@@ -453,7 +453,7 @@ public class GoundBackItem : MonoBehaviour
 		{
 			SurfacesList.Clear();
 		});
-		sequence.Play(); // Á¢¼´²¥·ÅÃ¿¸ö×ÓĞòÁĞ
+		sequence.Play(); // ç«‹å³æ’­æ”¾æ¯ä¸ªå­åºåˆ—
 
 	}
 }

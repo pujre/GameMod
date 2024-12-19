@@ -7,7 +7,7 @@ namespace TYQ
 		public Dictionary<OnEventKey, Delegate> MyEvent = new Dictionary<OnEventKey, Delegate>();
 		public void OnListenerAdding(OnEventKey eventType, Delegate action)
 		{
-			//ÅĞ¶ÏÎ¯ÍĞÈç¹û²»´æÔÚ¾Í´´½¨Ò»¸ö
+			//åˆ¤æ–­å§”æ‰˜å¦‚æœä¸å­˜åœ¨å°±åˆ›å»ºä¸€ä¸ª
 			if (!MyEvent.ContainsKey(eventType))
 			{
 				MyEvent.Add(eventType, null);
@@ -15,7 +15,7 @@ namespace TYQ
 			Delegate oldAction = MyEvent[eventType];
 			if (oldAction != null && oldAction.GetType() != action.GetType())
 			{
-				throw new Exception(string.Format("³¢ÊÔÎªÊÂ¼ş{0}Ìí¼Ó²»Í¬ÀàĞÍµÄÎ¯ÍĞ£¬µ±Ç°ÊÂ¼şËù¶ÔÓ¦µÄÎ¯ÍĞÊÇ{1}£¬ÒªÌí¼ÓµÄÎ¯ÍĞÀàĞÍÎª{2}", eventType, oldAction.GetType(), action.GetType()));
+				throw new Exception(string.Format("å°è¯•ä¸ºäº‹ä»¶{0}æ·»åŠ ä¸åŒç±»å‹çš„å§”æ‰˜ï¼Œå½“å‰äº‹ä»¶æ‰€å¯¹åº”çš„å§”æ‰˜æ˜¯{1}ï¼Œè¦æ·»åŠ çš„å§”æ‰˜ç±»å‹ä¸º{2}", eventType, oldAction.GetType(), action.GetType()));
 			}
 		}
 		public void OnListenerRemoving(OnEventKey eventType, Delegate action)
@@ -26,16 +26,16 @@ namespace TYQ
 				if (oldAction == null)
 				{
 
-					throw new Exception(string.Format("ÒÆ³ı¼àÌı´íÎó£ºÊÂ¼ş{0}Ã»ÓĞ¶ÔÓ¦µÄÎ¯ÍĞ", eventType));
+					throw new Exception(string.Format("ç§»é™¤ç›‘å¬é”™è¯¯ï¼šäº‹ä»¶{0}æ²¡æœ‰å¯¹åº”çš„å§”æ‰˜", eventType));
 				}
 				else if (oldAction.GetType() != action.GetType())
 				{
-					throw new Exception(string.Format("ÒÆ³ı¼àÌı´íÎó£º³¢ÊÔÎªÊÂ¼ş{0}ÒÆ³ı²»Í¬ÀàĞÍµÄÎ¯ÍĞ£¬µ±Ç°Î¯ÍĞÀàĞÍÎª{1}£¬ÒªÒÆ³ıµÄÎ¯ÍĞÀàĞÍÎª{2}", eventType, oldAction.GetType(), action.GetType()));
+					throw new Exception(string.Format("ç§»é™¤ç›‘å¬é”™è¯¯ï¼šå°è¯•ä¸ºäº‹ä»¶{0}ç§»é™¤ä¸åŒç±»å‹çš„å§”æ‰˜ï¼Œå½“å‰å§”æ‰˜ç±»å‹ä¸º{1}ï¼Œè¦ç§»é™¤çš„å§”æ‰˜ç±»å‹ä¸º{2}", eventType, oldAction.GetType(), action.GetType()));
 				}
 			}
 			else
 			{
-				throw new Exception(string.Format("ÒÆ³ı¼àÌı´íÎó£ºÃ»ÓĞÊÂ¼şÂë{0}", eventType));
+				throw new Exception(string.Format("ç§»é™¤ç›‘å¬é”™è¯¯ï¼šæ²¡æœ‰äº‹ä»¶ç {0}", eventType));
 			}
 		}
 		private void OnListenerRemoved(OnEventKey eventType)
@@ -114,7 +114,7 @@ namespace TYQ
 				}
 				else
 				{
-					throw new Exception(string.Format("¹ã²¥ÊÂ¼ş´íÎó£ºÊÂ¼ş{0}¶ÔÓ¦Î¯ÍĞ¾ßÓĞ²»Í¬µÄÀàĞÍ", eventType));
+					throw new Exception(string.Format("å¹¿æ’­äº‹ä»¶é”™è¯¯ï¼šäº‹ä»¶{0}å¯¹åº”å§”æ‰˜å…·æœ‰ä¸åŒçš„ç±»å‹", eventType));
 				}
 			}
 		}
@@ -130,7 +130,7 @@ namespace TYQ
 				}
 				else
 				{
-					throw new Exception(string.Format("¹ã²¥ÊÂ¼ş´íÎó£ºÊÂ¼ş{0}¶ÔÓ¦Î¯ÍĞ¾ßÓĞ²»Í¬µÄÀàĞÍ", eventType));
+					throw new Exception(string.Format("å¹¿æ’­äº‹ä»¶é”™è¯¯ï¼šäº‹ä»¶{0}å¯¹åº”å§”æ‰˜å…·æœ‰ä¸åŒçš„ç±»å‹", eventType));
 				}
 			}
 		}
@@ -146,7 +146,7 @@ namespace TYQ
 				}
 				else
 				{
-					throw new Exception(string.Format("¹ã²¥ÊÂ¼ş´íÎó£ºÊÂ¼ş{0}¶ÔÓ¦Î¯ÍĞ¾ßÓĞ²»Í¬µÄÀàĞÍ", eventType));
+					throw new Exception(string.Format("å¹¿æ’­äº‹ä»¶é”™è¯¯ï¼šäº‹ä»¶{0}å¯¹åº”å§”æ‰˜å…·æœ‰ä¸åŒçš„ç±»å‹", eventType));
 				}
 			}
 		}
@@ -163,7 +163,7 @@ namespace TYQ
 				}
 				else
 				{
-					throw new Exception(string.Format("¹ã²¥ÊÂ¼ş´íÎó£ºÊÂ¼ş{0}¶ÔÓ¦Î¯ÍĞ¾ßÓĞ²»Í¬µÄÀàĞÍ", eventType));
+					throw new Exception(string.Format("å¹¿æ’­äº‹ä»¶é”™è¯¯ï¼šäº‹ä»¶{0}å¯¹åº”å§”æ‰˜å…·æœ‰ä¸åŒçš„ç±»å‹", eventType));
 				}
 			}
 		}
@@ -179,7 +179,7 @@ namespace TYQ
 				}
 				else
 				{
-					throw new Exception(string.Format("¹ã²¥ÊÂ¼ş´íÎó£ºÊÂ¼ş{0}¶ÔÓ¦Î¯ÍĞ¾ßÓĞ²»Í¬µÄÀàĞÍ", eventType));
+					throw new Exception(string.Format("å¹¿æ’­äº‹ä»¶é”™è¯¯ï¼šäº‹ä»¶{0}å¯¹åº”å§”æ‰˜å…·æœ‰ä¸åŒçš„ç±»å‹", eventType));
 				}
 			}
 		}
