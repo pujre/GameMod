@@ -95,3 +95,6 @@ crashlytics-build.properties
 /WeChatMiniGame
 /TextToolDatas/slim
 /TextToolDatas
+/Assets/Resources/DOTweenSettings.asset
+/Packages/manifest.json
+/Packages/packages-lock.json
