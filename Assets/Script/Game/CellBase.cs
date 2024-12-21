@@ -135,6 +135,7 @@ public enum MoveTweenType
 	Continuity,
 }
 
+[Serializable]
 public class LevelDataRoot
 {
 	public List<LevelData> LevelDatas;
@@ -163,7 +164,7 @@ public class LevelDataRoot
 		return null;
 	}
 }
-
+[Serializable]
 public class LevelData
 {
 	public int Level;

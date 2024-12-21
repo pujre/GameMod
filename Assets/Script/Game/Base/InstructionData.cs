@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InstructionData
@@ -11,5 +9,10 @@ public class InstructionData
 	public InstructionData(Vector2Int star, Vector2Int end) {
 		StarVector2=star;
 		EndVector2=end;
+	}
+
+	public override string ToString()
+	{
+		return $"Start: {StarVector2}, End: {EndVector2}";
 	}
 }
