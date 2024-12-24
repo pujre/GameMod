@@ -12,6 +12,7 @@ public class GoundBackItem : MonoBehaviour
 	public bool IsLock = false;//true表示锁上，需要解锁
 	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
 	public GameObject NumberText;
+	public GameObject ParentClass;
 	public VolumetricLineStripBehavior volumetricLine;
 	public float GoundBack_Y;
 	public float Assign_Y;
@@ -101,6 +102,7 @@ public class GoundBackItem : MonoBehaviour
 	//	}
 	//}
 
+	//交换位置
 	public void PropPositionChange(GoundBackItem goundBackItem) {
 		var Surface = goundBackItem.SurfacesList;
 		goundBackItem.SurfacesList = SurfacesList;
@@ -146,9 +148,10 @@ public class GoundBackItem : MonoBehaviour
 	/// </summary>
 	public void SetChinderPosition() {
 		if (SurfacesList == null) return;
+		ParentClass.transform.localPosition=Vector3.zero;
 		for (int i = 0; i < SurfacesList.Count; i++)
 		{
-			SurfacesList[i].transform.parent = transform;
+			SurfacesList[i].transform.SetParent(ParentClass.transform);
 			SurfacesList[i].transform.localPosition = new Vector3(0, GoundBack_Y + (i * Assign_Y), 0);
 		}
 	}
@@ -194,7 +197,7 @@ public class GoundBackItem : MonoBehaviour
 		for (int i = 0; i < surfacess.Count; i++)
 		{
 			SurfacesList.Add(surfacess[i]);
-			surfacess[i].transform.SetParent(transform);
+			surfacess[i].transform.SetParent(ParentClass.transform);
 		}
 		SetChinderPosition();
 	}
@@ -272,7 +275,7 @@ public class GoundBackItem : MonoBehaviour
 		{
 			var obj = listsurface[i];
 			Vector3 controlPoint = new Vector3((o3s[i].x + obj.transform.position.x) / 2, o3s[i].y + 10, (o3s[i].z + obj.transform.position.z) / 2);
-			obj.transform.SetParent(transform);
+			obj.transform.SetParent(ParentClass.transform);
 			Vector3[] path = new Vector3[] { obj.transform.position, controlPoint, o3s[i] };
 			float delay = 0.03f * i;
 			// 计算垂直向量（法向量）

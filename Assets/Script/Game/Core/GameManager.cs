@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TYQ;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -18,13 +19,13 @@ public class GameManager : SingletonMono<GameManager>
 	private Camera Cam;
 	public bool IsTouchInput = false;
 	private bool IsDragging = false;
-	private GameObject SelectedObject;
+	public GameObject SelectedObject;
+	public int NowLevel = 1;
 
 
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
-	public int NowLevel = 1;
 	private LevelData LevelData;
 
 	private bool IsProp=false;
@@ -84,20 +85,27 @@ public class GameManager : SingletonMono<GameManager>
 
 				foreach (RaycastHit hit in hits)
 				{
-					if (!IsProp && hit.transform.gameObject.tag == "bottom" &&
-						hit.transform.GetComponent<GoundBackItem>() &&
-						hit.transform.GetComponent<GoundBackItem>().IsAddSurface())
+					if (UserPropIsTouchMove(hit.transform)||NoUserPropIsTouchMove(hit.transform))
 					{
 						if (lastHighlightedObject != null)
 						{
 							lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 							lastHighlightedObject.transform.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+							if (IsProp) {
+								PropTranform_1.transform.localPosition = Vector3.zero;
+								PropTranform_1 = null;
+							}
+							
 						}
 
 						lastHighlightedObject = hit.transform;
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[1];
 						lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(true);
 						foundBottom = true;
+						if (IsProp) { 
+							PropTranform_1 = hit.transform.Find("ParentClass").gameObject;
+							PropTranform_1.transform.position= SelectedObject.transform.parent.transform.position;
+						}
 						break; // 找到目标对象后退出循环
 					}
 					else if (!IsProp && hit.transform.gameObject.tag == "bottom" && hit.transform.gameObject.name == "Staging" && hit.transform.GetComponent<Staging>() && hit.transform.GetComponent<Staging>().IsStaging())
@@ -122,6 +130,11 @@ public class GameManager : SingletonMono<GameManager>
 						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
 						if(lastHighlightedObject.GetComponent<GoundBackItem>()) lastHighlightedObject.GetComponent<GoundBackItem>().SetvolumetricLine(false);
 						lastHighlightedObject = null;
+						if (IsProp&& PropTranform_1)
+						{
+							PropTranform_1.transform.localPosition = Vector3.zero;
+							PropTranform_1 = null;
+						}
 					}
 				}
 				
@@ -130,10 +143,40 @@ public class GameManager : SingletonMono<GameManager>
 			if (Input.GetMouseButtonUp(0) && IsDragging)
 			{
 				IsDragging = false;
-				SnapToGrid(SelectedObject, ((lastHighlightedObject!=null&&lastHighlightedObject.name == "Staging")|| lastHighlightedObject==null) ?false:true);
+				if (IsProp&& PropTranform_1)
+				{
+					PropSnapToPropGrid(PropTranform_1);
+				}
+				else if(!IsProp) {
+					SnapToGrid(SelectedObject, ((lastHighlightedObject != null && lastHighlightedObject.name == "Staging") || lastHighlightedObject == null) ? false : true);
+				}
 			}
 		}
 	}
+
+	/// <summary>
+	/// 未使用道具的情况下判断拖动到的区块是否允许操作
+	/// </summary>
+	/// <param name="transform"></param>
+	/// <returns></returns>
+	private bool NoUserPropIsTouchMove(Transform hit) {
+		return !IsProp && hit.transform.gameObject.tag == "bottom" 
+		&& hit.transform.GetComponent<GoundBackItem>() &&
+		hit.transform.GetComponent<GoundBackItem>().IsAddSurface();
+	}
+
+	/// <summary>
+	/// 使用道具的情况下判断拖动到的区块是否允许操作
+	/// </summary>
+	/// <returns></returns>
+	private bool UserPropIsTouchMove(Transform hit) {
+		return IsProp&& IsPropAppUserID==2 && hit.transform.gameObject.tag == "bottom" &&
+		hit.transform.GetComponent<GoundBackItem>() &&
+		hit.transform.GetComponent<GoundBackItem>().IsCanBeOperated()&&
+		hit.transform.GetComponent<GoundBackItem>().ParentClass!= SelectedObject;
+	}
+
+
 
 
 	/// <summary>
@@ -146,7 +189,6 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			SelectedObject = obj.transform.gameObject;
 			IsDragging = true;
-		
 		}
 		else if (!IsProp && hit.transform.gameObject.tag == "bottom" && hit.transform.gameObject.name == "Staging" && hit.transform.GetComponent<Staging>() && !hit.transform.GetComponent<Staging>().IsStaging())
 		{
@@ -177,20 +219,24 @@ public class GameManager : SingletonMono<GameManager>
 					UserProp(1);
 					break;
 				case 2:
+					SelectedObject = obj.transform.Find("ParentClass").gameObject;
+					IsDragging = true;
+
+
 					//SelectedObject = obj.transform.gameObject;
 					//UserProp(2);
-					Debug.Log("PropTranform_1: " + (PropTranform_1==null? "  n ": PropTranform_1.gameObject.name));
-					if (PropTranform_1 == null)
-					{
-						PropTranform_1 = obj.transform.gameObject;
-						PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "换");
-					}
-					else if (PropTranform_1 != null && PropTranform_1 != obj.transform.gameObject)
-					{
-						obj.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
-						SelectedObject = PropTranform_1;
-						UserProp(2);
-					}
+					//Debug.Log("PropTranform_1: " + (PropTranform_1==null? "  n ": PropTranform_1.gameObject.name));
+					//if (PropTranform_1 == null)
+					//{
+					//	PropTranform_1 = obj.transform.gameObject;
+					//	PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "换");
+					//}
+					//else if (PropTranform_1 != null && PropTranform_1 != obj.transform.gameObject)
+					//{
+					//	obj.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
+					//	SelectedObject = PropTranform_1;
+					//	UserProp(2);
+					//}
 					break;
 				case 3:
 					
@@ -201,6 +247,21 @@ public class GameManager : SingletonMono<GameManager>
 		if (obj.transform.GetComponent<GoundBackItem>() && obj.transform.GetComponent<GoundBackItem>().IsLock)
 		{
 
+		}
+	}
+
+
+	/// <summary>
+	/// 使用道具
+	/// </summary>
+	/// <param name="propMoveTager">拖到了目标得地方得那个物体</param>
+	private void PropSnapToPropGrid(GameObject propMoveTager)
+	{
+		if (propMoveTager != null && SelectedObject.transform.parent != propMoveTager.transform)
+		{
+			propMoveTager.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
+			SelectedObject = PropTranform_1;
+			UserProp(2);
 		}
 	}
 
@@ -231,6 +292,7 @@ public class GameManager : SingletonMono<GameManager>
 						}
 					}
 					Destroy(obj);
+
 				}
 				else {
 					Staging staging = lastHighlightedObject.GetComponent<Staging>();
@@ -751,10 +813,14 @@ public class GameManager : SingletonMono<GameManager>
 				{
 					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
 					GameObject oth = PoolManager.Instance.GetObject("bottomText", goundBackItem.transform);
+					GameObject parentClass = PoolManager.Instance.GetObject("ParentClass", goundBackItem.transform);
 					oth.transform.rotation = Quaternion.Euler(90, 0, 0);
-					oth.transform.position = Vector3.zero;
+					oth.transform.localPosition = Vector3.zero;
+					parentClass.transform.localPosition= Vector3.zero;
 					//othbottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
 					goundBackItem.NumberText = oth;
+					goundBackItem.ParentClass = parentClass;
+					oth.transform.SetParent(goundBackItem.ParentClass.transform);
 					if (goundBackItem.IsLock) {
 						GameObject spriteRendererPrefab = Resources.Load<GameObject>("Prefab/Lock");
 						GameObject spriteRenderer = Instantiate(spriteRendererPrefab,new Vector3(0,1.4f,1), Quaternion.Euler(90, 0, 0), goundBackItem.transform);
