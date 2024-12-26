@@ -1,4 +1,5 @@
 using TMPro;
+using TYQ;
 using UnityEngine;
 
 public class Staging : MonoBehaviour
@@ -7,6 +8,15 @@ public class Staging : MonoBehaviour
 	public GameObject ADIcon;
 	public GameObject ShareImage;
 	public bool IsOn=false;
+	private void Awake()
+	{
+		TYQEventCenter.Instance.AddListener(OnEventKey.OnLoadGameLevel, LoadGameLevel);
+	}
+
+
+	void LoadGameLevel() {
+		AD(true);
+	}
 
 	private void Start()
 	{
@@ -52,7 +62,6 @@ public class Staging : MonoBehaviour
 		IsOn = !isAd;
 		ADIcon.SetActive(isAd);
 		ShareImage.SetActive(isAd);
-		
 	}
 
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TYQ;
 using UnityEngine;
 
@@ -226,8 +227,7 @@ public class GameManager : SingletonMono<GameManager>
 				case 2:
 					SelectedObject = obj.transform.Find("ParentClass").gameObject;
 					IsDragging = true;
-
-
+					#region Old prop script
 					//SelectedObject = obj.transform.gameObject;
 					//UserProp(2);
 					//Debug.Log("PropTranform_1: " + (PropTranform_1==null? "  n ": PropTranform_1.gameObject.name));
@@ -242,6 +242,7 @@ public class GameManager : SingletonMono<GameManager>
 					//	SelectedObject = PropTranform_1;
 					//	UserProp(2);
 					//}
+					#endregion
 					break;
 				case 3:
 					
@@ -264,6 +265,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (propMoveTager != null && SelectedObject.transform.parent != propMoveTager.transform)
 		{
+			OperationPath.Add(PropTranform_1.transform.parent.GetComponent<GoundBackItem>().ItemPosition);
 			propMoveTager.transform.parent.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.transform.parent.GetComponent<GoundBackItem>());
 			SelectedObject = PropTranform_1;
 			UserProp(2);
@@ -446,6 +448,9 @@ public class GameManager : SingletonMono<GameManager>
 
 	public void CalculateElimination(int x, int y, int step=0)
 	{
+		if (hasStacked == true) {
+			OperationPath.Add(new Vector2Int(x,y));
+		}
 		if (GoundBackItemArray2D != null)
 		{
 			FilterLinked.Clear();
@@ -486,6 +491,7 @@ public class GameManager : SingletonMono<GameManager>
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
 						{
+							hasStacked = false;
 							ChainCall(step++);
 						});
 						return;
@@ -503,6 +509,15 @@ public class GameManager : SingletonMono<GameManager>
 	}
 
 
+	private void IsOver() {
+		int x = IsItAvailable();
+		if (x==0) {
+			UIManager.Instance.SetUiPanelAction("OverPanel", true);
+			TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
+			IsTouchInput = false;
+		}
+	}
+
 	void ChainCall(int step)
 	{
 		Debug.Log(string.Format("开始连锁数据,第{0}步", step));
@@ -519,10 +534,10 @@ public class GameManager : SingletonMono<GameManager>
 		if (OperationPath.Count == 0)
 		{
 			IsTouchInput = true;
-			if (hasStacked) {
-				TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);
-				hasStacked = false;
-			}
+			//if (hasStacked) {
+			//	TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);
+			//	hasStacked = false;
+			//}
 		}
 	}
 
