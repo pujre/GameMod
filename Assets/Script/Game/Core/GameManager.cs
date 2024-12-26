@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using TYQ;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : SingletonMono<GameManager>
@@ -143,11 +140,19 @@ public class GameManager : SingletonMono<GameManager>
 			if (Input.GetMouseButtonUp(0) && IsDragging)
 			{
 				IsDragging = false;
-				if (IsProp&& PropTranform_1)
+				if (IsProp && SelectedObject != null && PropTranform_1 != null)
 				{
-					PropSnapToPropGrid(PropTranform_1);
+					PropSnapToPropGrid(SelectedObject);
+					if (lastHighlightedObject != null)
+					{
+						lastHighlightedObject.GetComponent<MeshRenderer>().material = DefaultORHightMaterial[0];
+						lastHighlightedObject.transform.GetComponent<GoundBackItem>().SetvolumetricLine(false);
+					}
+				} else if (IsProp && SelectedObject != null && PropTranform_1 == null) {
+					SelectedObject.transform.parent.GetComponent<GoundBackItem>().QueMoveCancel();
+					SelectedObject = null;
 				}
-				else if(!IsProp) {
+				else if (!IsProp) {
 					SnapToGrid(SelectedObject, ((lastHighlightedObject != null && lastHighlightedObject.name == "Staging") || lastHighlightedObject == null) ? false : true);
 				}
 			}
@@ -259,7 +264,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (propMoveTager != null && SelectedObject.transform.parent != propMoveTager.transform)
 		{
-			propMoveTager.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
+			propMoveTager.transform.parent.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.transform.parent.GetComponent<GoundBackItem>());
 			SelectedObject = PropTranform_1;
 			UserProp(2);
 		}
@@ -556,7 +561,6 @@ public class GameManager : SingletonMono<GameManager>
 				break;
 			case 2:
 				LevelData.Item_2Number--;
-				PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true);
 				CalculateElimination(hit.transform.GetComponent<GoundBackItem>().ItemPosition.x, hit.transform.GetComponent<GoundBackItem>().ItemPosition.y);
 				SelectedObject = null;
 				PropTranform_1 = null;

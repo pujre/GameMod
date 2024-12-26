@@ -83,9 +83,9 @@ public class GoundBackItem : MonoBehaviour
 		return SurfacesList.Count > 0;
 	}
 
-	/// <summary>
-	/// 预交换
-	/// </summary>
+	///// <summary>
+	///// 预交换
+	///// </summary>
 	//public void PropPreExchange(Transform preEx) {
 	//	if (preEx != null)
 	//	{
@@ -104,14 +104,25 @@ public class GoundBackItem : MonoBehaviour
 
 	//交换位置
 	public void PropPositionChange(GoundBackItem goundBackItem) {
+		goundBackItem.ParentClass.transform.localPosition=Vector3.zero;
+		ParentClass.transform.localPosition = Vector3.zero;
 		var Surface = goundBackItem.SurfacesList;
 		goundBackItem.SurfacesList = SurfacesList;
 		SurfacesList = Surface;
 		goundBackItem.SetChinderPosition();
 		SetChinderPosition();
 		DisplayNumbers(true);
+		goundBackItem.DisplayNumbers(true);
 	}
 
+	public void QueMoveCancel()
+	{
+		MoveToPosition(Vector3.zero, () =>{ });
+	}
+	private void MoveToPosition(Vector3 pos, TweenCallback onComplete)
+	{
+		ParentClass.transform.DOLocalMove(pos, 0.3f).OnComplete(onComplete);
+	}
 	/// <summary>
 	/// 指定时间内将所有物体颜色设置为指定颜色
 	/// </summary>

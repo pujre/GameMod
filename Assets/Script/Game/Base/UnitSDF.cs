@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
 
 public class UnitSDF : MonoBehaviour
@@ -218,7 +217,7 @@ public class UnitSDF : MonoBehaviour
 		{
 			if (coordinates.Count==4) {
 				Vector2Int three = FindCountIsThree(coordinates);
-				if (three == default) {
+				if (three.x == -1&& three.y == -1) {
 					Debug.LogWarning("0:未能找到覆盖所有节点的完整路径。");
 					return new List<InstructionData>();
 				} else {
@@ -328,19 +327,20 @@ public class UnitSDF : MonoBehaviour
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
 		// 预计算所有坐标的邻居数量，以减少重复计算
 		Dictionary<Vector2Int, int> neighborsCountDict = new Dictionary<Vector2Int, int>();
-		foreach (var pos in coordinates)
+		foreach (Vector2Int pos in coordinates)
 		{
-			var neighbors = GameManager.Instance.GetAroundCanBeOperatedPos(pos.x, pos.y);
+			List<Vector2Int> neighbors = GameManager.Instance.GetAroundCanBeOperatedPos(pos.x, pos.y);
 			int count = neighbors.Count(n => coordinateSet.Contains(n));
 			neighborsCountDict[pos] = count;
 		}
-		var start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 1).Key;
-		if (start == default)
+		Vector2Int start = new Vector2Int(-1,-1);
+		start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 1).Key;
+		if (start.x == -1&& start.y == -1)
 		{
 			// 没有找到则找邻居数量为3的
 			start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 3).Key;
 		}
-		if (start == default)
+		if (start.x == -1 && start.y == -1)
 		{
 			// 如果依然没找到则找邻居数量大于1的
 			start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value > 1).Key;
@@ -360,7 +360,8 @@ public class UnitSDF : MonoBehaviour
 			int count = neighbors.Count(n => coordinateSet.Contains(n));
 			neighborsCountDict[pos] = count;
 		}
-		var start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 3).Key;
+		Vector2Int start = new Vector2Int(-1,-1);
+		start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 3).Key;
 		return start;
 	}
 }

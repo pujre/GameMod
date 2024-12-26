@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43975514, g: 0.48817998, b: 0.5683994, a: 1}
+  m_IndirectSpecularColor: {r: 0.17511088, g: 0.21907213, b: 0.3013723, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4861,9 +4861,10 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5298433dfaa321e48b33929abb87368b, type: 2}
   OperationPath: []
   IsTouchInput: 1
+  SelectedObject: {fileID: 0}
+  NowLevel: 1
   LevelDataRoot:
     LevelDatas: []
-  NowLevel: 1
 --- !u!114 &924926689
 MonoBehaviour:
   m_ObjectHideFlags: 0
