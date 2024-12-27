@@ -80,11 +80,11 @@ public class UnitSDF : MonoBehaviour
 				{
 					queue.Enqueue(aroundCan[i]);
 					visited.Add(aroundCan[i]);
-					log +=("X:" + aroundCan[i].x+"Y:"+aroundCan[i].y+" ");
+					log +=("X:" + aroundCan[i].x+"Y:"+aroundCan[i].y+"，");
 				}
 			}
 		}
-		Debug.Log(string.Format("-搜寻点- 点X:{0}，Y：{1}周围所有的点一共有{2}个，为：{3}", startHex.x, startHex.y, visited.ToList().Count, log));
+		Debug.Log(string.Format("-判断该点附件是否有可翻转的点- 点X:{0}，Y：{1}周围所有的点一共有 {2} 个，为：{3}", startHex.x, startHex.y, visited.ToList().Count, log));
 		if (visited.ToList().Count == 1)
 		{
 			return null;
@@ -263,6 +263,8 @@ public class UnitSDF : MonoBehaviour
 		// 如果所有节点都已访问，返回成功
 		if (visited.Count == coordinateSet.Count)
 		{
+
+			Debug.Log($"——————————————————————————所有节点都已访问——————————————————————");
 			return true;
 		}
 

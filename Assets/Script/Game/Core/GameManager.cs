@@ -450,6 +450,7 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (hasStacked == true) {
 			OperationPath.Add(new Vector2Int(x,y));
+			return;
 		}
 		if (GoundBackItemArray2D != null)
 		{
@@ -527,7 +528,7 @@ public class GameManager : SingletonMono<GameManager>
 			OperationPath.Remove(po);
 			if (GoundBackItemArray2D[po.x, po.y].GetComponent<GoundBackItem>().IsSurface())
 			{
-				CalculateElimination(po.x, po.y, step);
+				CalculateElimination(po.x, po.y, step++);
 				break;
 			}
 		}
