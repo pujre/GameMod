@@ -512,6 +512,7 @@ public class GameManager : SingletonMono<GameManager>
 
 	private void IsOver() {
 		int x = IsItAvailable();
+		Debug.Log("判断是否输了，当前空余空棋盘数为："+ x);
 		if (x==0) {
 			UIManager.Instance.SetUiPanelAction("OverPanel", true);
 			TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
@@ -535,6 +536,7 @@ public class GameManager : SingletonMono<GameManager>
 		if (OperationPath.Count == 0)
 		{
 			IsTouchInput = true;
+			IsOver();
 			//if (hasStacked) {
 			//	TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);
 			//	hasStacked = false;

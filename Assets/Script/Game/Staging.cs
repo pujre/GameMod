@@ -56,8 +56,9 @@ public class Staging : MonoBehaviour
 			ADIcon=PoolManager.Instance.GetObject("bottomText",transform);
 			ADIcon.name = "ADIcon";
 			ADIcon.GetComponent<TextMeshPro>().text = "临时格子";
-			ADIcon.GetComponent<TextMeshPro>().fontSize = 11;
+			ADIcon.GetComponent<TextMeshPro>().fontSize = 12.5f;
 			ADIcon.transform.localPosition = new Vector3(0, 1.5f, -1.03f);
+			ADIcon.transform.GetComponent<RectTransform>().sizeDelta = new Vector2(6,6);
 		}
 		IsOn = !isAd;
 		ADIcon.SetActive(isAd);
