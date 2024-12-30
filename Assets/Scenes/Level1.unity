@@ -4859,7 +4859,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5262850ab54374a922d200e72e2f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DontSimcity: 1
+  DontSimcity: 0
   SelectedList:
   - SelfGameMove: {fileID: 0}
     Pos: {x: -10, y: 1, z: -18}

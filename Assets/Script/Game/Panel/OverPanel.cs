@@ -48,8 +48,11 @@ namespace TYQ
 					GameManager.Instance.LoadNextLevel();
 					break;
 				case "ADBtn":
+					Debug.Log("播放广告");
 					break;
 				case "LoseRe":
+					gameObject.SetActive(false);
+					GameManager.Instance.ReLoadLevel();
 					break;
 			}
 			AudioManager.Instance.PlaySFX("click_ui（点击UI按钮）");

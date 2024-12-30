@@ -401,6 +401,13 @@ public class GameManager : SingletonMono<GameManager>
 		LoadLevel(NowLevel + 1);
 	}
 
+	/// <summary>
+	/// 从新加载当前关卡
+	/// </summary>
+	public void ReLoadLevel() {
+		LoadLevel(NowLevel);
+	}
+
 	public void LoadLevel(int level)
 	{
 		NowLevel = level;
@@ -456,19 +463,20 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			FilterLinked.Clear();
 			List<Vector2Int> GoundBackItemList = UnitSDF.FindConnectedPieces(new Vector2Int(x,y));
-			if (GoundBackItemList == null || GoundBackItemList.Count == 0)
+			Debug.Log(string.Format("寻找点，是否为null：{0}", GoundBackItemList==null));
+			if (GoundBackItemList == null&& OperationPath.Count>0)
 			{
-				ChainCall(step++);
-				Debug.Log(string.Format("放置-当前点X:{0},Y:{1}在棋盘周围上无可连线的点", x,y));
+				ChainCall(step++);//执行连锁数据部分逻辑
 				return;
 			}
+			
 			FilterLinked = UnitSDF.FilterLinkedCoordinates(GoundBackItemList);
-			if (FilterLinked == null || FilterLinked.Count == 0)
-			{
-				ChainCall(step++);
-				Debug.Log(string.Format("放置-当前点X:{0},Y:{1}，排序后无连锁", x, y));
-				return;
-			}
+			//if (FilterLinked == null || FilterLinked.Count == 0)
+			//{
+			//	ChainCall(step++);
+			//	Debug.Log(string.Format("放置-当前点X:{0},Y:{1}，排序后无连锁", x, y));
+			//	return;
+			//}
 			void StartNextAnimation(int index)
 			{
 				var linkedItem = GoundBackItemArray2D[FilterLinked[index].StarVector2.x, FilterLinked[index].StarVector2.y];
@@ -515,7 +523,7 @@ public class GameManager : SingletonMono<GameManager>
 		Debug.Log("判断是否输了，当前空余空棋盘数为："+ x);
 		if (x==0) {
 			UIManager.Instance.SetUiPanelAction("OverPanel", true);
-			TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
+			TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverLose, true);
 			IsTouchInput = false;
 		}
 	}
@@ -536,12 +544,15 @@ public class GameManager : SingletonMono<GameManager>
 		if (OperationPath.Count == 0)
 		{
 			IsTouchInput = true;
-			IsOver();
+			Debug.Log("____没有可以连锁得，判断是否结束游戏______");
 			//if (hasStacked) {
 			//	TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);
 			//	hasStacked = false;
 			//}
 		}
+		IsOver();
+
+
 	}
 
 	#endregion
@@ -703,10 +714,6 @@ public class GameManager : SingletonMono<GameManager>
 		}
 		return null;
 	}
-
-
-
-
 
 
 

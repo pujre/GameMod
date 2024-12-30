@@ -196,7 +196,7 @@ public class UnitSDF : MonoBehaviour
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
 		List<InstructionData> instructionData = new List<InstructionData>();
-		Debug.Log("____________________________________");
+		Debug.Log("___________________________深度搜索_____________________________");
 		// 使用HashSet提高查找效率
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
 		// 查找起点：度为1的节点
@@ -215,12 +215,13 @@ public class UnitSDF : MonoBehaviour
 		}
 		else
 		{
-			if (coordinates.Count==4) {
+			if (coordinates.Count==4) {//针对特殊情况
 				Vector2Int three = FindCountIsThree(coordinates);
 				if (three.x == -1&& three.y == -1) {
-					Debug.LogWarning("0:未能找到覆盖所有节点的完整路径。");
+					Debug.Log("0:未能找到覆盖所有节点的完整路径。");
+					Debug.Log("___________________________深度搜索结束_____________________________");
 					return new List<InstructionData>();
-				} else {
+				} else {//普通情况
                     for (int i = 0; i < coordinates.Count; i++)
                     {
 						if (three!= coordinates[i]) {
@@ -233,7 +234,8 @@ public class UnitSDF : MonoBehaviour
 			}
             else
             {
-				Debug.LogWarning("1:未能找到覆盖所有节点的完整路径。");
+				Debug.Log("1:未能找到覆盖所有节点的完整路径。");
+				Debug.Log("___________________________深度搜索结束_____________________________");
 				return new List<InstructionData>();
 			}
 		}
