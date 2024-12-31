@@ -31,7 +31,7 @@ namespace TYQ
 				case "PalyBtn":
 					transform.gameObject.SetActive(false);
 					UIManager.Instance.SetUiPanelAction("GamePanel", true);
-					GameManager.Instance.LoadLevel(1);
+					GameManager.Instance.LoadLevel(DataManager.Instance.GetHighestLevel());
 					break;
 				case "":
 

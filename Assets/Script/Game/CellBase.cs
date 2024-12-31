@@ -117,6 +117,7 @@ public enum OnDataKey
 	Music_On,
 	Shake_On,
 	Other,
+	HighestLevel,
 }
 
 /// <summary>
@@ -128,10 +129,16 @@ public enum MoveTweenType
 	Continuity,
 }
 
+public class GameSaveData {
+	public int NowLevel = 1;//当前关卡
+	public int HighestLevel = 1;//已通关得最高关卡
+}
+
 [Serializable]
 public class LevelDataRoot
 {
 	public List<LevelData> LevelDatas;
+
 
 	public LevelDataRoot() {
 	}

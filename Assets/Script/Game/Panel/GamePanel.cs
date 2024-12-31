@@ -229,18 +229,32 @@ namespace TYQ
 		{
 			if (NowScore >= TagerScore)
 			{
-				if (!isSettlement) {
-					isSettlement=true;
+				if (!isSettlement)
+				{
+					isSettlement = true;
 					GameManager.Instance.IsTouchInput = false;
 					Double_explosion_ukraine.SetActive(true);
 					Double_explosion_ukraine.GetComponentInChildren<ParticleSystem>().Play();
-					TaTimeManager.Instance.StartTimer(3f, () => {
+					AudioManager.Instance.PlaySFX("胜利2");
+					DataManager.Instance.SetHighestLevel(GameManager.Instance.NowLevel+1);
+					TaTimeManager.Instance.StartTimer(3f, () =>
+					{
 						UIManager.Instance.SetUiPanelAction("OverPanel", true);
 						TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverWin, true);
 						Double_explosion_ukraine.SetActive(false);
 						isSettlement = false;
 						GameManager.Instance.IsTouchInput = true;
 					});
+				}
+			}
+			else {
+				int x = GameManager.Instance.IsItAvailable();
+				Debug.Log("判断是否输了，当前空余空棋盘数为：" + x);
+				if (x == 0)
+				{
+					UIManager.Instance.SetUiPanelAction("OverPanel", true);
+					TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverLose, true);
+					GameManager.Instance.IsTouchInput = false;
 				}
 			}
 		}

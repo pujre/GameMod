@@ -457,17 +457,18 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (hasStacked == true) {
 			OperationPath.Add(new Vector2Int(x,y));
+			Debug.Log(string.Format("正在动画，加入数组,X:{0},y:{1}",x,y));
 			return;
 		}
 		if (GoundBackItemArray2D != null)
 		{
 			FilterLinked.Clear();
 			List<Vector2Int> GoundBackItemList = UnitSDF.FindConnectedPieces(new Vector2Int(x,y));
-			Debug.Log(string.Format("寻找点，是否为null：{0}, 数组长度为：{1}", GoundBackItemList==null, GoundBackItemList == null?"0": GoundBackItemList.Count));
+			Debug.Log(string.Format("寻找点，是否可连线, 数组长度为：{1}", GoundBackItemList==null, GoundBackItemList == null?"0": GoundBackItemList.Count));
 			if ((GoundBackItemList == null|| GoundBackItemList.Count == 1))
 			{
 				if (OperationPath.Count > 0) {
-					ChainCall(step++);//执行连锁数据部分逻辑
+					ChainCall(step+1);//执行连锁数据部分逻辑
 				}
 				return;
 			}
@@ -495,8 +496,8 @@ public class GameManager : SingletonMono<GameManager>
 					{
 						GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].RemoveTopColorObject(() =>
 						{
-							hasStacked = false;
-							ChainCall(step++);
+							hasStacked = false;//单次结束
+							ChainCall(step+1);
 						});
 						return;
 					}
@@ -507,21 +508,13 @@ public class GameManager : SingletonMono<GameManager>
 				});
 
 			}
-			//IsTouchInput = false;
+			IsTouchInput = false;
 			StartNextAnimation(0);
 		}
 	}
 
 
-	private void IsOver() {
-		int x = IsItAvailable();
-		Debug.Log("判断是否输了，当前空余空棋盘数为："+ x);
-		if (x==0) {
-			UIManager.Instance.SetUiPanelAction("OverPanel", true);
-			TYQEventCenter.Instance.Broadcast(OnEventKey.OnGameOverLose, true);
-			IsTouchInput = false;
-		}
-	}
+
 
 	void ChainCall(int step)
 	{
@@ -532,6 +525,7 @@ public class GameManager : SingletonMono<GameManager>
 			OperationPath.Remove(po);
 			if (GoundBackItemArray2D[po.x, po.y].GetComponent<GoundBackItem>().IsSurface())
 			{
+				Debug.Log(string.Format("连锁数据-点X:{0},y:{1})", po.x, po.y));
 				CalculateElimination(po.x, po.y, step++);
 				break;
 			}
@@ -540,14 +534,8 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			IsTouchInput = true;
 			Debug.Log("____没有可以连锁得，判断是否结束游戏______");
-			//if (hasStacked) {
-			//	TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);
-			//	hasStacked = false;
-			//}
+			TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);//判断是否胜利
 		}
-		IsOver();
-
-
 	}
 
 	#endregion
