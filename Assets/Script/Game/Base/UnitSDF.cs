@@ -201,7 +201,7 @@ public class UnitSDF : MonoBehaviour
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
 		// 查找起点：度为1的节点
 		Vector2Int start = FindCountIsOne(coordinates);
-		//Debug.Log($"找到起点：X={start.x}, Y={start.y}");
+		Debug.Log($"找到起点：X={start.x}, Y={start.y}");
 		// 初始化访问记录
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		// 初始化路径
@@ -253,7 +253,7 @@ public class UnitSDF : MonoBehaviour
 	private static bool FindPath(Vector2Int current, HashSet<Vector2Int> coordinateSet, HashSet<Vector2Int> visited, List<InstructionData> path, Vector2Int? previous)
 	{
 		visited.Add(current);
-		Debug.Log($"访问节点：X={current.x}, Y={current.y}");
+		//Debug.Log($"访问节点：X={current.x}, Y={current.y}");
 
 		// 如果有上一个节点，则记录路径
 		if (previous.HasValue)
@@ -266,7 +266,7 @@ public class UnitSDF : MonoBehaviour
 		if (visited.Count == coordinateSet.Count)
 		{
 
-			Debug.Log($"——————————————————————————所有节点都已访问——————————————————————");
+			Debug.Log($"——————————————————————————找到路径——————————————————————");
 			return true;
 		}
 
@@ -338,16 +338,25 @@ public class UnitSDF : MonoBehaviour
 			neighborsCountDict[pos] = count;
 		}
 		Vector2Int start = new Vector2Int(-1,-1);
-		start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 1).Key;
+		start = neighborsCountDict.Where(kvp => kvp.Value == 1)
+									  .Select(kvp => kvp.Key)
+									  .DefaultIfEmpty(new Vector2Int(-1, -1))
+									  .First();
 		if (start.x == -1&& start.y == -1)
 		{
 			// 没有找到则找邻居数量为3的
-			start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 3).Key;
+			start = neighborsCountDict.Where(kvp => kvp.Value == 3)
+									  .Select(kvp => kvp.Key)
+									  .DefaultIfEmpty(new Vector2Int(-1, -1))
+									  .First();
 		}
 		if (start.x == -1 && start.y == -1)
 		{
 			// 如果依然没找到则找邻居数量大于1的
-			start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value > 1).Key;
+			start = neighborsCountDict.Where(kvp => kvp.Value > 1)
+									  .Select(kvp => kvp.Key)
+									  .DefaultIfEmpty(new Vector2Int(-1, -1))
+									  .First();
 		}
 		return start;
 	}
@@ -365,7 +374,10 @@ public class UnitSDF : MonoBehaviour
 			neighborsCountDict[pos] = count;
 		}
 		Vector2Int start = new Vector2Int(-1,-1);
-		start = neighborsCountDict.FirstOrDefault(kvp => kvp.Value == 3).Key;
+		start = neighborsCountDict.Where(kvp => kvp.Value == 3)
+									  .Select(kvp => kvp.Key)
+									  .DefaultIfEmpty(new Vector2Int(-1, -1))
+									  .First();
 		return start;
 	}
 }

@@ -463,27 +463,22 @@ public class GameManager : SingletonMono<GameManager>
 		{
 			FilterLinked.Clear();
 			List<Vector2Int> GoundBackItemList = UnitSDF.FindConnectedPieces(new Vector2Int(x,y));
-			Debug.Log(string.Format("寻找点，是否为null：{0}", GoundBackItemList==null));
-			if (GoundBackItemList == null&& OperationPath.Count>0)
+			Debug.Log(string.Format("寻找点，是否为null：{0}, 数组长度为：{1}", GoundBackItemList==null, GoundBackItemList == null?"0": GoundBackItemList.Count));
+			if ((GoundBackItemList == null|| GoundBackItemList.Count == 1))
 			{
-				ChainCall(step++);//执行连锁数据部分逻辑
+				if (OperationPath.Count > 0) {
+					ChainCall(step++);//执行连锁数据部分逻辑
+				}
 				return;
 			}
-			
 			FilterLinked = UnitSDF.FilterLinkedCoordinates(GoundBackItemList);
-			//if (FilterLinked == null || FilterLinked.Count == 0)
-			//{
-			//	ChainCall(step++);
-			//	Debug.Log(string.Format("放置-当前点X:{0},Y:{1}，排序后无连锁", x, y));
-			//	return;
-			//}
 			void StartNextAnimation(int index)
 			{
+				hasStacked = true;
 				var linkedItem = GoundBackItemArray2D[FilterLinked[index].StarVector2.x, FilterLinked[index].StarVector2.y];
 				var ops = linkedItem.RemoveSurfaces();
 				linkedItem.DisplayNumbers(false);
 				OperationPath.Add(FilterLinked[index].StarVector2);
-				hasStacked = true;
 				//Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
