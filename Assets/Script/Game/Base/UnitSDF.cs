@@ -28,6 +28,31 @@ public class UnitSDF : MonoBehaviour
 	}
 
 	/// <summary>
+	/// 筛选指定数组里面的点有哪些是该点相邻的点
+	/// </summary>
+	/// <param name="star"></param>
+	/// <param name="list"></param>
+	/// <returns></returns>
+	public static List<Vector2Int> GetCreatorPosForList(Vector2Int star, List<Vector2Int> list) {
+		List<Vector2Int> vector2s = GetCreatorPos(star.x, star.y);
+		return list.Where(v => vector2s.Contains(v)).ToList();
+	}
+
+	/// <summary>
+	/// 筛选指定数组里面的点有哪些是该点相邻的点且不属于list2里面
+	/// </summary>
+	/// <param name="star"></param>
+	/// <param name="list"></param>
+	/// <returns></returns>
+	public static List<Vector2Int> GetCreatorPosForListOrList(Vector2Int star, List<Vector2Int> list1, List<Vector2Int> list2)
+	{
+		List<Vector2Int> vector2s = GetCreatorPos(star.x, star.y);
+		return list1.Where(v => vector2s.Contains(v)&& !list2.Contains(v)).ToList();
+
+	}
+
+
+	/// <summary>
 	/// 筛选相邻的坐标
 	/// </summary>
 	/// <param name="coord"></param>
@@ -192,6 +217,54 @@ public class UnitSDF : MonoBehaviour
 	#endregion
 
 
+	public static List<InstructionData> FilterLinkedCoordinates(Vector2Int currentPoint, List<Vector2Int> surroundingPoints)
+	{
+		// 创建用于存储InstructionData的列表
+		List<InstructionData> instructions = new List<InstructionData>();
+		// 使用队列进行广度优先搜索（BFS），按层级处理点
+		Queue<Vector2Int> queue = new Queue<Vector2Int>();
+		// 使用HashSet记录已访问的点，避免重复处理
+		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+		// 从当前点开始
+		queue.Enqueue(currentPoint);
+		visited.Add(currentPoint);
+		int layer = 0; // 初始化层级计数器
+		// 按层级处理点
+		while (queue.Count > 0)
+		{
+			int pointsInCurrentLayer = queue.Count;
+			// 处理当前层级的所有点
+			for (int i = 0; i < pointsInCurrentLayer; i++)
+			{
+				Vector2Int current = queue.Dequeue();
+				// 获取当前点周围的点，并过滤出在surroundingPoints中且未访问的点
+				List<Vector2Int> neighbors = GameManager.Instance.GetAroundPos(current.x, current.y)
+					.Where(v => surroundingPoints.Contains(v) && !visited.Contains(v))
+					.ToList();
+				// 将每个邻居点加入队列，标记为已访问，并添加到instructions中
+				foreach (Vector2Int neighbor in neighbors)
+				{
+					visited.Add(neighbor);
+					queue.Enqueue(neighbor);
+					InstructionData data = new InstructionData(neighbor, layer + 1);
+					data.SetSatrtAndEnd(neighbor, current);
+					instructions.Add(data);
+					Debug.Log(string.Format("添加层级点，坐标为，X：{0}，Y：{1}，层级为：{2}", neighbor.x, neighbor.y, layer + 1));
+				}
+			}
+
+			layer++; // 进入下一层级
+		}
+		instructions = instructions.OrderByDescending(instruction => instruction.Ceng).ToList();
+		return instructions;
+	}
+
+	private float GetEuclideanDistance(Vector2Int a, Vector2Int b)
+	{
+		return Vector2Int.Distance(a, b);
+	}
+
+
 	#region Test 1
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
@@ -199,14 +272,16 @@ public class UnitSDF : MonoBehaviour
 		Debug.Log("___________________________深度搜索_____________________________");
 		// 使用HashSet提高查找效率
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
+		GameManager.Instance.StartPos = coordinates;
 		// 查找起点：度为1的节点
 		Vector2Int start = FindCountIsOne(coordinates);
+		GameManager.Instance.StartPos.Remove(start);
 		Debug.Log($"找到起点：X={start.x}, Y={start.y}");
 		// 初始化访问记录
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		// 初始化路径
 		List<InstructionData> path = new List<InstructionData>();
-		// 开始递归搜索
+
 		bool success = FindPath(start, coordinateSet, visited, path, null);
 		if (success)
 		{
@@ -215,31 +290,40 @@ public class UnitSDF : MonoBehaviour
 		}
 		else
 		{
-			if (coordinates.Count==4) {//针对特殊情况
+			if (coordinates.Count == 4)
+			{//针对特殊情况
 				Vector2Int three = FindCountIsThree(coordinates);
-				if (three.x == -1&& three.y == -1) {
-					Debug.Log("0:未能找到覆盖所有节点的完整路径。");
+				if (three.x == -1 && three.y == -1)
+				{
+					Debug.Log("1:未能找到覆盖所有节点的完整路径。");
 					Debug.Log("___________________________深度搜索结束_____________________________");
-					return new List<InstructionData>();
-				} else {//普通情况
-                    for (int i = 0; i < coordinates.Count; i++)
-                    {
-						if (three!= coordinates[i]) {
-							InstructionData instruction = new InstructionData(coordinates[i], three);
+					return path;
+				}
+				else
+				{
+					//普通情况
+					for (int k = 0; k < coordinates.Count; k++)
+					{
+						if (three != coordinates[k])
+						{
+							InstructionData instruction = new InstructionData(coordinates[k], three);
 							path.Add(instruction);
 						}
-                    }
-                    return path;
+					}
+					return path;
 				}
 			}
-            else
-            {
+			else
+			{
+
 				Debug.Log("1:未能找到覆盖所有节点的完整路径。");
 				Debug.Log("___________________________深度搜索结束_____________________________");
-				return new List<InstructionData>();
+				return path;
 			}
 		}
 	}
+
+
 
 	/// <summary>
 	/// 递归DFS搜索路径

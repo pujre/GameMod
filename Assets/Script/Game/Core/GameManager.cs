@@ -13,6 +13,7 @@ public class GameManager : SingletonMono<GameManager>
 	public GameObject ItemParent;
 	public Material[] DefaultORHightMaterial;
 	public List<Vector2Int> OperationPath = new List<Vector2Int>();
+	public List<Vector2Int> StartPos = new List<Vector2Int>();//作为起点的点
 
 	private Camera Cam;
 	public bool IsTouchInput = false;
@@ -472,7 +473,12 @@ public class GameManager : SingletonMono<GameManager>
 				}
 				return;
 			}
-			FilterLinked = UnitSDF.FilterLinkedCoordinates(GoundBackItemList);
+			StartPos.Clear();
+			FilterLinked = UnitSDF.FilterLinkedCoordinates(new Vector2Int(x,y), GoundBackItemList);
+			if (FilterLinked==null|| FilterLinked.Count==0) {
+				Debug.Log("无法连线");
+				return;
+			}
 			void StartNextAnimation(int index)
 			{
 				hasStacked = true;
