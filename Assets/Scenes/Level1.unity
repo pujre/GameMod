@@ -4800,6 +4800,7 @@ GameObject:
   - component: {fileID: 924926690}
   - component: {fileID: 924926692}
   - component: {fileID: 924926693}
+  - component: {fileID: 924926694}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -4876,6 +4877,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 17411c03558c52545a974a8f22c5ec32, type: 2}
   - {fileID: 2100000, guid: 5298433dfaa321e48b33929abb87368b, type: 2}
   OperationPath: []
+  StartPos: []
   IsTouchInput: 1
   SelectedObject: {fileID: 0}
   NowLevel: 1
@@ -4957,6 +4959,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ADTargerSystem: 0
+--- !u!114 &924926694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924926684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c0bb0d3220e0e47941ebc8d145a3c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDebugLog: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

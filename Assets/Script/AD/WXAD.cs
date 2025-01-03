@@ -110,7 +110,7 @@ public class WXAD : IAdManager
 
 	
 	/// <summary>
-	/// 创建banner广告
+	/// 鍒涘缓banner骞垮憡
 	/// </summary>
 	private void CreateBannerAd()
 	{
@@ -120,7 +120,7 @@ public class WXAD : IAdManager
 
 
 	/// <summary>
-	/// 创建视频广告
+	/// 鍒涘缓瑙嗛骞垮憡
 	/// </summary>
 	private void CreateRewardedVideoAd()
 	{
@@ -160,7 +160,7 @@ public class WXAD : IAdManager
 
 
 	/// <summary>
-	/// 创建插屏广告
+	/// 鍒涘缓鎻掑睆骞垮憡
 	/// </summary>
 	private void CreatorInterstitialAd() {
 		InterstitialAd = WX.CreateInterstitialAd(new WXCreateInterstitialAdParam {
@@ -171,7 +171,7 @@ public class WXAD : IAdManager
 
 
 	/// <summary>
-	/// 创建原生广告
+	/// 鍒涘缓鍘熺敓骞垮憡
 	/// </summary>
 	private void CreateCustomAd()
 	{

@@ -95,8 +95,7 @@ public enum OnEventKey
 	OnGameStar,//
 	OnStackingCompleted,//一次操作下的所有颜色堆叠结束
 	OnStop,//
-	OnGameOverWin,//游戏结束胜利
-	OnGameOverLose,//游戏结束失败
+	OnGameOverWinOrLose,//游戏结束胜利或失败
 	OnAd,//看广告
 	OnApplyProp,//使用道具
 	OnBonusEvent,//加分

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class DelayManager
 {
-	// ¿ªÊ¼Ò»¸öÑÓÊ±ÊÂ¼ş
+	// å¼€å§‹ä¸€ä¸ªå»¶æ—¶äº‹ä»¶
 	public static void StartDelay(float delayTime, System.Action callback)
 	{
 		MonoBehaviour monoBehaviour = GameObject.FindObjectOfType<MonoBehaviour>();
@@ -17,7 +17,7 @@ public static class DelayManager
 		}
 	}
 
-	// ÑÓÊ±Ğ­³Ì
+	// å»¶æ—¶åç¨‹
 	private static IEnumerator DelayCoroutine(float delayTime, System.Action callback)
 	{
 		yield return new WaitForSeconds(delayTime);

@@ -10,7 +10,7 @@ namespace TYQ
 
 		private void Awake()
 		{
-			TYQEventCenter.Instance.AddListener<bool>(OnEventKey.OnGameOverWin, Over);
+			TYQEventCenter.Instance.AddListener<bool>(OnEventKey.OnGameOverWinOrLose, Over);
 		}
 		// Start is called before the first frame update
 		void Start()
@@ -49,6 +49,10 @@ namespace TYQ
 					break;
 				case "ADBtn":
 					Debug.Log("播放广告");
+					ADManager.Instance.ShowAD(ADType.Video,(bool ison) => {
+						if (ison) {
+						}
+					});
 					break;
 				case "LoseRe":
 					gameObject.SetActive(false);

@@ -209,6 +209,7 @@ public class GameManager : SingletonMono<GameManager>
 				{
 					obj.transform.GetComponent<GoundBackItem>().IsLock = false;
 					obj.transform.GetComponent<GoundBackItem>().DisplayNumbers(true, "");
+					AudioManager.Instance.PlaySFX("Unlock（解锁新格子）");
 				}
 				else
 				{
@@ -295,7 +296,7 @@ public class GameManager : SingletonMono<GameManager>
 						//OperationPath.Clear();
 						if (!DontSimcity) {
 							CalculateElimination(lj.ItemPosition.x, lj.ItemPosition.y, 0);
-							Debug.Log(string.Format("-放置- 了堆叠堆，X:{0},Y{1}", lj.ItemPosition.x, lj.ItemPosition.y));
+							LogManager.Instance.Log(string.Format("-放置- 了堆叠堆，X:{0},Y{1}", lj.ItemPosition.x, lj.ItemPosition.y));
 
 						}
 					}
@@ -411,6 +412,9 @@ public class GameManager : SingletonMono<GameManager>
 
 	public void LoadLevel(int level)
 	{
+		if (level>=5) {
+			level = 4;
+		}
 		NowLevel = level;
 		LevelData = LevelDataRoot.GetLevelData(level);
 		//GenerateBoxMatrix(levedata.ChapterSize.x, levedata.ChapterSize.y);
@@ -458,35 +462,33 @@ public class GameManager : SingletonMono<GameManager>
 	{
 		if (hasStacked == true) {
 			OperationPath.Add(new Vector2Int(x,y));
-			Debug.Log(string.Format("正在动画，加入数组,X:{0},y:{1}",x,y));
+			LogManager.Instance.Log(string.Format("正在动画，加入数组,X:{0},y:{1}",x,y));
 			return;
 		}
 		if (GoundBackItemArray2D != null)
 		{
 			FilterLinked.Clear();
 			List<Vector2Int> GoundBackItemList = UnitSDF.FindConnectedPieces(new Vector2Int(x,y));
-			Debug.Log(string.Format("寻找点，是否可连线, 数组长度为：{1}", GoundBackItemList==null, GoundBackItemList == null?"0": GoundBackItemList.Count));
+			LogManager.Instance.Log(string.Format("寻找点，是否可连线, 数组长度为：{1}", GoundBackItemList==null, GoundBackItemList == null?"0": GoundBackItemList.Count));
 			if ((GoundBackItemList == null|| GoundBackItemList.Count == 1))
 			{
-				if (OperationPath.Count > 0) {
-					ChainCall(step+1);//执行连锁数据部分逻辑
-				}
+				ChainCall(step + 1);//执行连锁数据部分逻辑
 				return;
 			}
 			StartPos.Clear();
 			FilterLinked = UnitSDF.FilterLinkedCoordinates(new Vector2Int(x,y), GoundBackItemList);
 			if (FilterLinked==null|| FilterLinked.Count==0) {
-				Debug.Log("无法连线");
+				LogManager.Instance.Log("无法连线");
 				return;
 			}
 			void StartNextAnimation(int index)
 			{
-				hasStacked = true;
+				
 				var linkedItem = GoundBackItemArray2D[FilterLinked[index].StarVector2.x, FilterLinked[index].StarVector2.y];
 				var ops = linkedItem.RemoveSurfaces();
 				linkedItem.DisplayNumbers(false);
 				OperationPath.Add(FilterLinked[index].StarVector2);
-				//Debug.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
+				//LogManager.Instance.Log("添加了坐标数据：x:" + FilterLinked[index].StarVector2.x + " Y:" + FilterLinked[index].StarVector2.y);
 				GoundBackItemArray2D[FilterLinked[index].EndVector2.x, FilterLinked[index].EndVector2.y].AddSurfaces(ops, () =>
 				{
 					if (linkedItem)
@@ -495,7 +497,7 @@ public class GameManager : SingletonMono<GameManager>
 					}
 					else
 					{
-						Debug.Log("linkedItem is Null");
+						LogManager.Instance.Log("linkedItem is Null");
 					}
 					
 					if ((index + 1) >= FilterLinked.Count)
@@ -514,7 +516,8 @@ public class GameManager : SingletonMono<GameManager>
 				});
 
 			}
-			IsTouchInput = false;
+			hasStacked = true;
+			//IsTouchInput = false;
 			StartNextAnimation(0);
 		}
 	}
@@ -524,22 +527,21 @@ public class GameManager : SingletonMono<GameManager>
 
 	void ChainCall(int step)
 	{
-		Debug.Log(string.Format("开始连锁数据,第{0}步", step));
+		LogManager.Instance.Log(string.Format("开始连锁数据,第{0}步", step));
 		for (int i = OperationPath.Count - 1; i >= 0; i--)
 		{
 			var po = OperationPath[i];
 			OperationPath.Remove(po);
 			if (GoundBackItemArray2D[po.x, po.y].GetComponent<GoundBackItem>().IsSurface())
 			{
-				Debug.Log(string.Format("连锁数据-点X:{0},y:{1})", po.x, po.y));
+				LogManager.Instance.Log(string.Format("连锁数据-点X:{0},y:{1})", po.x, po.y));
 				CalculateElimination(po.x, po.y, step++);
 				break;
 			}
 		}
-		if (OperationPath.Count == 0)
-		{
-			IsTouchInput = true;
-			Debug.Log("____没有可以连锁得，判断是否结束游戏______");
+
+		if (OperationPath==null||OperationPath.Count==0) {
+			LogManager.Instance.Log("____没有可以连锁得，判断是否结束游戏______");
 			TYQEventCenter.Instance.Broadcast(OnEventKey.OnStackingCompleted);//判断是否胜利
 		}
 	}
@@ -604,7 +606,7 @@ public class GameManager : SingletonMono<GameManager>
 		List<Vector2Int> coordinates = GetSpecifyColorList(x,y);
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		List<Vector2Int> resultCoordinates = new List<Vector2Int>();
-		Debug.Log("开始筛选顶部相同颜色的坐标");
+		LogManager.Instance.Log("开始筛选顶部相同颜色的坐标");
 		foreach (var coord in coordinates)
 		{
 			if (!visited.Contains(coord))
@@ -816,7 +818,7 @@ public class GameManager : SingletonMono<GameManager>
 		//GameObject bottomtext= Resources.Load<GameObject>("Prefab/bottomText");
 		if (PrefabObj == null)
 		{
-			Debug.Log("未能加载到该关卡数据，加载的关卡为："+ NowLevel.ToString());
+			LogManager.Instance.Log("未能加载到该关卡数据，加载的关卡为："+ NowLevel.ToString());
 			return;
 		}
 		else {

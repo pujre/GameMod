@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using WeChatWASM;
 
 
 public class UnitSDF : MonoBehaviour
@@ -109,7 +110,7 @@ public class UnitSDF : MonoBehaviour
 				}
 			}
 		}
-		Debug.Log(string.Format("-判断该点附件是否有可翻转的点- 点X:{0}，Y：{1}周围所有的点一共有 {2} 个，为：{3}", startHex.x, startHex.y, visited.ToList().Count, log));
+		LogManager.Instance.Log(string.Format("-判断该点附件是否有可翻转的点- 点X:{0}，Y：{1}周围所有的点一共有 {2} 个，为：{3}", startHex.x, startHex.y, visited.ToList().Count, log));
 		if (visited.ToList().Count == 1)
 		{
 			return null;
@@ -249,7 +250,7 @@ public class UnitSDF : MonoBehaviour
 					InstructionData data = new InstructionData(neighbor, layer + 1);
 					data.SetSatrtAndEnd(neighbor, current);
 					instructions.Add(data);
-					Debug.Log(string.Format("添加层级点，坐标为，X：{0}，Y：{1}，层级为：{2}", neighbor.x, neighbor.y, layer + 1));
+					LogManager.Instance.Log(string.Format("添加层级点，坐标为，X：{0}，Y：{1}，层级为：{2}", neighbor.x, neighbor.y, layer + 1));
 				}
 			}
 
@@ -269,14 +270,14 @@ public class UnitSDF : MonoBehaviour
 	public static List<InstructionData> FilterLinkedCoordinates(List<Vector2Int> coordinates)
 	{
 		List<InstructionData> instructionData = new List<InstructionData>();
-		Debug.Log("___________________________深度搜索_____________________________");
+		LogManager.Instance.Log("___________________________深度搜索_____________________________");
 		// 使用HashSet提高查找效率
 		HashSet<Vector2Int> coordinateSet = new HashSet<Vector2Int>(coordinates);
 		GameManager.Instance.StartPos = coordinates;
 		// 查找起点：度为1的节点
 		Vector2Int start = FindCountIsOne(coordinates);
 		GameManager.Instance.StartPos.Remove(start);
-		Debug.Log($"找到起点：X={start.x}, Y={start.y}");
+		LogManager.Instance.Log($"找到起点：X={start.x}, Y={start.y}");
 		// 初始化访问记录
 		HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 		// 初始化路径
@@ -295,8 +296,8 @@ public class UnitSDF : MonoBehaviour
 				Vector2Int three = FindCountIsThree(coordinates);
 				if (three.x == -1 && three.y == -1)
 				{
-					Debug.Log("1:未能找到覆盖所有节点的完整路径。");
-					Debug.Log("___________________________深度搜索结束_____________________________");
+					LogManager.Instance.Log("1:未能找到覆盖所有节点的完整路径。");
+					LogManager.Instance.Log("___________________________深度搜索结束_____________________________");
 					return path;
 				}
 				else
@@ -316,8 +317,8 @@ public class UnitSDF : MonoBehaviour
 			else
 			{
 
-				Debug.Log("1:未能找到覆盖所有节点的完整路径。");
-				Debug.Log("___________________________深度搜索结束_____________________________");
+				LogManager.Instance.Log("1:未能找到覆盖所有节点的完整路径。");
+				LogManager.Instance.Log("___________________________深度搜索结束_____________________________");
 				return path;
 			}
 		}
@@ -337,20 +338,20 @@ public class UnitSDF : MonoBehaviour
 	private static bool FindPath(Vector2Int current, HashSet<Vector2Int> coordinateSet, HashSet<Vector2Int> visited, List<InstructionData> path, Vector2Int? previous)
 	{
 		visited.Add(current);
-		//Debug.Log($"访问节点：X={current.x}, Y={current.y}");
+		//LogManager.Instance.Log($"访问节点：X={current.x}, Y={current.y}");
 
 		// 如果有上一个节点，则记录路径
 		if (previous.HasValue)
 		{
 			path.Add(new InstructionData(previous.Value, current));
-			Debug.Log($"添加路径：{previous.Value} -> {current}");
+			LogManager.Instance.Log($"添加路径：{previous.Value} -> {current}");
 		}
 
 		// 如果所有节点都已访问，返回成功
 		if (visited.Count == coordinateSet.Count)
 		{
 
-			Debug.Log($"——————————————————————————找到路径——————————————————————");
+			LogManager.Instance.Log($"——————————————————————————找到路径——————————————————————");
 			return true;
 		}
 
@@ -375,7 +376,7 @@ public class UnitSDF : MonoBehaviour
 				if (lastStep.EndVector2 == neighbor)
 				{
 					path.RemoveAt(path.Count - 1);
-					Debug.Log($"回溯路径：移除 {lastStep.StarVector2} -> {lastStep.EndVector2}");
+					LogManager.Instance.Log($"回溯路径：移除 {lastStep.StarVector2} -> {lastStep.EndVector2}");
 				}
 			}
 		}

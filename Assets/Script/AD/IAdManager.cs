@@ -21,19 +21,19 @@ public enum ADTarger
 public enum ADType
 {
 	/// <summary>
-	/// ºá·ù banner
+	/// æ¨ªå¹… banner
 	/// </summary>
 	Banner,
 	/// <summary>
-	///  ¼¤ÀøÊÓÆµ  ÊÓÆµ
+	///  æ¿€åŠ±è§†é¢‘  è§†é¢‘
 	/// </summary>
 	Video,
 	/// <summary>
-	/// ²åÆÁ
+	/// æ’å±
 	/// </summary>
 	Interstitial,
 	/// <summary>
-	/// Ô­ÉúÄ£°å
+	/// åŸç”Ÿæ¨¡æ¿
 	/// </summary>
 	Custom,
 }

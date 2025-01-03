@@ -16,7 +16,7 @@
 	}, {
 		"Level": 2,
 		"ClearanceScore": 100,
-		"ColourNum": 3,
+		"ColourNum": 6,
 		"MaxNum": 5,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
@@ -30,7 +30,7 @@
 	}, {
 		"Level": 3,
 		"ClearanceScore": 100,
-		"ColourNum": 3,
+		"ColourNum": 7,
 		"MaxNum": 5,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
@@ -44,7 +44,7 @@
 	}, {
 		"Level": 4,
 		"ClearanceScore": 100,
-		"ColourNum": 3,
+		"ColourNum": 8,
 		"MaxNum": 5,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
@@ -58,7 +58,7 @@
 	}, {
 		"Level": 5,
 		"ClearanceScore": 100,
-		"ColourNum": 3,
+		"ColourNum": 9,
 		"MaxNum": 5,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
