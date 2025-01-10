@@ -1,9 +1,10 @@
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using TYQ;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : SingletonMono<GameManager>
 {
@@ -20,12 +21,14 @@ public class GameManager : SingletonMono<GameManager>
 	private bool IsDragging = false;
 	public GameObject SelectedObject;
 	public int NowLevel = 1;
+	public GameObject Prompt;
 
 
 	public GoundBackItem[,] GoundBackItemArray2D;
 	public LevelDataRoot LevelDataRoot;
 	public List<InstructionData> FilterLinked = new List<InstructionData>();
 	private LevelData LevelData;
+	private Vector3 PromptStarVector3;
 
 	private bool IsProp=false;
 	private int IsPropAppUserID;
@@ -46,6 +49,7 @@ public class GameManager : SingletonMono<GameManager>
 		base.Awake();
 		Cam = Camera.main; // 获取主摄像机
 		ResPath.Init();
+		PromptStarVector3= Prompt.transform.position;
 	}
 
 	void Start()
@@ -57,7 +61,16 @@ public class GameManager : SingletonMono<GameManager>
 
 	void Update()
 	{
-		if (IsTouchInput)
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+			Debug.Log("按下了测试按键");
+			ShowPrompt("按下了测试按键");
+
+		}
+
+
+        if (IsTouchInput)
 		{
 			ray = Cam.ScreenPointToRay(Input.mousePosition);
 			if (!IsDragging && SelectedObject == null && Input.GetMouseButtonDown(0))
@@ -229,22 +242,6 @@ public class GameManager : SingletonMono<GameManager>
 				case 2:
 					SelectedObject = obj.transform.Find("ParentClass").gameObject;
 					IsDragging = true;
-					#region Old prop script
-					//SelectedObject = obj.transform.gameObject;
-					//UserProp(2);
-					//Debug.Log("PropTranform_1: " + (PropTranform_1==null? "  n ": PropTranform_1.gameObject.name));
-					//if (PropTranform_1 == null)
-					//{
-					//	PropTranform_1 = obj.transform.gameObject;
-					//	PropTranform_1.GetComponent<GoundBackItem>().DisplayNumbers(true, "换");
-					//}
-					//else if (PropTranform_1 != null && PropTranform_1 != obj.transform.gameObject)
-					//{
-					//	obj.transform.GetComponent<GoundBackItem>().PropPositionChange(PropTranform_1.GetComponent<GoundBackItem>());
-					//	SelectedObject = PropTranform_1;
-					//	UserProp(2);
-					//}
-					#endregion
 					break;
 				case 3:
 					
@@ -342,6 +339,15 @@ public class GameManager : SingletonMono<GameManager>
 			}
 		}
 		return number;
+	}
+
+	public void ShowPrompt(string str) {
+		Prompt.SetActive(true);
+		Prompt.transform.Find("Text (Legacy)").GetComponent<Text>().text = str;
+		Prompt.transform.DOMoveY(PromptStarVector3.y+5, 2f).OnComplete(() => {
+			Prompt.transform.position = PromptStarVector3;
+			Prompt.SetActive(false);
+		});
 	}
 
 	/// <summary>

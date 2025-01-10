@@ -15,14 +15,14 @@ public class ArrayManagerEditor : Editor
 
 		GameManager script = (GameManager)target;
 
-		//if (GUILayout.Button(string.Format("³õÊ¼»¯Ò»¸ö{0}*{1}µÄÊı×é", script.MapSize.x, script.MapSize.y)))
+		//if (GUILayout.Button(string.Format("åˆå§‹åŒ–ä¸€ä¸ª{0}*{1}çš„æ•°ç»„", script.MapSize.x, script.MapSize.y)))
 		//{
 		//	script.GenerateBoxMatrix(script.MapSize.x, script.MapSize.y);  // Example dimensions or read from user input
 		//}
-		if (GUILayout.Button(string.Format("Éú³ÉÒ»¸ö²âÊÔjson,{0}", "5¹ØÊı¾İ")))
-		{
-			TestLevel(5);
-		}
+		//if (GUILayout.Button(string.Format("ç”Ÿæˆä¸€ä¸ªæµ‹è¯•json,{0}", "5å…³æ•°æ®")))
+		//{
+		//	TestLevel(5);
+		//}
 
 		EditorGUILayout.Space();
 
@@ -75,6 +75,6 @@ public class ArrayManagerEditor : Editor
 		Debug.Log(json);
 		string path = Path.Combine(Application.dataPath, "Resources/LevelData.json");
 		File.WriteAllText(path, json);
-		Debug.Log("³É¹¦");
+		Debug.Log("æˆåŠŸ");
 	}
 }

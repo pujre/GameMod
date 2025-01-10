@@ -12,13 +12,13 @@
 
 //		Surface generator = (Surface)target;
 
-//		//if (GUILayout.Button("Éú³ÉUGUI¸ñ×ÓÃæ°å"))
+//		//if (GUILayout.Button("ç”ŸæˆUGUIæ ¼å­é¢æ¿"))
 //		//{
 //		//	generator.GenerateMatrix();
 //		//}
 
 
-//		//if (GUILayout.Button("ÕûÀí×ÓÎïÌå×ø±ê"))
+//		//if (GUILayout.Button("æ•´ç†å­ç‰©ä½“åæ ‡"))
 //		//{
 //		//	//generator.AssignPositions();
 //		//}

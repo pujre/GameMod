@@ -31,7 +31,7 @@ namespace TYQ
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnLoadGameLevel, LoadGameLevel);
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnGameStar, OnGameStar);
 			TYQEventCenter.Instance.AddListener(OnEventKey.OnStackingCompleted, GameWin);
-			TYQEventCenter.Instance.AddListener(OnEventKey.ShowLevelTarge, ShowLevelTarge); 
+			TYQEventCenter.Instance.AddListener(OnEventKey.ShowLevelTarge, ShowLevelTarge);
 		}
 
 
@@ -48,6 +48,50 @@ namespace TYQ
 			}
 			UpdatePropNumber();
 		}
+
+		public void UserProp(string userPropName) {
+			int value = 0;
+			string propName = "";
+			int propId = 0;
+			switch (userPropName)
+			{
+				case "Prop_1Btn":
+					propName = "Prop_1";
+					propId = GameManager.Instance.GetNowLevelData().Item_1ID;
+					value = GameManager.Instance.GetNowLevelData().Item_1Number;
+					break;
+				case "Prop_2Btn":
+					propName = "Prop_2";
+					propId = GameManager.Instance.GetNowLevelData().Item_2ID;
+					value = GameManager.Instance.GetNowLevelData().Item_2Number;
+					break;
+				case "Prop_3Btn":
+					propName = "Prop_3";
+					propId = GameManager.Instance.GetNowLevelData().Item_3ID;
+					value = GameManager.Instance.GetNowLevelData().Item_3Number;
+					if (value > 0)
+					{
+						GameManager.Instance.ScelfJob(3);
+						GameManager.Instance.GetNowLevelData().Item_3Number--;
+						SetUIAction(true, "");
+						GameManager.Instance.CloneUserProp();
+						TYQEventCenter.Instance.Broadcast(OnEventKey.OnApplyProp);
+						return;
+					}
+					break;
+			}
+			if (value > 0 && propName != "Prop_3")
+			{
+				SetUIAction(false, propName);
+				GameManager.Instance.SetUserProp(propId);
+			}
+			else
+			{
+				UIManager.Instance.SetUiPanelAction("RewardPanel", true);
+				UIManager.Instance.GetPanel("RewardPanel").GetComponent<RewardPanel>().ShowObtain(propId - 1);
+			}
+		}
+	
 
 		private void OnClickEvent(GameObject button)
 		{

@@ -3,7 +3,7 @@ using UnityEngine;
 [CustomEditor(typeof(GoundBackItem))]
 public class MatrixGeneratorEditor : Editor
 {
-	private Color targetColor = Color.white;  // ÔÚ±à¼­Æ÷ÀàÖĞ¶¨ÒåÑÕÉ«±äÁ¿
+	private Color targetColor = Color.white;  // åœ¨ç¼–è¾‘å™¨ç±»ä¸­å®šä¹‰é¢œè‰²å˜é‡
 	public override void OnInspectorGUI()
 	{
 		base.OnInspectorGUI();
@@ -13,11 +13,11 @@ public class MatrixGeneratorEditor : Editor
 
 
 		GUILayout.BeginHorizontal();
-		if (GUILayout.Button("ÅÅĞò×Ó½Úµã"))
+		if (GUILayout.Button("æ’åºå­èŠ‚ç‚¹"))
 		{
 			generator.SetChinderPosition();
 		}
-		if (GUILayout.Button("Ïû³ı×Ó½Úµã"))
+		if (GUILayout.Button("æ¶ˆé™¤å­èŠ‚ç‚¹"))
 		{
 			if (generator.GetTopColorNumber() >= 10)
 			{
@@ -25,14 +25,14 @@ public class MatrixGeneratorEditor : Editor
 			}
 			else
 			{
-				Debug.Log(string.Format("Î´Âú×ãÌõ¼ş£¬µ±Ç°ÊıÎª{0}", generator.GetTopColorNumber()));
+				Debug.Log(string.Format("æœªæ»¡è¶³æ¡ä»¶ï¼Œå½“å‰æ•°ä¸º{0}", generator.GetTopColorNumber()));
 
 			}
 		}
 		GUILayout.EndHorizontal();
-		// ÏÔÊ¾ÑÕÉ«Ñ¡ÔñÆ÷
+		// æ˜¾ç¤ºé¢œè‰²é€‰æ‹©å™¨
 		targetColor = EditorGUILayout.ColorField("Target Color", targetColor);
-		if (GUILayout.Button("¸Ä±äÑÕÉ«"))
+		if (GUILayout.Button("æ”¹å˜é¢œè‰²"))
 		{
 			generator.SetAllColor(targetColor,4,ItemColorType.Gray);
 		}

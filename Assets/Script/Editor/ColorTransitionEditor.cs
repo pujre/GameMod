@@ -4,13 +4,13 @@ using UnityEngine;
 [CustomEditor(typeof(SuTest))]
 public class ColorTransitionEditor : Editor
 {
-	private Color targetColor = Color.white;  // ÔÚ±à¼­Æ÷ÀàÖĞ¶¨ÒåÑÕÉ«±äÁ¿
+	private Color targetColor = Color.white;  // åœ¨ç¼–è¾‘å™¨ç±»ä¸­å®šä¹‰é¢œè‰²å˜é‡
 	public override void OnInspectorGUI()
 	{
 		DrawDefaultInspector();
 
 		SuTest colorTransition = (SuTest)target;
-		// ÏÔÊ¾ÑÕÉ«Ñ¡ÔñÆ÷
+		// æ˜¾ç¤ºé¢œè‰²é€‰æ‹©å™¨
 		targetColor = EditorGUILayout.ColorField("Target Color", targetColor);
 		if (GUILayout.Button("Do Color Transition")) {
 			colorTransition.StartColorDOTransition(targetColor);

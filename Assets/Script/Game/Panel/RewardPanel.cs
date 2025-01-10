@@ -56,18 +56,25 @@ namespace TYQ
 					break;
 				case "ObtainPropsBtn":
 					Debug.Log("获取道具，道具id为：" + TypeIndex);
+					GamePanel gamePanel = UIManager.Instance.GetPanel("GamePanel") as GamePanel;
 					ADManager.Instance.ShowAD(ADType.Video, (isOn) =>
 					{
 						switch (TypeIndex)
 						{
 							case 0:
 								GameManager.Instance.GetNowLevelData().Item_1Number++;
+								GameManager.Instance.ShowPrompt("获得了锤子道具");
+								gamePanel.UserProp("Prop_1Btn");
 								break;
 							case 1:
 								GameManager.Instance.GetNowLevelData().Item_2Number++;
+								GameManager.Instance.ShowPrompt("获得了交换道具");
+								gamePanel.UserProp("Prop_2Btn");
 								break;
 							case 2:
 								GameManager.Instance.GetNowLevelData().Item_3Number++;
+								GameManager.Instance.ShowPrompt("获得了刷新道具");
+								gamePanel.UserProp("Prop_3Btn");
 								break;
 							default:
 								break;

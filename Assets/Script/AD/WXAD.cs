@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using UnityEngine;
 using WeChatWASM;
 
@@ -27,6 +28,19 @@ public class WXAD : IAdManager
 		});
 	}
 
+	/// <summary>
+	/// 获取手机号
+	/// </summary>
+	/// <param name="success"></param>
+	public void GetPhoneNumber(Action success) {
+		WXGetPhoneNumber((GeneralCallbackResult res) => {
+			//IADDebugManager.Log(res.Code); // 动态令牌
+			IADDebugManager.Log(res.errMsg); // 回调信息（成功失败都会返回）
+			success!.Invoke();
+		}, (GeneralCallbackResult err) => {
+			IADDebugManager.Log("getPhoneNumber fail:" + err);
+		});
+	}
 
 	public void CreateAD(ADType adType)
 	{
@@ -64,7 +78,7 @@ public class WXAD : IAdManager
 		return false;
 	}
 
-	public void ShowAD(ADType adType,Action<bool> callBack=null)
+	public void ShowAD(ADType adType, Action<bool> callBack = null)
 	{
 		switch (adType)
 		{
@@ -106,17 +120,62 @@ public class WXAD : IAdManager
 	}
 
 
-	#region ______________________________________________
 
-	
+	#region 用户信息
+	private void WXGetPhoneNumber(Action<GeneralCallbackResult> success,Action<GeneralCallbackResult> fail)
+	{
+		WX.GetPhoneNumber(new GetPhoneNumberOption() {
+			isRealtime = true,
+			phoneNumberNoQuotaToast= false,
+			success= success,
+			fail= fail,
+		});
+		//  js代码示例
+		//	wx.getPhoneNumber({
+		//		isRealtime: true,
+		//		phoneNumberNoQuotaToast: false,
+		//		success: (res) =>
+		//		{
+		//			IADDebugManager.Log(res.code); // 动态令牌
+		//			IADDebugManager.Log(res.errMsg) // 回调信息（成功失败都会返回）
+		//			IADDebugManager.Log(res.errno)  // 错误码（失败时返回）
+		//		},
+		//		fail: (err) =>
+		//		{
+		//			IADDebugManager.Log('getPhoneNumber fail:', err);
+		//		}
+		//	})
+	}
+
+	#endregion
+
+	#region _____________________广告_________________________
+
+
 	/// <summary>
 	/// 创建banner广告
 	/// </summary>
 	private void CreateBannerAd()
 	{
-		BannerAd = WX.CreateFixedBottomMiddleBannerAd(BannerAdUnit, 30, 200);
-	}
+		if (!string.IsNullOrEmpty(BannerAdUnit)) {
+			BannerAd = WX.CreateFixedBottomMiddleBannerAd(BannerAdUnit, 30, 200);
+			
+		}
+        else
+        {
+		
+		}
+    }
 
+
+	private void Login() {
+		WX.Login(new LoginOption() {
+			success = (LoginSuccessCallbackResult lcr) => {
+				IADDebugManager.Log(lcr.code);
+				IADDebugManager.Log(lcr.errMsg);
+			},
+		});
+	}
 
 
 	/// <summary>
@@ -124,6 +183,12 @@ public class WXAD : IAdManager
 	/// </summary>
 	private void CreateRewardedVideoAd()
 	{
+		WX.GetSystemInfoAsync(new GetSystemInfoAsyncOption() {
+			success = (SystemInfo) =>{
+
+			},
+		});
+
 		RewardedVideoAd = WX.CreateRewardedVideoAd(new WXCreateRewardedVideoAdParam()
 		{
 			adUnitId = VideoAdUnit,

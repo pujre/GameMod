@@ -41,9 +41,9 @@ MonoBehaviour:
     disableHighPerformanceFallback: 0
     IOSDevicePixelRatio: 0
   SDKOptions:
-    UseFriendRelation: 0
+    UseFriendRelation: 1
     UseCompressedTexture: 0
-    UseMiniGameChat: 0
+    UseMiniGameChat: 1
     PreloadWXFont: 0
   CompileOptions:
     DevelopBuild: 0
@@ -52,14 +52,14 @@ MonoBehaviour:
     Il2CppOptimizeSize: 1
     profilingFuncs: 1
     Webgl2: 0
-    fbslim: 0
+    fbslim: 1
     DeleteStreamingAssets: 1
     ProfilingMemory: 0
     CleanBuild: 0
     CustomNodePath: 
     autoAdaptScreen: 1
-    showMonitorSuggestModal: 1
-    enableProfileStats: 1
+    showMonitorSuggestModal: 0
+    enableProfileStats: 0
     enableRenderAnalysis: 0
     enablePerfAnalysis: 0
     iOSAutoGCInterval: 10000
