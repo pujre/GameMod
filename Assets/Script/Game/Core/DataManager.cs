@@ -19,5 +19,4 @@ public class DataManager : SingletonMono<DataManager>
 	{
 		 PlayerPrefs.SetInt(OnDataKey.HighestLevel.ToString(), x);
 	}
-
 }

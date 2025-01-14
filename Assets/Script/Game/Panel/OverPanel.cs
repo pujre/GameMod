@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,8 @@ namespace TYQ
 	{
 		public GameObject Win;
 		public GameObject Lose;
+		public List<Sprite> WinTextureList=new List<Sprite>();
+		public Image WinImage;
 
 		private void Awake()
 		{
@@ -27,6 +30,9 @@ namespace TYQ
 		{
 			Win.SetActive(isWin);
 			Lose.SetActive(!isWin);
+			if (isWin) {
+				WinImage.sprite = WinTextureList[Random.Range(0, WinTextureList.Count)];
+			}
 		}
 
 
