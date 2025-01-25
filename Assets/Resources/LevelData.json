@@ -15,9 +15,9 @@
 		"Describe_3": ""
 	}, {
 		"Level": 2,
-		"ClearanceScore": 100,
-		"ColourNum": 4,
-		"MaxNum": 5,
+		"ClearanceScore": 50,
+		"ColourNum": 3,
+		"MaxNum": 3,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
 		"Describe_1": "",
@@ -30,8 +30,8 @@
 	}, {
 		"Level": 3,
 		"ClearanceScore": 100,
-		"ColourNum": 5,
-		"MaxNum": 5,
+		"ColourNum": 3,
+		"MaxNum": 3,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
 		"Describe_1": "",
@@ -43,9 +43,9 @@
 		"Describe_3": ""
 	}, {
 		"Level": 4,
-		"ClearanceScore": 100,
-		"ColourNum": 6,
-		"MaxNum": 5,
+		"ClearanceScore": 200,
+		"ColourNum": 3,
+		"MaxNum": 3,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
 		"Describe_1": "",
@@ -57,9 +57,9 @@
 		"Describe_3": ""
 	}, {
 		"Level": 5,
-		"ClearanceScore": 100,
-		"ColourNum": 7,
-		"MaxNum": 5,
+		"ClearanceScore": 500,
+		"ColourNum": 3,
+		"MaxNum": 3,
 		"Item_1ID": 1,
 		"Item_1Number": 0,
 		"Describe_1": "",
