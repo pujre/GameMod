@@ -5,10 +5,10 @@ using WeChatWASM;
 
 public class WXAD : IAdManager
 {
-	public string BannerAdUnit;
-	public string VideoAdUnit;
-	public string InterstitialAdUnit;
-	public string CustomAdUnit;
+	public string BannerAdUnit;//横幅广告
+	public string VideoAdUnit;//视频广告
+	public string InterstitialAdUnit;//插屏广告
+	public string CustomAdUnit;//原生广告
 
 
 	private WXBannerAd BannerAd;
@@ -20,11 +20,20 @@ public class WXAD : IAdManager
 	{
 		WX.InitSDK((code) =>
 		{
-			CreateBannerAd();
+			if (!string.IsNullOrEmpty(BannerAdUnit))
+			{
+				CreateBannerAd();
+			}
 
-			CreateRewardedVideoAd();
+			if(!string.IsNullOrEmpty(VideoAdUnit)){
+				CreateRewardedVideoAd();
+			}
 
-			CreateCustomAd();
+			if (!string.IsNullOrEmpty(CustomAdUnit))
+			{
+				CreateCustomAd();
+			}
+			
 		});
 	}
 
@@ -157,14 +166,9 @@ public class WXAD : IAdManager
 	/// </summary>
 	private void CreateBannerAd()
 	{
-		if (!string.IsNullOrEmpty(BannerAdUnit)) {
-			BannerAd = WX.CreateFixedBottomMiddleBannerAd(BannerAdUnit, 30, 200);
-			
-		}
-        else
-        {
 		
-		}
+		BannerAd = WX.CreateFixedBottomMiddleBannerAd(BannerAdUnit, 30, 200);
+			
     }
 
 

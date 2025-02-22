@@ -34,6 +34,13 @@ public class ADManager : MonoBehaviour
 	public void Init()
 	{
 		if(Ad != null){ return; }
+		//友盟SDK接入
+		Debug.Log("开始调用友盟SDK");
+		UMeng.HellowTest();
+		UMeng.Init("67b3fcf68f232a05f116ea81", true,true);
+
+		UMeng.TrackEvent("EnterTheGame", "end");
+
 		switch (ADTargerSystem)
 		{
 			case ADTarger.Unity:
@@ -61,8 +68,9 @@ public class ADManager : MonoBehaviour
 		else {
 			Debug.Log("Ad 为 null，当前平台为：" + ADTargerSystem.ToString());
 		}
-		
 	}
+
+
 	public void CreateAD(ADType adType) {
 		Ad.CreateAD(adType);
 	}
