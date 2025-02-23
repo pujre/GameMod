@@ -34,13 +34,6 @@ public class ADManager : MonoBehaviour
 	public void Init()
 	{
 		if(Ad != null){ return; }
-		//友盟SDK接入
-		Debug.Log("开始调用友盟SDK");
-		UMeng.HellowTest();
-		UMeng.Init("67b3fcf68f232a05f116ea81", true,true);
-
-		UMeng.TrackEvent("EnterTheGame", "end");
-
 		switch (ADTargerSystem)
 		{
 			case ADTarger.Unity:

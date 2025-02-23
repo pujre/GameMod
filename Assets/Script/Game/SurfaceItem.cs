@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using TMPro;
+using TYQ;
 
 public class SurfaceItem : MonoBehaviour
 {
@@ -87,7 +88,7 @@ public class SurfaceItem : MonoBehaviour
 	/// <param name="colorNumber"></param>
 	public void CreatorSurface(int colorNumber = 3)
 	{
-		List<int> colors = GenerateRandomColors(Random.Range(colorNumber,9), colorNumber);
+		List<int> colors = GenerateRandomColors(Random.Range(1, colorNumber), UIManager.Instance.Colors.Length);
 		colors = GroupNumbersTogether(colors);
 
 		for (int i = 0; i < colors.Count; i++)
@@ -115,6 +116,12 @@ public class SurfaceItem : MonoBehaviour
 		PoolManager.Instance.ReturnObject(transform.gameObject);
 	}
 
+	/// <summary>
+	/// 生成随机颜色索引
+	/// </summary>
+	/// <param name="count">需要几个颜色</param>
+	/// <param name="colorNumber">颜色随机范围</param>
+	/// <returns></returns>
 	private List<int> GenerateRandomColors(int count, int colorNumber)
 	{
 		List<int> colors = new List<int>();

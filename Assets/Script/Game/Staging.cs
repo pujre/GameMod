@@ -71,9 +71,21 @@ public class Staging : MonoBehaviour
 
 
 	public void ShowAD() {
-		ADIcon.SetActive(false);
-		ShareImage.SetActive(false);
-		IsOn =true;
-		Debug.Log("播放广告或者询问是否播放广告");
+		ADManager.Instance.ShowAD(ADType.Video, (bool isShow) =>
+		{
+			if (isShow)
+			{
+				ADIcon.SetActive(false);
+				ShareImage.SetActive(false);
+				IsOn = true;
+				Debug.Log("广告播放成功");
+				GameManager.Instance.ShowPrompt("解锁成功");
+			}
+			else {
+				Debug.Log("广告播放失败");
+				GameManager.Instance.ShowPrompt("解锁失败");
+			}
+		});
+		
 	}
 }
