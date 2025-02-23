@@ -31,6 +31,9 @@ public class GoundBackItem : MonoBehaviour
 		if (SurfacesList==null) {
 			SurfacesList = new List<Surface>();
 		} 
+		if(NumberText != null) {
+			DisplayNumbers(false);
+		}
 		//volumetricLineList.gameObject.SetActive(false);
 	}
 
