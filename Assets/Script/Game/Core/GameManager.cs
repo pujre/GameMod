@@ -418,8 +418,8 @@ public class GameManager : SingletonMono<GameManager>
 
 	public void LoadLevel(int level)
 	{
-		if (level>=5) {
-			level = 4;
+		if (level>=21) {
+			level = 20;
 		}
 		NowLevel = level;
 		LevelData = LevelDataRoot.GetLevelData(level);
@@ -838,6 +838,14 @@ public class GameManager : SingletonMono<GameManager>
 				if (goundBackItem != null)
 				{
 					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
+					if (goundBackItem.ParentClass == null)
+					{
+						GameObject parentClass = PoolManager.Instance.GetObject("ParentClass", goundBackItem.transform);
+						parentClass.transform.localPosition = Vector3.zero;
+						//othbottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
+						goundBackItem.ParentClass = parentClass;
+					}
+
 					if (goundBackItem.NumberText==null) {
 						GameObject oth = PoolManager.Instance.GetObject("bottomText", goundBackItem.transform);
 						oth.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -846,12 +854,6 @@ public class GameManager : SingletonMono<GameManager>
 						oth.transform.SetParent(goundBackItem.ParentClass.transform);
 					}
 
-					if (goundBackItem.ParentClass==null) {
-						GameObject parentClass = PoolManager.Instance.GetObject("ParentClass", goundBackItem.transform);
-						parentClass.transform.localPosition = Vector3.zero;
-						//othbottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
-						goundBackItem.ParentClass = parentClass;
-					}
 					
 					
 					if (goundBackItem.IsLock) {

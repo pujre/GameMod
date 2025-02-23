@@ -11,7 +11,7 @@ namespace TYQ
 		public GameObject LoseBtn, WinBtn;
 		private void Awake()
 		{
-			TYQEventCenter.Instance.AddListener(OnEventKey.OnStop, DelegateCallback);
+			//TYQEventCenter.Instance.AddListener(OnEventKey.OnStop, DelegateCallback);
 		}
 
 		private void OnEnable()
@@ -123,7 +123,7 @@ namespace TYQ
 
 		private void OnDestroy()
 		{
-			TYQEventCenter.Instance.RemoveListener(OnEventKey.OnStop, DelegateCallback);
+			//TYQEventCenter.Instance.RemoveListener(OnEventKey.OnStop, DelegateCallback);
 		}
 	}
 }
