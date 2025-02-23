@@ -28,9 +28,10 @@ public class GoundBackItem : MonoBehaviour
 	{
 		GoundBack_Y = 1.9f;
 		Assign_Y = 0.65f;
-		SurfacesList = new List<Surface>();
+		if (SurfacesList==null) {
+			SurfacesList = new List<Surface>();
+		} 
 		//volumetricLineList.gameObject.SetActive(false);
-		//DelegateManager.Instance.AddEvent(OnEventKey.OnCalculate.ToString(), DelegateCallback);
 	}
 
 

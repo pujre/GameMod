@@ -170,6 +170,7 @@ public class LevelData
 	public int ClearanceScore;
 	public int ColourNum;
 	public int MaxNum;
+	public int CurrentevelColourMaxNum;
 	/// <summary>
 	/// 道具ID
 	/// </summary>

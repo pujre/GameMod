@@ -838,15 +838,22 @@ public class GameManager : SingletonMono<GameManager>
 				if (goundBackItem != null)
 				{
 					GoundBackItemArray2D[goundBackItem.ItemPosition.x, goundBackItem.ItemPosition.y] = goundBackItem;
-					GameObject oth = PoolManager.Instance.GetObject("bottomText", goundBackItem.transform);
-					GameObject parentClass = PoolManager.Instance.GetObject("ParentClass", goundBackItem.transform);
-					oth.transform.rotation = Quaternion.Euler(90, 0, 0);
-					oth.transform.localPosition = Vector3.zero;
-					parentClass.transform.localPosition= Vector3.zero;
-					//othbottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
-					goundBackItem.NumberText = oth;
-					goundBackItem.ParentClass = parentClass;
-					oth.transform.SetParent(goundBackItem.ParentClass.transform);
+					if (goundBackItem.NumberText==null) {
+						GameObject oth = PoolManager.Instance.GetObject("bottomText", goundBackItem.transform);
+						oth.transform.rotation = Quaternion.Euler(90, 0, 0);
+						oth.transform.localPosition = Vector3.zero;
+						goundBackItem.NumberText = oth;
+						oth.transform.SetParent(goundBackItem.ParentClass.transform);
+					}
+
+					if (goundBackItem.ParentClass==null) {
+						GameObject parentClass = PoolManager.Instance.GetObject("ParentClass", goundBackItem.transform);
+						parentClass.transform.localPosition = Vector3.zero;
+						//othbottomtext,Vector3.zero, Quaternion.Euler(90, 0, 0), goundBackItem.transform);
+						goundBackItem.ParentClass = parentClass;
+					}
+					
+					
 					if (goundBackItem.IsLock) {
 						GameObject spriteRendererPrefab = Resources.Load<GameObject>("Prefab/Lock");
 						GameObject spriteRenderer = Instantiate(spriteRendererPrefab,new Vector3(0,1.4f,1), Quaternion.Euler(90, 0, 0), goundBackItem.transform);
