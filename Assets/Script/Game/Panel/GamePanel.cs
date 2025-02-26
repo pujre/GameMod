@@ -2,7 +2,6 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Reflection;
 using TMPro;
-using TYQ;
 using UnityEngine;
 using UnityEngine.UI;
 namespace TYQ

@@ -65,6 +65,13 @@ public class Item
 	public int ItemIndex;
 }
 
+public enum LockType { 
+	NOLock,
+	AD,
+	Score,
+	Share,
+}
+
 /// <summary>
 /// 格子颜色枚举
 /// </summary>

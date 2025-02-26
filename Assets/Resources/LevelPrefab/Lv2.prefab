@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca68deedbfcc15f4db5f5f2f5ff235cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SurfaceColor: 2
+  SurfaceColor: 0
   targetMaterial: {fileID: 2100000, guid: 264e17f5cf0e3884babc6c64f072d95e, type: 2}
 --- !u!1 &239792534646667794
 GameObject:
@@ -1216,7 +1216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca68deedbfcc15f4db5f5f2f5ff235cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SurfaceColor: 2
+  SurfaceColor: 0
   targetMaterial: {fileID: 2100000, guid: 264e17f5cf0e3884babc6c64f072d95e, type: 2}
 --- !u!1 &820016205893097280
 GameObject:
@@ -1352,11 +1352,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 8162621022998240874}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 3446568385841783779}
   ParentClass: {fileID: 8395603055180209343}
-  volumetricLine: {fileID: 8162621022998240874}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 3}
@@ -1607,11 +1608,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 8040872283484834966}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 8253665635193438519}
   ParentClass: {fileID: 473859784252116913}
-  volumetricLine: {fileID: 8040872283484834966}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 3}
@@ -2132,7 +2134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca68deedbfcc15f4db5f5f2f5ff235cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SurfaceColor: 2
+  SurfaceColor: 0
   targetMaterial: {fileID: 0}
 --- !u!1 &1744368273395450928
 GameObject:
@@ -2608,11 +2610,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 1030050379895279948}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 7803330423777014654}
   ParentClass: {fileID: 336590679528819932}
-  volumetricLine: {fileID: 1030050379895279948}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 2}
@@ -3397,11 +3400,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 3445549708111273631}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 8456180173117722979}
   ParentClass: {fileID: 6061026905361467748}
-  volumetricLine: {fileID: 3445549708111273631}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 1}
@@ -4258,7 +4262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca68deedbfcc15f4db5f5f2f5ff235cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SurfaceColor: 2
+  SurfaceColor: 0
   targetMaterial: {fileID: 2100000, guid: 264e17f5cf0e3884babc6c64f072d95e, type: 2}
 --- !u!1 &3669907159316474165
 GameObject:
@@ -4856,11 +4860,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 1636308833394007794}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 7734318507785680403}
   ParentClass: {fileID: 1776208195729609929}
-  volumetricLine: {fileID: 1636308833394007794}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 2}
@@ -5002,11 +5007,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 2645218656233315633}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 6694661698963817500}
   ParentClass: {fileID: 3140466369957888909}
-  volumetricLine: {fileID: 2645218656233315633}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 4}
@@ -5148,11 +5154,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 2
+  TargetScore: 20
+  volumetricLine: {fileID: 8470736281835006829}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 7155548290831802626}
   ParentClass: {fileID: 8700953861024784062}
-  volumetricLine: {fileID: 8470736281835006829}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 3}
@@ -5700,11 +5707,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 1487398312603332909}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 186345075384247087}
   ParentClass: {fileID: 2142338046390500901}
-  volumetricLine: {fileID: 1487398312603332909}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 2}
@@ -5821,7 +5829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca68deedbfcc15f4db5f5f2f5ff235cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SurfaceColor: 2
+  SurfaceColor: 0
   targetMaterial: {fileID: 0}
 --- !u!1 &5422534712073620759
 GameObject:
@@ -6370,11 +6378,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 200
+  volumetricLine: {fileID: 3821184789172767961}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 4763811275361699568}
   ParentClass: {fileID: 5767234435662591086}
-  volumetricLine: {fileID: 3821184789172767961}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 1}
@@ -6521,11 +6530,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 1
+  TargetScore: 0
+  volumetricLine: {fileID: 1833681749611529533}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 1849246542263012816}
   ParentClass: {fileID: 5424353789576440675}
-  volumetricLine: {fileID: 1833681749611529533}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 3}
@@ -6667,11 +6677,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 2569430954843251206}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 8516269671900608154}
   ParentClass: {fileID: 426035869780825129}
-  volumetricLine: {fileID: 2569430954843251206}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 2}
@@ -6944,11 +6955,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 8196620106652066235}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 5524185146077636774}
   ParentClass: {fileID: 8942755574001985109}
-  volumetricLine: {fileID: 8196620106652066235}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 3}
@@ -7541,11 +7553,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 4534256916175343099}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 8867525529154174062}
   ParentClass: {fileID: 4100016368145851195}
-  volumetricLine: {fileID: 4534256916175343099}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 2}
@@ -7980,11 +7993,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 866053167452016323}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 8990016002501006358}
   ParentClass: {fileID: 4122378693230548301}
-  volumetricLine: {fileID: 866053167452016323}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 1}
@@ -9858,11 +9872,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 3
+  TargetScore: 0
+  volumetricLine: {fileID: 6391516822885820069}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 1281999640691654164}
   ParentClass: {fileID: 8795502876474202752}
-  volumetricLine: {fileID: 6391516822885820069}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 4}

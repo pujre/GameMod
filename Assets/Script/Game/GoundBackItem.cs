@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using TMPro;
 using TYQ;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using VolumetricLines;
 
 [System.Serializable]
 public class GoundBackItem : MonoBehaviour
 {
-	public bool IsLock = false;//true表示锁上，需要解锁
-	public float delayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
+	//public bool IsLock = false;//true表示锁上，需要解锁
+	[HideInInspector]
+	public LockType ItemLockType=LockType.NOLock;
+	[HideInInspector]
+	public int TargetScore =0;
+
+	public VolumetricLineStripBehavior volumetricLine;
+	public float DelayBetweenMoves = 0.35f;  // 每个对象移动之间的延迟
 	public GameObject NumberText;
 	public GameObject ParentClass;
-	public VolumetricLineStripBehavior volumetricLine;
 	public float GoundBack_Y;
 	public float Assign_Y;
 	/// <summary>
@@ -24,6 +30,7 @@ public class GoundBackItem : MonoBehaviour
 	public TextMeshPro NumberTextMesh = null;
 	public GameObject SpriteRendener;
 	public bool IsRunAnim=false;
+	private GamePanel gamePanel;
 	private void Awake()
 	{
 		GoundBack_Y = 1.9f;
@@ -37,9 +44,12 @@ public class GoundBackItem : MonoBehaviour
 		//volumetricLineList.gameObject.SetActive(false);
 	}
 
+	public bool IsLock {
+		get { return ItemLockType != LockType.NOLock;}
+	}
 
-	public void LockOrUnLockTheItem(bool isOn) {
-		IsLock = isOn;
+	public void LockOrUnLockTheItem(LockType isOn) {
+		ItemLockType = isOn;
 	}
 
 	public GoundBackItem(int x, int y, string name) {
@@ -52,6 +62,29 @@ public class GoundBackItem : MonoBehaviour
 		if (gameObject) gameObject.name = name;
 		volumetricLine = transform.Find("LineStrip-LightSaber").GetComponent<VolumetricLineStripBehavior>();
 		volumetricLine.gameObject.SetActive(false);
+	}
+
+
+	public void AddScoreEvent() {
+		BonusEvent(TargetScore);
+		TYQEventCenter.Instance.AddListener<int>(OnEventKey.OnBonusEvent, BonusEvent);
+		
+	}
+
+	public void BonusEvent(int score) {
+		if (ItemLockType==LockType.Score) {
+			if (gamePanel==null) {
+				gamePanel=UIManager.Instance.GetPanel("GamePanel") as GamePanel;
+				NumberText.transform.localPosition = new Vector3(0, 1.35f, 0f);
+			}
+			NumberTextMesh.text =string.Format("差 <color=#AEFF4C>{0}</color> 分\r\n解锁", (TargetScore - gamePanel.NowScore).ToString());
+			Debug.Log("Now:"+ gamePanel.NowScore+ "   TargetScore: "+ TargetScore);
+			if (gamePanel.NowScore>=TargetScore) {
+				LockOrUnLockTheItem(LockType.NOLock);
+				DisplayNumbers(true, "");
+				AudioManager.Instance.PlaySFX("Unlock（解锁新格子）");
+			}
+		}
 	}
 
 	/// <summary>
@@ -419,7 +452,7 @@ public class GoundBackItem : MonoBehaviour
 
 				// 将子序列添加到主序列中
 				sequence.Append(subSequence);
-				sequence.AppendInterval(delayBetweenMoves);  // 在每个对象移动后添加延迟
+				sequence.AppendInterval(DelayBetweenMoves);  // 在每个对象移动后添加延迟
 			}
 			sequence.OnComplete(() =>
 			{

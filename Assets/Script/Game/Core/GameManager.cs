@@ -220,7 +220,7 @@ public class GameManager : SingletonMono<GameManager>
 			{
 				if (isOn)
 				{
-					obj.transform.GetComponent<GoundBackItem>().IsLock = false;
+					obj.transform.GetComponent<GoundBackItem>().LockOrUnLockTheItem(LockType.NOLock);
 					obj.transform.GetComponent<GoundBackItem>().DisplayNumbers(true, "");
 					AudioManager.Instance.PlaySFX("Unlock（解锁新格子）");
 				}
@@ -854,15 +854,32 @@ public class GameManager : SingletonMono<GameManager>
 						oth.transform.SetParent(goundBackItem.ParentClass.transform);
 					}
 
-					
-					
-					if (goundBackItem.IsLock) {
-						GameObject spriteRendererPrefab = Resources.Load<GameObject>("Prefab/Lock");
-						GameObject spriteRenderer = Instantiate(spriteRendererPrefab,new Vector3(0,1.4f,1), Quaternion.Euler(90, 0, 0), goundBackItem.transform);
-						goundBackItem.SpriteRendener = spriteRenderer;
-						spriteRenderer.transform.localPosition = new Vector3(0,1.4f,1);
-					}
 					goundBackItem.DisplayNumbers(true, goundBackItem.IsLock ? "解锁" : "");
+
+					if (goundBackItem.IsLock) {
+						switch (goundBackItem.ItemLockType)
+						{
+							case LockType.NOLock:
+								break;
+							case LockType.AD:
+								GameObject spriteRendererPrefab = Resources.Load<GameObject>("Prefab/Lock");
+								GameObject spriteRenderer = Instantiate(spriteRendererPrefab, new Vector3(0, 1.4f, 1), Quaternion.Euler(90, 0, 0), goundBackItem.transform);
+								goundBackItem.SpriteRendener = spriteRenderer;
+								spriteRenderer.transform.localPosition = new Vector3(0, 1.4f, 1);
+								break;
+							case LockType.Score:
+								goundBackItem.AddScoreEvent();
+								break;
+							case LockType.Share:
+								GameObject SharePrefab = Resources.Load<GameObject>("Prefab/Share");
+								GameObject ShareRenderer = Instantiate(SharePrefab, new Vector3(0, 1.4f, 1), Quaternion.Euler(90, 0, 0), goundBackItem.transform);
+								goundBackItem.SpriteRendener = ShareRenderer;
+								ShareRenderer.transform.localPosition = new Vector3(0, 1.4f, 1);
+								break;
+							default:
+								break;
+						}
+					}
 				}
 			}
 		}
