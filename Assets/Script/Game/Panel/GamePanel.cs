@@ -182,8 +182,8 @@ namespace TYQ
 			GameManager.Instance.IsTouchInput = false;
 			PropBtnList.ForEach(obj => obj.SetActive(false));
 			LevelTarget.SetActive(true);
-			TagerLevelText.text = GameManager.Instance.NowLevel.ToString();
-			TagerScoreText.text = GameManager.Instance.GetNowLevelData().ClearanceScore.ToString();
+			TagerLevelText.text = string.Format("关卡：{0}", GameManager.Instance.NowLevel.ToString());
+			TagerScoreText.text = string.Format("目标：{0}", GameManager.Instance.GetNowLevelData().ClearanceScore.ToString());
 			Transform LevelTargebackGound_2 = LevelTarget.transform.Find("LevelTargebackGound_2");
 			TaTimeManager.Instance.StartTimer(1f, () => {
 				Sequence sequence = DOTween.Sequence();
