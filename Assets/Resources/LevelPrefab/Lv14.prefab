@@ -460,11 +460,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 2
+  TargetScore: 50
+  volumetricLine: {fileID: 1402717872722959804}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 1402717872722959804}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 1}
@@ -823,11 +824,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 1477038883239320148}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 1477038883239320148}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 2}
@@ -968,11 +970,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 7214412897162873633}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 7214412897162873633}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 3}
@@ -1222,11 +1225,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 5396354364804056541}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 5396354364804056541}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 2}
@@ -1367,11 +1371,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 584162511905280366}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 584162511905280366}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 1}
@@ -1512,11 +1517,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 8538995109366662009}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 8538995109366662009}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 2}
@@ -1657,11 +1663,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 1693567520855620505}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 1693567520855620505}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 2}
@@ -1911,11 +1918,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 8585601331130740052}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 8585601331130740052}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 3}
@@ -2056,11 +2064,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 7968801613506650368}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 7968801613506650368}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 4}
@@ -2463,11 +2472,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 3507123125321184592}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 3507123125321184592}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 2}
@@ -2717,11 +2727,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 0
+  TargetScore: 0
+  volumetricLine: {fileID: 2541115269829922349}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 2541115269829922349}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 3}
@@ -2971,11 +2982,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 2
+  TargetScore: 100
+  volumetricLine: {fileID: 1316755108734766850}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 1316755108734766850}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 4}
@@ -3116,11 +3128,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
+  ItemLockType: 1
+  TargetScore: 0
+  volumetricLine: {fileID: 452138867112289486}
+  DelayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
-  volumetricLine: {fileID: 452138867112289486}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 1}

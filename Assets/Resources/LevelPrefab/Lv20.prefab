@@ -59,9 +59,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -171,9 +168,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -286,9 +280,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -360,16 +351,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 2570597624397241716}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 0}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &161985643087256038
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,9 +423,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -541,9 +532,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -653,9 +641,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -768,9 +753,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -842,16 +824,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 1402717872722959804}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 1}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &1857544943963778765
 GameObject:
   m_ObjectHideFlags: 0
@@ -911,9 +896,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1023,9 +1005,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1138,9 +1117,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1212,16 +1188,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 2
+  TargetScore: 50
   volumetricLine: {fileID: 3162868489560757193}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 3}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &2424212736138627350
 GameObject:
   m_ObjectHideFlags: 0
@@ -1284,9 +1263,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1358,16 +1334,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 1477038883239320148}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 2}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &2511740479056460462
 GameObject:
   m_ObjectHideFlags: 0
@@ -1430,9 +1409,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1504,16 +1480,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 7214412897162873633}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 3}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &3093441106202238902
 GameObject:
   m_ObjectHideFlags: 0
@@ -1573,9 +1552,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1685,9 +1661,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1800,9 +1773,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1874,16 +1844,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 2
+  TargetScore: 100
   volumetricLine: {fileID: 1549931826583274324}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 3}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &3626191907501236050
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,9 +1916,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2058,9 +2028,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2132,16 +2099,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 5396354364804056541}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 2}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &4106145710256299388
 GameObject:
   m_ObjectHideFlags: 0
@@ -2204,9 +2174,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2278,16 +2245,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 584162511905280366}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 1}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &4380789679316484602
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,9 +2320,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2424,16 +2391,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 1
+  TargetScore: 0
   volumetricLine: {fileID: 8538995109366662009}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 2}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &4585888178408517322
 GameObject:
   m_ObjectHideFlags: 0
@@ -2496,9 +2466,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2570,16 +2537,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 1
+  TargetScore: 0
   volumetricLine: {fileID: 1693567520855620505}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 2}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &4868003191909059446
 GameObject:
   m_ObjectHideFlags: 0
@@ -2639,9 +2609,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2751,9 +2718,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2866,9 +2830,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2940,16 +2901,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 8585601331130740052}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 3}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &5396764795640339008
 GameObject:
   m_ObjectHideFlags: 0
@@ -3012,9 +2976,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3086,16 +3047,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 7968801613506650368}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 4}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &5762130980363547011
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,9 +3122,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3232,16 +3193,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 2966381138628053282}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 4}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &5786791734087544417
 GameObject:
   m_ObjectHideFlags: 0
@@ -3351,9 +3315,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3463,9 +3424,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3578,9 +3536,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3652,16 +3607,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 4630954035417580790}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 1}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &6812402270989580321
 GameObject:
   m_ObjectHideFlags: 0
@@ -3724,9 +3682,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3798,16 +3753,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 3507123125321184592}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 0, y: 2}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &7283918758827650857
 GameObject:
   m_ObjectHideFlags: 0
@@ -3867,9 +3825,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3982,9 +3937,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4056,16 +4008,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 7318663170180138133}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 4, y: 1}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &7444912160245827526
 GameObject:
   m_ObjectHideFlags: 0
@@ -4128,9 +4083,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4202,16 +4154,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 2541115269829922349}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 3, y: 3}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &7712819708300581255
 GameObject:
   m_ObjectHideFlags: 0
@@ -4271,9 +4226,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4383,9 +4335,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4498,9 +4447,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4572,16 +4518,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 1316755108734766850}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 1, y: 4}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &8823535377451042031
 GameObject:
   m_ObjectHideFlags: 0
@@ -4644,9 +4593,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4718,16 +4664,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
-  delayBetweenMoves: 0
-  NumberText: {fileID: 0}
+  ItemLockType: 0
+  TargetScore: 0
   volumetricLine: {fileID: 452138867112289486}
+  DelayBetweenMoves: 0
+  NumberText: {fileID: 0}
+  ParentClass: {fileID: 0}
   GoundBack_Y: 1.9
   Assign_Y: 0.65
   ItemPosition: {x: 2, y: 1}
   SurfacesList: []
   NumberTextMesh: {fileID: 0}
   SpriteRendener: {fileID: 0}
+  IsRunAnim: 0
 --- !u!1 &8884341172970222767
 GameObject:
   m_ObjectHideFlags: 0
@@ -4787,9 +4736,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4899,9 +4845,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

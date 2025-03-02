@@ -4136,7 +4136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8df080b394196438b1c820486c9c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsLock: 0
+  IsLock: 1
   delayBetweenMoves: 0
   NumberText: {fileID: 0}
   ParentClass: {fileID: 0}
